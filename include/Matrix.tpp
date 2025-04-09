@@ -28,9 +28,15 @@ void Matrix<T, Order>::print() const {
 template<typename T, StorageOrder Order>
 size_t Matrix<T, Order>::index(const size_t i, const size_t j) const {
     if constexpr (Order == StorageOrder::RowMajor) {
-        return i * cols_ + j;  // Row-major storage
+        // Row-major storage
+        // (i,j) -> k
+        // k = i*cols + j
+        return i * cols_ + j;  
     } else {
-        return j * rows_ + i;  // Column-major storage
+        // Column-major storage
+        // (i,j) -> k
+        // k = j*rows + i
+        return j * rows_ + i;
     }
 }
 
