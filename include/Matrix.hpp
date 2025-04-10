@@ -17,7 +17,7 @@ public:
     Matrix(size_t rows, size_t cols); // Constructor
     void print() const; // Print matrix function
     void info() const; // Prints some useful matrix info
-    
+    bool update(const size_t i, const size_t j,const T& value);
 };
 
 
