@@ -1,5 +1,8 @@
 #include "Matrix.hpp"
+#include "Utils.hpp"
 #include <iostream>
+#include <iomanip>
+#include <typeinfo>
 
 namespace algebra{
 
@@ -22,6 +25,20 @@ void Matrix<T, Order>::print() const {
         }
         std::cout << std::endl;
     }
+}
+
+
+// Matrix info display function
+template<typename T, StorageOrder Order>
+void Matrix<T, Order>::info() const {
+    std::cout << std::string(50, '*') << std::endl;
+    std::cout << "*           Matrix Information Summary           *" << std::endl;
+    std::cout << std::string(50, '*') << std::endl;
+    std::cout << std::left;
+    std::cout << std::setw(30) << "  Size:" << rows_ << " x " << cols_ << std::endl;
+    std::cout << std::setw(30) << "  Storage Order:" << storageOrderToString(Order) << std::endl;
+    std::cout << std::setw(30) << "  Element Type:" << demangle(typeid(T).name()) << std::endl;
+    std::cout << std::string(50, '*') << std::endl;
 }
 
 // Index calculation based on storage order (RowMajor or ColumnMajor)

@@ -16,6 +16,8 @@ private:
 public:
     Matrix(size_t rows, size_t cols); // Constructor
     void print() const; // Print matrix function
+    void info() const; // Prints some useful matrix info
+    
 };
 
 
