@@ -3,7 +3,6 @@
 #include <iostream>
 #include <cxxabi.h>
 
-
 // Function to get the type name from
 std::string demangle(const char* mangled) {
     int status = 0;

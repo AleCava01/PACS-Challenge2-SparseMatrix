@@ -6,6 +6,33 @@
   <a href="https://img.shields.io/badge/clang-18.1.3-blue"><img src="https://img.shields.io/badge/clang-18.1.3-blue" alt="clang"></a>
 </p>
 
+## TO-DO
+Public Methods to implement:
+- Update() method:
+  - with three parameters (i,j,value): sets the corresponding item to the required value
+  - with two parameters (k, value): sets the element at index k to the required value
+  - with one parameter (Eigen::MatrixXd or std::vector<std::vector<int>> or int matrix[3][4]): update the whole matrix with the one passed as parameter.
+- Compress() method: does what it says
+- Expand() method: decompress the compressed matrix.
+
+
+# Project Structure and Description
+```
+challenge2-gasati/
+├── src/
+│   ├── main.cpp
+├── include/
+│   ├── Matrix.hpp
+│   ├── Matrix.tpp
+|   ├── StorageOrder.hpp
+|   ├── Utils.hpp
+├── assets
+├── Makefile
+├── run
+├── LICENSE
+└── README.md
+```
+## Matrix Class (Matrix.hpp + Matrix.tpp)
 ### Matrix Storage Method
 In our Matrix class implementation, the matrix is stored in a vector using one of the following methods:
 - Row-major ordering
@@ -30,26 +57,12 @@ In our implementation,
 - vector = ```vector<T> data_``` (private attribute of the Matrix class)
 - the conversion $(i,j)\to k$ is done by the private method ```Matrix::index(i,j) ```
 
+## Utils header (Utils.hpp)
+Utils contains the following functions:
+- demangle: used to obtain a human-readable type name for ```T``` in the ```Matrix::info()``` method.
 
 
 
-
-
-## Project Structure and Implementation Choices
-```
-challenge2-gasati/
-├── src/
-│   ├── main.cpp
-├── include/
-│   ├── Matrix.hpp
-│   ├── Matrix.tpp
-|   ├── StorageOrder.hpp
-├── Challenge24-25-2.pdf
-├── Makefile
-├── run
-├── LICENSE
-└── README.md
-```
 # Setup (Linux)
 ### Prerequisites
 Ensure you have the following dependencies installed on your Linux environment:

@@ -27,7 +27,6 @@ void Matrix<T, Order>::print() const {
     }
 }
 
-
 // Matrix info display function
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::info() const {
