@@ -58,14 +58,20 @@ size_t Matrix<T, Order>::index(const size_t i, const size_t j) const {
 
 template<typename T, StorageOrder Order>
 bool Matrix<T, Order>::update(const size_t i, const size_t j,const T& value){
+    return update(index(i,j), value);
+}
+
+template<typename T, StorageOrder Order>
+bool Matrix<T, Order>::update(const size_t k, const T& value){
     try {
-        data_[index(i, j)] = value;
+        data_[k] = value;
         return true;
     } catch (const std::exception& e) { // catches possible problems in allocating the value, e.g. index out of bounds
-        std::cerr << "Error while assigning value to matrix at (" << i << ", " << j << "): " << e.what() << std::endl;
+        std::cerr << "Error while assigning value to matrix: " << e.what() << std::endl;
         return false;
     }
 }
+
 
 
 } // namespace algebra

@@ -9,8 +9,8 @@
 ## TO-DO
 Public Methods to implement:
 - Update() method:
-  - with three parameters (i,j,value): sets the corresponding item to the required value DONE :white_check_mark:
-  - with two parameters (k, value): sets the element at index k to the required value
+  - with three parameters (i,j,value): sets the corresponding item to the required value :white_check_mark: DONE
+  - with two parameters (k, value): sets the element at index k to the required value  :white_check_mark: DONE
   - with one parameter (Eigen::MatrixXd or std::vector<std::vector<int>> or int matrix[3][4]): update the whole matrix with the one passed as parameter.
 - Compress() method: does what it says
 - Expand() method: decompress the compressed matrix.
