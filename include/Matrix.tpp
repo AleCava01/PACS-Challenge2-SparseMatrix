@@ -16,12 +16,17 @@ Matrix<T, Order>::Matrix(size_t rows, size_t cols){
     data_.resize(rows * cols);
 }
 
-// basic Matrix print function
+// only print the non-zero elements
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::print() const {
     for (std::size_t i = 0; i < rows_; ++i) {
         for (std::size_t j = 0; j < cols_; ++j) {
-            std::cout << data_[index(i,j)] << " ";
+            std::array<int, 2> key = {static_cast<int>(i), static_cast<int>(j)};
+            if (sparse_data_.count(key)) {
+                std::cout << sparse_data_.at(key) << " ";
+            } else {
+                std::cout << "0 ";
+            }
         }
         std::cout << std::endl;
     }
@@ -56,10 +61,18 @@ size_t Matrix<T, Order>::index(const size_t i, const size_t j) const {
     }
 }
 
+// update(i,j,value) for sparse matrix
 template<typename T, StorageOrder Order>
-bool Matrix<T, Order>::update(const size_t i, const size_t j,const T& value){
-    return update(index(i,j), value);
+bool Matrix<T, Order>::update(const size_t i, const size_t j, const T& value) {
+    std::array<int, 2> key = {static_cast<int>(i), static_cast<int>(j)};
+    if (value != T(0)) {
+        sparse_data_[key] = value;
+    } else {
+        sparse_data_.erase(key);
+    }
+    return true;
 }
+
 
 template<typename T, StorageOrder Order>
 bool Matrix<T, Order>::update(const size_t k, const T& value){

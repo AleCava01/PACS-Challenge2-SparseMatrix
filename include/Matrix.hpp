@@ -2,6 +2,10 @@
 #define MATRIX_HPP
 #include <vector>
 #include "StorageOrder.hpp"
+#include <map>
+#include <array>
+#include <iostream>
+
 
 namespace algebra {
 
@@ -11,6 +15,7 @@ class Matrix {
 private:
     size_t rows_, cols_;
     std::vector<T> data_;
+    std::map<std::array<int, 2>, T> sparse_data_; //sparse dynamic storage
     size_t index(const size_t i, const size_t j) const;
 
 public:
