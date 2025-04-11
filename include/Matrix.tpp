@@ -13,7 +13,6 @@ template<typename T, StorageOrder Order>
 Matrix<T, Order>::Matrix(size_t rows, size_t cols){
     rows_ = rows;
     cols_ = cols;
-    data_.resize(rows * cols);
 }
 
 // only print the non-zero elements
@@ -45,7 +44,34 @@ void Matrix<T, Order>::info() const {
     std::cout << std::string(50, '*') << std::endl;
 }
 
-// Index calculation based on storage order (RowMajor or ColumnMajor)
+// update(i,j,value) for sparse matrix
+template<typename T, StorageOrder Order>
+bool Matrix<T, Order>::update(const size_t i, const size_t j, const T& value) {
+    std::array<int, 2> key = {static_cast<int>(i), static_cast<int>(j)};
+    if (value != T(0)) {
+        sparse_data_[key] = value;
+    } else {
+        sparse_data_.erase(key);
+    }
+    return true;
+}
+
+// ---------------------------------------------------------------------------------
+
+// DEPRECATED
+/* template<typename T, StorageOrder Order>
+bool Matrix<T, Order>::update(const size_t k, const T& value){
+    try {
+        data_[k] = value;
+        return true;
+    } catch (const std::exception& e) { // catches possible problems in allocating the value, e.g. index out of bounds
+        std::cerr << "Error while assigning value to matrix: " << e.what() << std::endl;
+        return false;
+    }
+} */
+
+// DEPRECATED
+/* // Index calculation based on storage order (RowMajor or ColumnMajor)
 template<typename T, StorageOrder Order>
 size_t Matrix<T, Order>::index(const size_t i, const size_t j) const {
     if constexpr (Order == StorageOrder::RowMajor) {
@@ -60,30 +86,8 @@ size_t Matrix<T, Order>::index(const size_t i, const size_t j) const {
         return j * rows_ + i;
     }
 }
+ */
 
-// update(i,j,value) for sparse matrix
-template<typename T, StorageOrder Order>
-bool Matrix<T, Order>::update(const size_t i, const size_t j, const T& value) {
-    std::array<int, 2> key = {static_cast<int>(i), static_cast<int>(j)};
-    if (value != T(0)) {
-        sparse_data_[key] = value;
-    } else {
-        sparse_data_.erase(key);
-    }
-    return true;
-}
-
-
-template<typename T, StorageOrder Order>
-bool Matrix<T, Order>::update(const size_t k, const T& value){
-    try {
-        data_[k] = value;
-        return true;
-    } catch (const std::exception& e) { // catches possible problems in allocating the value, e.g. index out of bounds
-        std::cerr << "Error while assigning value to matrix: " << e.what() << std::endl;
-        return false;
-    }
-}
 
 
 
