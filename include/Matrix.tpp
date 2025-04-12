@@ -145,7 +145,7 @@ void Matrix<T, Order>::printCompressed() {
 
 template<typename T, StorageOrder Order>
 size_t Matrix<T, Order>::weight_compressed() const{
-    return sizeof(compressed_data_);
+    return sizeof(compressed_data_.values);
 }
 template<typename T, StorageOrder Order>
 size_t Matrix<T, Order>::weight_uncompressed() const{
