@@ -28,10 +28,11 @@ private:
 
 public:
     Matrix(size_t rows, size_t cols); // Constructor
+    Matrix(std::vector<std::vector<T>>& mat); // Constructor
+
     void print() const; // Print matrix
     void info() const; // Prints some useful matrix info
     bool update(const size_t i, const size_t j,const T& value); // Update element at position (i,j) to the specified value
-    bool update(const std::vector<std::vector<T>>& mat);
     void compress();
     void printCompressed();
     size_t weight_compressed() const;

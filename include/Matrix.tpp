@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip>
 #include <typeinfo>
+#include <vector>
 
 namespace algebra{
 
@@ -14,6 +15,25 @@ Matrix<T, Order>::Matrix(size_t rows, size_t cols){
     rows_ = rows;
     cols_ = cols;
 }
+
+// Matrix constructor
+template<typename T, StorageOrder Order>
+Matrix<T, Order>::Matrix(size_t rows, size_t cols){
+    rows_ = rows;
+    cols_ = cols;
+}
+
+template<typename T, StorageOrder Order>
+Matrix<T, Order>::Matrix(std::vector<std::vector<T>>& mat) {
+    rows_ = mat.size();
+    cols_ = mat[0].size();
+    for (size_t i = 0; i < mat.size(); ++i) { // Iterate over rows
+        for (size_t j = 0; j < mat[i].size(); ++j) { // Iterate over columns in row i
+            update(i,j,mat[i][j]);
+        }
+    }
+}
+
 
 // only print the non-zero elements
 template<typename T, StorageOrder Order>
@@ -55,15 +75,6 @@ bool Matrix<T, Order>::update(const size_t i, const size_t j, const T& value) {
     }
     return true;
 }
-
-/* // Compressed Storage
-template<typename T, StorageOrder Order>
-struct CompressedMatrix {
-    std::vector<T> values;
-    std::vector<int> inner_index;
-    std::vector<int> outer_ptr;
-}; */
-
 
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::compress() {
@@ -141,16 +152,6 @@ size_t Matrix<T, Order>::weight_compressed() const{
 template<typename T, StorageOrder Order>
 size_t Matrix<T, Order>::weight_uncompressed() const{
     return sizeof(sparse_data_);
-}
-
-template <typename T>
-bool update(const std::vector<std::vector<T>>& mat) {
-    for (size_t i = 0; i < mat.size(); ++i) { // Iterate over rows
-        for (size_t j = 0; j < mat[i].size(); ++j) { // Iterate over columns in row i
-            update(i,j,mat[i][j]);
-        }
-    }
-    return true;    
 }
 
 
