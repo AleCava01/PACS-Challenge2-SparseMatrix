@@ -56,46 +56,43 @@ bool Matrix<T, Order>::update(const size_t i, const size_t j, const T& value) {
     return true;
 }
 
-// Compressed Storage
+/* // Compressed Storage
 template<typename T, StorageOrder Order>
 struct CompressedMatrix {
     std::vector<T> values;
     std::vector<int> inner_index;
     std::vector<int> outer_ptr;
-};
+}; */
 
 
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::compress() {
 
-    // Initialize the struct
-    CompressedMatrix compressed_;
-    
     // Determine the conversion type
     constexpr bool isRowMajor = (Order == StorageOrder::RowMajor);
     size_t outer_size = isRowMajor ? rows_ : cols_;
 
     // Clears the values and preparation
-    compressed_.values.clear();
-    compressed_.inner_index.clear();
-    compressed_.outer_ptr.assign(outer_size + 1, 0);  // initialise outer_ptr with zeroes
+    compressed_data_.values.clear();
+    compressed_data_.inner_index.clear();
+    compressed_data_.outer_ptr.assign(outer_size + 1, 0);  // initialise outer_ptr with zeroes
 
     // 1. Counts the values in each row/column
     for (const auto& [key, val] : sparse_data_) {
         int outer = isRowMajor ? key[0] : key[1];  // if CSR uses the row as outer if CSC uses the column  
-        compressed_.outer_ptr[outer + 1]++;        // to know how many elements are in each column/row
+        compressed_data_.outer_ptr[outer + 1]++;        // to know how many elements are in each column/row
     }                                              
     // 2. Indicates where starts each row
     for (size_t i = 1; i <= outer_size; ++i) {  // outer_ptr[i]   -> index of starting of the i-th row/column in the vector values  
                                                 // outer_ptr[i+1] -> index excluded of the next row
-        compressed_.outer_ptr[i] += compressed_.outer_ptr[i - 1];
+        compressed_data_.outer_ptr[i] += compressed_data_.outer_ptr[i - 1];
     }
 
     // 3. Allocates space and to not call pushback each time 
     size_t nnz = sparse_data_.size();  // total number of non zero values 
-    compressed_.values.resize(nnz);
-    compressed_.inner_index.resize(nnz);
-    std::vector<int> temp_offset = compressed_.outer_ptr;
+    compressed_data_.values.resize(nnz);
+    compressed_data_.inner_index.resize(nnz);
+    std::vector<int> temp_offset = compressed_data_.outer_ptr;
 
     // 4. Giving values to the vectors
     for (const auto& [key, val] : sparse_data_) {
@@ -103,39 +100,33 @@ void Matrix<T, Order>::compress() {
         int inner = isRowMajor ? key[1] : key[0];
         int idx = temp_offset[outer]++;
 
-        compressed_.values[idx] = val;
-        compressed_.inner_index[idx] = inner;
+        compressed_data_.values[idx] = val;
+        compressed_data_.inner_index[idx] = inner;
     }
 }
 
 // Print Compressed Matrix
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::printCompressed() {
-    std::vector<T> values;
-    std::vector<int> inner_index;
-    std::vector<int> outer_ptr;
-
-    // Chiamiamo il metodo compress per riempire i vettori
-    compress();
 
     std::cout << std::string(50, '-') << "\n";
     std::cout << "         Compressed Sparse Representation (CSR)\n";
     std::cout << std::string(50, '-') << "\n";
 
     std::cout << "Values:        ";
-    for (const auto& v : values) {
+    for (const auto& v : compressed_data_.values) {
         std::cout << v << " ";
     }
     std::cout << "\n";
 
     std::cout << "Inner index:   ";
-    for (const auto& i : inner_index) {
+    for (const auto& i : compressed_data_.inner_index) {
         std::cout << i << " ";
     }
     std::cout << "\n";
 
     std::cout << "Outer pointer: ";
-    for (const auto& o : outer_ptr) {
+    for (const auto& o : compressed_data_.outer_ptr) {
         std::cout << o << " ";
     }
     std::cout << "\n";
