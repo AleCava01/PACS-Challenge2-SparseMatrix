@@ -136,12 +136,23 @@ void Matrix<T, Order>::printCompressed() {
 
 template<typename T, StorageOrder Order>
 size_t Matrix<T, Order>::weight_compressed() const{
-    return sizeof(compressed_data_)/8;
+    return sizeof(compressed_data_);
 }
 template<typename T, StorageOrder Order>
 size_t Matrix<T, Order>::weight_uncompressed() const{
-    return sizeof(sparse_data_)/8;
+    return sizeof(sparse_data_);
 }
+
+template <typename T>
+bool update(const std::vector<std::vector<T>>& mat) {
+    for (size_t i = 0; i < mat.size(); ++i) { // Iterate over rows
+        for (size_t j = 0; j < mat[i].size(); ++j) { // Iterate over columns in row i
+            update(i,j,mat[i][j]);
+        }
+    }
+    return true;    
+}
+
 
 // ---------------------------------------------------------------------------------
 

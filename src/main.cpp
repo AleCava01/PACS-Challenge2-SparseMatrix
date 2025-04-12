@@ -14,7 +14,7 @@ int main(){
     std::cout<<std::endl;
     mat.update(3,3,6);
     mat.print();
-
+    
     std::cout<<std::endl;
     mat.compress();
     mat.printCompressed();
