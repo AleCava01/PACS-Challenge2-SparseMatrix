@@ -23,8 +23,7 @@ class Matrix {
 private:
     size_t rows_, cols_;
     std::map<std::array<int, 2>, T> sparse_data_; //sparse dynamic storage
-    size_t index(const size_t i, const size_t j) const;
-    CompressedMatrix<T> compressed_data_;
+    CompressedMatrix<T> compressed_data_; // compressed storage
       
 
 public:
@@ -34,6 +33,9 @@ public:
     bool update(const size_t i, const size_t j,const T& value); // Update element at position (i,j) to the specified value
     void compress();
     void printCompressed();
+    size_t weight_compressed() const;
+    size_t weight_uncompressed() const;
+
     //bool update(const size_t k, const T& value); // needed? to be decided.
 };
 

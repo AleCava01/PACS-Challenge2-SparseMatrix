@@ -18,6 +18,10 @@ int main(){
     std::cout<<std::endl;
     mat.compress();
     mat.printCompressed();
+    std::cout << std::endl;
+    std::cout << "Compressed matrix weight: " << mat.weight_compressed() << std::endl;
+    std::cout << "Uncompressed matrix weight: " << mat.weight_uncompressed() << std::endl;
+
 
 
     return 0;
