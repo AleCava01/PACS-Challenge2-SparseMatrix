@@ -1,10 +1,10 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
-#include <vector>
 #include "StorageOrder.hpp"
 #include <map>
 #include <array>
 #include <iostream>
+#include <vector>
 
 
 namespace algebra {
@@ -28,7 +28,7 @@ private:
 
 public:
     Matrix(size_t rows, size_t cols); // Constructor
-    Matrix(std::vector<std::vector<T>>& mat); // Constructor
+    Matrix(const std::vector<std::vector<T>>& mat); // Constructor
 
     void print() const; // Print matrix
     void info() const; // Prints some useful matrix info

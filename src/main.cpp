@@ -4,10 +4,13 @@
 using namespace algebra;
 
 int main(){
+
+
     Matrix<int, algebra::StorageOrder::RowMajor> mat(1000, 1000);
 
     
     //for (int r : 1000) for (auto& x : r) if ((double)rand()/RAND_MAX > 0.95) x = rand() % 100 + 1;
+    
     
     for (int i = 0; i < 1000; i++){
         for (int j = 0; j < 1000; j++){

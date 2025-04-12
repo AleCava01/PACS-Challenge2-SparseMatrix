@@ -16,20 +16,18 @@ Matrix<T, Order>::Matrix(size_t rows, size_t cols){
     cols_ = cols;
 }
 
-// Matrix constructor
 template<typename T, StorageOrder Order>
-Matrix<T, Order>::Matrix(size_t rows, size_t cols){
-    rows_ = rows;
-    cols_ = cols;
-}
-
-template<typename T, StorageOrder Order>
-Matrix<T, Order>::Matrix(std::vector<std::vector<T>>& mat) {
-    rows_ = mat.size();
-    cols_ = mat[0].size();
-    for (size_t i = 0; i < mat.size(); ++i) { // Iterate over rows
-        for (size_t j = 0; j < mat[i].size(); ++j) { // Iterate over columns in row i
-            update(i,j,mat[i][j]);
+Matrix<T, Order>::Matrix(const std::vector<std::vector<T>>& mat) {
+    if (mat.empty() || mat[0].empty()) {
+        rows_ = 0;
+        cols_ = 0;
+    } else {
+        rows_ = mat.size();
+        cols_ = mat[0].size();
+        for (size_t i = 0; i < mat.size(); ++i) {
+            for (size_t j = 0; j < mat[i].size(); ++j) {
+                update(i, j, mat[i][j]);
+            }
         }
     }
 }
