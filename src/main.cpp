@@ -12,18 +12,23 @@ int main(){
     for (int i = 0; i < 1000; i++){
         for (int j = 0; j < 1000; j++){
             if ((double)rand()/RAND_MAX > 0.999){
-                matrix[i][j]=0;
+                matrix[i][j]=1;
             }
         }
     }
     Matrix<int, algebra::StorageOrder::RowMajor> mat(matrix);
 
     mat.compress();
-    mat.print();
-    
+
     std::cout << std::endl;
     std::cout << "Compressed matrix weight: " << mat.weight_compressed() << std::endl;
     std::cout << "Uncompressed matrix weight: " << mat.weight_uncompressed() << std::endl;
+
+
+    Matrix<int, algebra::StorageOrder::RowMajor> mat2(5,5);
+    std::cout << "Compressed matrix weight: " << mat2.weight_compressed() << std::endl;
+    std::cout << "Uncompressed matrix weight: " << mat2.weight_uncompressed() << std::endl;
+
 
 
 
