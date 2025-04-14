@@ -34,7 +34,9 @@ public:
     void info() const; // Prints some useful matrix info
     bool update(const size_t i, const size_t j,const T& value); // Update element at position (i,j) to the specified value
     void compress();
-    void printCompressed();
+    void uncompress();
+    void printCompressed() const;
+    void printSparseData() const;
     size_t weight_compressed() const;
     size_t weight_uncompressed() const;
 

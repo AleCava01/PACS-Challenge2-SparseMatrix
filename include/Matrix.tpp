@@ -47,6 +47,7 @@ void Matrix<T, Order>::print() const {
         }
         std::cout << std::endl;
     }
+    std::cout << std::endl;
 }
 
 // Matrix info display function
@@ -89,8 +90,9 @@ void Matrix<T, Order>::compress() {
     // 1. Counts the values in each row/column
     for (const auto& [key, val] : sparse_data_) {
         int outer = isRowMajor ? key[0] : key[1];  // if CSR uses the row as outer if CSC uses the column  
-        compressed_data_.outer_ptr[outer + 1]++;        // to know how many elements are in each column/row
-    }                                              
+        compressed_data_.outer_ptr[outer + 1]++;   // to know how many elements are in each column/row
+    }                                
+
     // 2. Indicates where starts each row
     for (size_t i = 1; i <= outer_size; ++i) {  // outer_ptr[i]   -> index of starting of the i-th row/column in the vector values  
                                                 // outer_ptr[i+1] -> index excluded of the next row
@@ -112,11 +114,36 @@ void Matrix<T, Order>::compress() {
         compressed_data_.values[idx] = val;
         compressed_data_.inner_index[idx] = inner;
     }
+
+    sparse_data_.clear();
+
+}
+
+template<typename T, StorageOrder Order>
+void Matrix<T, Order>::uncompress() {
+
+    sparse_data_.clear();
+
+    constexpr bool isRowMajor = (Order == StorageOrder::RowMajor);
+    size_t outer_size = compressed_data_.outer_ptr.size() - 1;
+
+    for (size_t outer = 0; outer < outer_size; ++outer) {
+        for (int k = compressed_data_.outer_ptr[outer]; k < compressed_data_.outer_ptr[outer + 1]; ++k) {
+            int inner = compressed_data_.inner_index[k];
+
+            size_t i = isRowMajor ? outer : inner;
+            size_t j = isRowMajor ? inner : outer;
+
+            update(i, j, compressed_data_.values[k]);  // ✅ utilizzo del metodo update()
+        }
+    }
+
+    compressed_data_.clear();
 }
 
 // Print Compressed Matrix
 template<typename T, StorageOrder Order>
-void Matrix<T, Order>::printCompressed() {
+void Matrix<T, Order>::printCompressed() const{
 
     std::cout << std::string(50, '-') << "\n";
     std::cout << "         Compressed Sparse Representation (CSR)\n";
@@ -142,6 +169,15 @@ void Matrix<T, Order>::printCompressed() {
     std::cout << std::string(50, '-') << "\n";
 }
 
+template<typename T, StorageOrder Order>
+void Matrix<T, Order>::printSparseData() const {
+    
+    for (const auto& [key, val] : sparse_data_) {
+        std::cout << "Chiave: (" << key[0] << ", " << key[1]
+        << ") -> Valore: " << val << std::endl;
+    }
+
+}
 
 template<typename T, StorageOrder Order>
 size_t Matrix<T, Order>::weight_compressed() const{
