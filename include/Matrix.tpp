@@ -32,7 +32,6 @@ Matrix<T, Order>::Matrix(const std::vector<std::vector<T>>& mat) {
     }
 }
 
-
 // only print the non-zero elements
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::print() const {
@@ -75,6 +74,7 @@ bool Matrix<T, Order>::update(const size_t i, const size_t j, const T& value) {
     return true;
 }
 
+// Compression
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::compress() {
 
@@ -119,6 +119,7 @@ void Matrix<T, Order>::compress() {
 
 }
 
+// Decompression
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::uncompress() {
 
@@ -142,6 +143,17 @@ void Matrix<T, Order>::uncompress() {
     compressed_data_.values.clear();
     compressed_data_.outer_ptr.clear();
 
+}
+
+// update(i,j,value) for sparse matrix
+template<typename T, StorageOrder Order>
+bool Matrix<T, Order>::is_compressed() const{
+   if(compressed_data_.values.size() != 0 & compressed_data_.inner_index.size() != 0 & compressed_data_.outer_ptr.size() != 0){
+    return true;
+   }
+   else{
+    return false;
+   }
 }
 
 // Print Compressed Matrix
@@ -172,6 +184,7 @@ void Matrix<T, Order>::printCompressed() const{
     std::cout << std::string(50, '-') << "\n";
 }
 
+// Printing the map
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::printSparseData() const {
     
@@ -186,6 +199,7 @@ template<typename T, StorageOrder Order>
 size_t Matrix<T, Order>::weight_compressed() const{
     return (compressed_data_.values.size()+compressed_data_.inner_index.size()+compressed_data_.outer_ptr.size()) * sizeof(T);
 }
+
 template<typename T, StorageOrder Order>
 size_t Matrix<T, Order>::weight_uncompressed() const{
     size_t size_per_element = sizeof(std::array<int, 2>) + sizeof(T) + 3 * sizeof(void*) + sizeof(bool);
