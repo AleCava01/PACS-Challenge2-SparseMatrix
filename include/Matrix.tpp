@@ -138,7 +138,10 @@ void Matrix<T, Order>::uncompress() {
         }
     }
 
-    compressed_data_.clear();
+    compressed_data_.inner_index.clear();
+    compressed_data_.values.clear();
+    compressed_data_.outer_ptr.clear();
+
 }
 
 // Print Compressed Matrix

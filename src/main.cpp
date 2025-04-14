@@ -27,9 +27,9 @@ int main(){
 
     // Print dei vettori di compressione
     mat.printCompressed();
-
     mat.printSparseData();
 
+    // Uncompression
     mat.uncompress();
     mat.printSparseData();
     mat.print();
