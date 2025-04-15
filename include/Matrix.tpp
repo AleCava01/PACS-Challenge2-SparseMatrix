@@ -63,9 +63,10 @@ void Matrix<T, Order>::print() const {
             {
                 auto num_values = compressed_data_.outer_ptr[i+1]-compressed_data_.outer_ptr[i];
                 for(size_t j=0; j<cols_; ++j){
-                    if(compressed_data_.inner_index[k]==j){
+                    if(compressed_data_.inner_index[k]==j && num_values>0){
                         std::cout<<compressed_data_.values[k]<< " ";
                         k++;
+                        num_values--;
                     }
                     else{
                         std::cout<<"0 ";
@@ -74,9 +75,7 @@ void Matrix<T, Order>::print() const {
                 std::cout<<std::endl;
             }
             else{
-                for(size_t j=0; j<cols_;++j){
-                    std::cout<<"0 ";
-                }
+                for(size_t j=0; j<cols_;++j){std::cout<<"0 ";}
                 std::cout<<std::endl;
             }
             
