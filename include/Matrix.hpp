@@ -36,7 +36,7 @@ public:
     bool is_compressed() const;
     void compress();
     void uncompress();
-    void printCompressed() const;
+    void compressedInfo() const;
     void printSparseData() const;
 
     std::vector<T> product_by_vector(const std::vector<T>& v) const;

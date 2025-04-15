@@ -35,26 +35,55 @@ Matrix<T, Order>::Matrix(const std::vector<std::vector<T>>& mat) {
 // only print the non-zero elements
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::print() const {
+    if (!is_compressed()){
+        std::cout << std::string(50, '-') << "\n";
+        std::cout << "    Matrix Representation\n";
+        std::cout << std::string(50, '-') << "\n";
 
-    std::cout << std::string(50, '-') << "\n";
-    std::cout << "    Matrix Representation\n";
-    std::cout << std::string(50, '-') << "\n";
-
-    for (std::size_t i = 0; i < rows_; ++i) {
-        for (std::size_t j = 0; j < cols_; ++j) {
-            std::array<int, 2> key = {static_cast<int>(i), static_cast<int>(j)};
-            if (sparse_data_.count(key)) {
-                std::cout << sparse_data_.at(key) << " ";
-            } else {
-                std::cout << "0 ";
+        for (std::size_t i = 0; i < rows_; ++i) {
+            for (std::size_t j = 0; j < cols_; ++j) {
+                std::array<int, 2> key = {static_cast<int>(i), static_cast<int>(j)};
+                if (sparse_data_.count(key)) {
+                    std::cout << sparse_data_.at(key) << " ";
+                } else {
+                    std::cout << "0 ";
+                }
             }
+            std::cout << std::endl;
         }
         std::cout << std::endl;
-    }
-    std::cout << std::endl;
 
-    std::cout << "\n";
-    std::cout << std::string(50, '-') << "\n";
+        std::cout << "\n";
+        std::cout << std::string(50, '-') << "\n";
+    }
+    else{
+        auto k = 0;
+        for(size_t i=0; i<compressed_data_.outer_ptr.size()-1; ++i){
+            if (compressed_data_.outer_ptr[i]!=compressed_data_.outer_ptr[i+1])
+            {
+                auto num_values = compressed_data_.outer_ptr[i+1]-compressed_data_.outer_ptr[i];
+                for(size_t j=0; j<cols_; ++j){
+                    if(compressed_data_.inner_index[k]==j){
+                        std::cout<<compressed_data_.values[k]<< " ";
+                        k++;
+                    }
+                    else{
+                        std::cout<<"0 ";
+                    }
+                }
+                std::cout<<std::endl;
+            }
+            else{
+                for(size_t j=0; j<cols_;++j){
+                    std::cout<<"0 ";
+                }
+                std::cout<<std::endl;
+            }
+            
+        }
+    }
+
+    
 }
 
 // Matrix info display function
@@ -143,7 +172,7 @@ void Matrix<T, Order>::uncompress() {
             size_t i = isRowMajor ? outer : inner;
             size_t j = isRowMajor ? inner : outer;
 
-            update(i, j, compressed_data_.values[k]);  // ✅ utilizzo del metodo update()
+            update(i, j, compressed_data_.values[k]);  // utilizzo del metodo update()
         }
     }
 
@@ -198,7 +227,7 @@ size_t Matrix<T, Order>::find_row_for_index(size_t idx) const {
 
 // Print Compressed Matrix
 template<typename T, StorageOrder Order>
-void Matrix<T, Order>::printCompressed() const{
+void Matrix<T, Order>::compressedInfo() const{
 
     std::cout << std::string(50, '-') << "\n";
     std::cout << "         Compressed Sparse Representation (CSR)\n";
