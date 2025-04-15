@@ -13,8 +13,8 @@ namespace algebra {
 template<typename T>
 struct CompressedMatrix {
     std::vector<T> values;        // Contains non zero values
-    std::vector<int> inner_index; // Indexes of rows/columns
-    std::vector<int> outer_ptr;   // Pointers to the starting row/column
+    std::vector<size_t> inner_index; // Indexes of rows/columns
+    std::vector<size_t> outer_ptr;   // Pointers to the starting row/column
 };
 
 template<typename T, StorageOrder Order>
@@ -22,7 +22,7 @@ class Matrix {
 
 private:
     size_t rows_, cols_;
-    std::map<std::array<int, 2>, T> sparse_data_; //sparse dynamic storage
+    std::map<std::array<size_t, 2>, T> sparse_data_; //sparse dynamic storage
     CompressedMatrix<T> compressed_data_; // compressed storage
       
 

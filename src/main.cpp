@@ -4,34 +4,28 @@
 
 using namespace algebra;
 
-int main(){
-    srand(time(0));     // set seed based on current time
-
-    //for (int r : 1000) for (auto& x : r) if ((double)rand()/RAND_MAX > 0.95) x = rand() % 100 + 1;
-    std::vector<std::vector<int>> matrix(5, std::vector<int>(5, 0));  // 1000x1000 matrix, inizializzata a 0
+std::vector<std::vector<int>> getRandomSparseMatrix(const size_t rows, const size_t cols, const double random_factor){
+    srand(time(0));
+    std::vector<std::vector<int>> matrix(rows, std::vector<int>(cols, 0)); // matrix initialization, all elements set at 0.
     
-    for (int i = 0; i < 5; i++){
-        for (int j = 0; j < 5; j++){
-            if ((double)rand()/RAND_MAX > 0.7){
+    for (size_t i = 0; i < rows; i++){
+        for (size_t j = 0; j < cols; j++){
+            if ((double)rand()/RAND_MAX > random_factor){ 
                 matrix[i][j]=1 + rand() % 9;
             }
         }
     }
+    return matrix;
+}
 
-    Matrix<int, algebra::StorageOrder::RowMajor> mat(matrix);
+int main(){
 
-/*     // Print iniziale
-    mat.printSparseData();
-    mat.print(); */
+    Matrix<int, algebra::StorageOrder::RowMajor> mat(getRandomSparseMatrix(5,5,0.7));
+    mat.print();
 
     // Compressione della matrice
     mat.compress();
-    if(mat.is_compressed()){
-        std::cout << "The matrix is compress" << std::endl;
-    }
-    else{
-        std::cout << "The matrix is not compress" << std::endl;
-    }
+    std::cout << (mat.is_compressed() ? "The matrix is compressed" : "The matrix is not compressed") << std::endl;
 
     // Print dei vettori di compressione
     mat.compressedInfo();

@@ -9,13 +9,14 @@ namespace algebra{
 
 // METHODS IMPLEMENTATION OF MATRIX CLASS
 
-// Matrix constructor
+// Matrix constructor (empty matrix initialization)
 template<typename T, StorageOrder Order>
 Matrix<T, Order>::Matrix(size_t rows, size_t cols){
     rows_ = rows;
     cols_ = cols;
 }
 
+// Matrix constructor (matrix initialization)
 template<typename T, StorageOrder Order>
 Matrix<T, Order>::Matrix(const std::vector<std::vector<T>>& mat) {
     if (mat.empty() || mat[0].empty()) {
@@ -32,17 +33,17 @@ Matrix<T, Order>::Matrix(const std::vector<std::vector<T>>& mat) {
     }
 }
 
-// only print the non-zero elements
+// Matrix print function
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::print() const {
-    if (!is_compressed()){
+    if (!is_compressed()){ // Print uncompressed matrix
         std::cout << std::string(50, '-') << "\n";
         std::cout << "    Matrix Representation\n";
         std::cout << std::string(50, '-') << "\n";
 
         for (std::size_t i = 0; i < rows_; ++i) {
             for (std::size_t j = 0; j < cols_; ++j) {
-                std::array<int, 2> key = {static_cast<int>(i), static_cast<int>(j)};
+                std::array<size_t, 2> key = {i, j};
                 if (sparse_data_.count(key)) {
                     std::cout << sparse_data_.at(key) << " ";
                 } else {
@@ -51,10 +52,7 @@ void Matrix<T, Order>::print() const {
             }
             std::cout << std::endl;
         }
-        std::cout << std::endl;
-
-        std::cout << "\n";
-        std::cout << std::string(50, '-') << "\n";
+        std::cout << std::endl << std::string(50, '-') << "\n";
     }
     else{
         auto k = 0;
@@ -101,7 +99,7 @@ void Matrix<T, Order>::info() const {
 // update(i,j,value) for sparse matrix
 template<typename T, StorageOrder Order>
 bool Matrix<T, Order>::update(const size_t i, const size_t j, const T& value) {
-    std::array<int, 2> key = {static_cast<int>(i), static_cast<int>(j)};
+    std::array<size_t, 2> key = {i, j};
     if (value != T(0)) {
         sparse_data_[key] = value;
     } else {
@@ -125,7 +123,7 @@ void Matrix<T, Order>::compress() {
 
     // 1. Counts the values in each row/column
     for (const auto& [key, val] : sparse_data_) {
-        int outer = isRowMajor ? key[0] : key[1];  // if CSR uses the row as outer if CSC uses the column  
+        size_t outer = isRowMajor ? key[0] : key[1];  // if CSR uses the row as outer if CSC uses the column  
         compressed_data_.outer_ptr[outer + 1]++;   // to know how many elements are in each column/row
     }                                
 
@@ -139,13 +137,13 @@ void Matrix<T, Order>::compress() {
     size_t nnz = sparse_data_.size();  // total number of non zero values 
     compressed_data_.values.resize(nnz);
     compressed_data_.inner_index.resize(nnz);
-    std::vector<int> temp_offset = compressed_data_.outer_ptr;
+    std::vector<size_t> temp_offset = compressed_data_.outer_ptr;
 
     // 4. Giving values to the vectors
     for (const auto& [key, val] : sparse_data_) {
-        int outer = isRowMajor ? key[0] : key[1];
-        int inner = isRowMajor ? key[1] : key[0];
-        int idx = temp_offset[outer]++;
+        size_t outer = isRowMajor ? key[0] : key[1];
+        size_t inner = isRowMajor ? key[1] : key[0];
+        size_t idx = temp_offset[outer]++;
 
         compressed_data_.values[idx] = val;
         compressed_data_.inner_index[idx] = inner;
@@ -165,8 +163,8 @@ void Matrix<T, Order>::uncompress() {
     size_t outer_size = compressed_data_.outer_ptr.size() - 1;
 
     for (size_t outer = 0; outer < outer_size; ++outer) {
-        for (int k = compressed_data_.outer_ptr[outer]; k < compressed_data_.outer_ptr[outer + 1]; ++k) {
-            int inner = compressed_data_.inner_index[k];
+        for (size_t k = compressed_data_.outer_ptr[outer]; k < compressed_data_.outer_ptr[outer + 1]; ++k) {
+            size_t inner = compressed_data_.inner_index[k];
 
             size_t i = isRowMajor ? outer : inner;
             size_t j = isRowMajor ? inner : outer;
@@ -195,7 +193,7 @@ std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v) cons
     std::vector<T> vect_out = {};  // initializing the output 
     T result = 0;
 
-    for (int i = 0; i < compressed_data_.values.size(); i++){
+    for (size_t i = 0; i < compressed_data_.values.size(); i++){
         if (i == find_row_for_index(compressed_data_.values[i])){
             result += v[i] * compressed_data_.value[i];
         }
@@ -278,45 +276,10 @@ size_t Matrix<T, Order>::weight_compressed() const{
 
 template<typename T, StorageOrder Order>
 size_t Matrix<T, Order>::weight_uncompressed() const{
-    size_t size_per_element = sizeof(std::array<int, 2>) + sizeof(T) + 3 * sizeof(void*) + sizeof(bool);
+    size_t size_per_element = sizeof(std::array<size_t, 2>) + sizeof(T) + 3 * sizeof(void*) + sizeof(bool);
     return sizeof(sparse_data_) + sparse_data_.size() * size_per_element;
 
 }
-
-
-// ---------------------------------------------------------------------------------
-
-// DEPRECATED
-/* template<typename T, StorageOrder Order>
-bool Matrix<T, Order>::update(const size_t k, const T& value){
-    try {
-        data_[k] = value;
-        return true;
-    } catch (const std::exception& e) { // catches possible problems in allocating the value, e.g. index out of bounds
-        std::cerr << "Error while assigning value to matrix: " << e.what() << std::endl;
-        return false;
-    }
-} */
-
-// DEPRECATED
-/* // Index calculation based on storage order (RowMajor or ColumnMajor)
-template<typename T, StorageOrder Order>
-size_t Matrix<T, Order>::index(const size_t i, const size_t j) const {
-    if constexpr (Order == StorageOrder::RowMajor) {
-        // Row-major storage
-        // (i,j) -> k
-        // k = i*cols + j
-        return i * cols_ + j;  
-    } else {
-        // Column-major storage
-        // (i,j) -> k
-        // k = j*rows + i
-        return j * rows_ + i;
-    }
-}
- */
-
-
 
 
 } // namespace algebra
