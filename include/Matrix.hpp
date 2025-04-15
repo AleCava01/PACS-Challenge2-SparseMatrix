@@ -39,8 +39,11 @@ public:
     void printCompressed() const;
     void printSparseData() const;
 
+    std::vector<T> product_by_vector(const std::vector<T>& v) const;
+
     size_t weight_compressed() const;
     size_t weight_uncompressed() const;
+    size_t find_row_for_index(size_t idx) const;
 
     //bool update(const size_t k, const T& value); // needed? to be decided.
 };

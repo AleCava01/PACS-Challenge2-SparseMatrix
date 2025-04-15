@@ -33,11 +33,10 @@ int main(){
 
     // Print dei vettori di compressione
     mat.printCompressed();
-    mat.printSparseData();
+    
 
     // Uncompression
     mat.uncompress();
-    mat.printSparseData();
     mat.print();
     if(mat.is_compressed()){
         std::cout << "The matrix is compress" << std::endl;
