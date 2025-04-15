@@ -24,7 +24,7 @@ private:
     size_t rows_, cols_;
     std::map<std::array<size_t, 2>, T> sparse_data_; //sparse dynamic storage
     CompressedMatrix<T> compressed_data_; // compressed storage
-      
+
 
 public:
     Matrix(size_t rows, size_t cols); // Constructor
@@ -33,16 +33,15 @@ public:
     void print() const; // Print matrix
     void info() const; // Prints some useful matrix info
     bool update(const size_t i, const size_t j,const T& value); // Update element at position (i,j) to the specified value
-    bool is_compressed() const;
-    void compress();
-    void uncompress();
-    void compressedInfo() const;
-    void printSparseData() const;
+    bool is_compressed() const; // returns compression status
+    void compress(); //matrix compression (from COOmap to CSR/CSC)
+    void decompress(); // matrix decompression (from CSR/CSC to COOmap)
+    void compressedInfo() const; // prints CSR/CSC vectors
+    void printSparseData() const; 
 
     std::vector<T> product_by_vector(const std::vector<T>& v) const;
 
-    size_t weight_compressed() const;
-    size_t weight_uncompressed() const;
+    size_t weight() const;
     size_t find_row_for_index(size_t idx) const;
 
     //bool update(const size_t k, const T& value); // needed? to be decided.

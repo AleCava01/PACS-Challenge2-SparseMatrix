@@ -36,11 +36,8 @@ Matrix<T, Order>::Matrix(const std::vector<std::vector<T>>& mat) {
 // Matrix print function
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::print() const {
-    if (!is_compressed()){ // Print uncompressed matrix
-        std::cout << std::string(50, '-') << "\n";
-        std::cout << "    Matrix Representation\n";
-        std::cout << std::string(50, '-') << "\n";
-
+    if (!is_compressed()){ 
+        // Print uncompressed matrix (sparse_data_)
         for (std::size_t i = 0; i < rows_; ++i) {
             for (std::size_t j = 0; j < cols_; ++j) {
                 std::array<size_t, 2> key = {i, j};
@@ -52,9 +49,9 @@ void Matrix<T, Order>::print() const {
             }
             std::cout << std::endl;
         }
-        std::cout << std::endl << std::string(50, '-') << "\n";
     }
     else{
+        // Print compressed matrix (compressed_data_)
         auto k = 0;
         for(size_t i=0; i<compressed_data_.outer_ptr.size()-1; ++i){
             if (compressed_data_.outer_ptr[i]!=compressed_data_.outer_ptr[i+1])
@@ -75,12 +72,9 @@ void Matrix<T, Order>::print() const {
             else{
                 for(size_t j=0; j<cols_;++j){std::cout<<"0 ";}
                 std::cout<<std::endl;
-            }
-            
+            }     
         }
     }
-
-    
 }
 
 // Matrix info display function
@@ -93,6 +87,8 @@ void Matrix<T, Order>::info() const {
     std::cout << std::setw(30) << "  Size:" << rows_ << " x " << cols_ << std::endl;
     std::cout << std::setw(30) << "  Storage Order:" << storageOrderToString(Order) << std::endl;
     std::cout << std::setw(30) << "  Element Type:" << demangle(typeid(T).name()) << std::endl;
+    std::cout << std::setw(30) << "  Compression status:" << (is_compressed() ? "Compressed" : "Uncompressed") << std::endl;
+    std::cout << std::setw(30) << "  Memory usage (bytes):" << weight() << std::endl;
     std::cout << std::string(50, '*') << std::endl;
 }
 
@@ -155,7 +151,7 @@ void Matrix<T, Order>::compress() {
 
 // Decompression
 template<typename T, StorageOrder Order>
-void Matrix<T, Order>::uncompress() {
+void Matrix<T, Order>::decompress() {
 
     sparse_data_.clear();
 
@@ -260,8 +256,8 @@ void Matrix<T, Order>::printSparseData() const {
 
     
     for (const auto& [key, val] : sparse_data_) {
-        std::cout << "Chiave: (" << key[0] << ", " << key[1]
-        << ") -> Valore: " << val << std::endl;
+        std::cout << "Key: (" << key[0] << ", " << key[1]
+        << ") -> Value: " << val << std::endl;
     }
 
     std::cout << "\n";
@@ -269,17 +265,16 @@ void Matrix<T, Order>::printSparseData() const {
 
 }
 
+// Returns the matrix weight, in bytes
 template<typename T, StorageOrder Order>
-size_t Matrix<T, Order>::weight_compressed() const{
-    return (compressed_data_.values.size()+compressed_data_.inner_index.size()+compressed_data_.outer_ptr.size()) * sizeof(T);
+size_t Matrix<T, Order>::weight() const{
+    if (is_compressed()){
+        return (compressed_data_.values.size()+compressed_data_.inner_index.size()+compressed_data_.outer_ptr.size()) * sizeof(T);
+    }
+    else{
+        size_t size_per_element = sizeof(std::array<size_t, 2>) + sizeof(T) + 3 * sizeof(void*) + sizeof(bool);
+        return sizeof(sparse_data_) + sparse_data_.size() * size_per_element;
+    }
 }
-
-template<typename T, StorageOrder Order>
-size_t Matrix<T, Order>::weight_uncompressed() const{
-    size_t size_per_element = sizeof(std::array<size_t, 2>) + sizeof(T) + 3 * sizeof(void*) + sizeof(bool);
-    return sizeof(sparse_data_) + sparse_data_.size() * size_per_element;
-
-}
-
 
 } // namespace algebra
