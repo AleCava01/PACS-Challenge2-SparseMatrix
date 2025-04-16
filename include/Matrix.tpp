@@ -211,11 +211,10 @@ std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v){
 }
 
 
-// funziona solo per la prima riga
+// funziona 
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::extract_row(size_t index, int& k){
     std::vector<T> output = {};
-    // Da sistemare
 
     if (compressed_data_.outer_ptr[index]!=compressed_data_.outer_ptr[index+1])
     {
