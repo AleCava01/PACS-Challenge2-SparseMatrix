@@ -184,14 +184,14 @@ bool Matrix<T, Order>::is_compressed() const{
 
 // Multiplication by vector
 template<typename T, StorageOrder Order>
-std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v){
+std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v) const {
 
     // Create the output vector 
     std::vector<T> output(rows_, 0);
 
     if(is_compressed()){
-        
         // Compressed matrix * vector multiplication
+
         std::vector<size_t> row_offset(rows_ + 1, 0); // stores the starting indexes to iterate over compressed_data_.values
         // the row_offset vector will look like:
         // [0, number_of_elements_in_the_first_row, number_of_elements_in_the_first_2_rows, ...]
@@ -223,29 +223,27 @@ std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v){
 
 // Extract the specified row when the matrix is stored as CSR/CSC matrix.
 template<typename T, StorageOrder Order>
-std::vector<T> Matrix<T, Order>::extract_row(size_t index, size_t k){
-    std::vector<T> row = {};
-    /* size_t k=0;
-    for(size_t i=0; i<index;++i){
-        k+=compressed_data_.outer_ptr[i+1]-compressed_data_.outer_ptr[i];
-    } */
+std::vector<T> Matrix<T, Order>::extract_row(size_t index, size_t k) const{
+    std::vector<T> row(cols_, 0);
+
     if (compressed_data_.outer_ptr[index]!=compressed_data_.outer_ptr[index+1])
     {
         auto num_values = compressed_data_.outer_ptr[index+1]-compressed_data_.outer_ptr[index];
         for(size_t j=0; j<cols_; ++j){
             if(compressed_data_.inner_index[k]==j && num_values>0){
-                row.push_back(compressed_data_.values[k]);
+                row[j] = compressed_data_.values[k];
+                //row.push_back(compressed_data_.values[k]);
                 k++;
                 num_values--;
             }
-            else{
+            /* else{
                 row.push_back(0);
-            }
+            } */
         }
     }
-    else{
+    /* else{
         row.resize(cols_, 0);
-    }
+    } */
     return row;
 }
 

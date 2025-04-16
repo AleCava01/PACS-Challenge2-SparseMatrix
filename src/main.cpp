@@ -18,27 +18,31 @@ std::vector<std::vector<int>> getTestMatrix(){
 int main(){
 
     // Sparse matrix Initialization
-    size_t n_row = 5;
-    size_t n_col = 5;
-    Matrix<int, algebra::StorageOrder::RowMajor> mat(getRandomSparseMatrix(n_row,n_col,0.7));
+    size_t n_row = 100;
+    size_t n_col = 100;
+    Matrix<int, algebra::StorageOrder::RowMajor> mat(getRandomSparseMatrix(n_row,n_col,0.9));
+    //Matrix<int, algebra::StorageOrder::RowMajor> mat(getTestMatrix());
+    //std::vector<int> v = {1,2,1};
+    std::vector<int> v = getRandomVector(n_row);
 
     verbose::separator(50);
 
     // Matrix compression
     mat.compress();
-    mat.printStorage();
     mat.print();
     //mat.info();
 
     // Matrix * vector multiplication
-    std::vector<int> v = {1,0,1,0,0};
     std::vector<int> multiplication_result = mat.product_by_vector(v);
     verbose::separator(50);
-    std::cout << "multiplication result: ";
-    print(multiplication_result);
+    std::cout << "v: ";
+    print(v);
+    auto [result, duration] = test_multiplication_mean(mat,v,100);
+    verbose::display_mat_times_vector_results(result, duration);
+
     verbose::separator(50);
 
-    // Decompression
+    /* // Decompression
     mat.decompress();
     //mat.printStorage();
     mat.print();
@@ -47,9 +51,11 @@ int main(){
     // Matrix * vector multiplication
     multiplication_result = mat.product_by_vector(v);
     verbose::separator(50);
-    std::cout << "multiplication result: ";
-    print(multiplication_result);
-    verbose::separator(50);
+    std::cout << "v: ";
+    print(v);
+    std::tie(result, duration) = test_multiplication(mat,v);
+    verbose::display_mat_times_vector_results(result, duration);
+    verbose::separator(50); */
 
 
 
