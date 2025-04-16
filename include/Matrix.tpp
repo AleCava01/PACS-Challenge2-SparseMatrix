@@ -92,19 +92,27 @@ void Matrix<T, Order>::info() const {
     std::cout << std::string(50, '*') << std::endl;
 }
 
-// update(i,j,value) for sparse matrix
+// update(i,j,value) for sparse matrix if the matrix is dynamically stored as COOmap
 template<typename T, StorageOrder Order>
 bool Matrix<T, Order>::update(const size_t i, const size_t j, const T& value) {
-    std::array<size_t, 2> key = {i, j};
-    if (value != T(0)) {
-        sparse_data_[key] = value;
-    } else {
-        sparse_data_.erase(key);
+    if(!is_compressed()){
+        std::array<size_t, 2> key = {i, j};
+        if (value != T(0)) {
+            sparse_data_[key] = value;
+        } else {
+            sparse_data_.erase(key);
+        }
+        return true;
     }
-    return true;
+    else{
+        throw std::runtime_error("The matrix is compressed and it's element cannot be updated.");
+        return false;
+     }
+    
 }
 
 // Compression
+// matrix compression (from COOmap to CSR/CSC)
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::compress() {
 
@@ -150,6 +158,7 @@ void Matrix<T, Order>::compress() {
 }
 
 // Decompression
+// matrix decompression (from CSR/CSC to COOmap)
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::decompress() {
 
@@ -176,6 +185,7 @@ void Matrix<T, Order>::decompress() {
 }
 
 // checks if the Storage is with the compressed or uncompressed method
+// returns compression status
 template<typename T, StorageOrder Order>
 bool Matrix<T, Order>::is_compressed() const{
    return compressed_data_.values.size() != 0 && compressed_data_.inner_index.size() != 0 && compressed_data_.outer_ptr.size() != 0;
@@ -185,67 +195,110 @@ bool Matrix<T, Order>::is_compressed() const{
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v){
 
-    // Creo il vettore di output 
+    // Create the output vector 
     std::vector<T> output = {};
-    int k = 0;
 
-
-    // 1. Iterare sulle righe della matirce e estrarre il vettore riga
-    // posso usare un metodo tipo quello di print per costruire il vettore 
-    for (int i = 0; i < rows_ ; i++){
+    size_t k = 0;
+    // Iterate over matrix rows to extract
+    for (size_t i = 0; i < rows_ ; i++){
         
-        // Estraggo il vettore riga
-        std::vector<T> row_i = extract_row(i, k);
+        // Extract matrix row vector
+        std::vector<T> matrix_row = extract_row(i, k);
 
-        // faccio il prodotto scalare
-        T result = row_i * v;
+        // Compute the dot product between row and the input vector
+        T result = matrix_row * v; // * operator has been overloaded in Utils.hpp
 
+        // Append to result
         output.push_back(result);
     }
-
-    for (int i = 0; i < output.size(); i++){
-        std::cout << output[i] << " ";
-    }
-    std::cout << std::endl << "fine moltiplicazione" << std::endl;
     return output;
 }
 
-
-// funziona 
+// Extract the specified row when the matrix is stored as CSR/CSC matrix.
 template<typename T, StorageOrder Order>
-std::vector<T> Matrix<T, Order>::extract_row(size_t index, int& k){
-    std::vector<T> output = {};
+std::vector<T> Matrix<T, Order>::extract_row(size_t index, size_t& k){
+    std::vector<T> row = {};
 
     if (compressed_data_.outer_ptr[index]!=compressed_data_.outer_ptr[index+1])
     {
         auto num_values = compressed_data_.outer_ptr[index+1]-compressed_data_.outer_ptr[index];
         for(size_t j=0; j<cols_; ++j){
             if(compressed_data_.inner_index[k]==j && num_values>0){
-                output.push_back(compressed_data_.values[k]);
+                row.push_back(compressed_data_.values[k]);
                 k++;
                 num_values--;
             }
             else{
-                output.push_back(0);
+                row.push_back(0);
             }
         }
     }
     else{
-        for(size_t j=0; j<cols_;++j){
-        output.push_back(0);
-        }
+        row.resize(cols_, 0);
     }
-
-    for (int i = 0; i < output.size(); i++){
-        std::cout << output[i] << " ";
-    }
-    
-    std::cout << std::endl << "fine riga " << std::endl;
-    std::cout << std::endl << std::endl;
-    return output;
+    return row;
 }
 
-// Funzione di supporto che dice in quale riga si trova l'elemento values[k]
+// Print Storage
+// prints CSR/CSC vectors or COOmap mapping, depending on compression status
+template<typename T, StorageOrder Order>
+void Matrix<T, Order>::printStorage() const {
+    if(is_compressed()){
+        // Print CSR/CSC vectors
+        std::cout << std::string(50, '-') << "\n";
+        std::cout << "         Compressed Sparse Representation \n";
+        std::cout << std::string(50, '-') << "\n";
+
+        std::cout << "Values:        ";
+        for (const auto& v : compressed_data_.values) {
+            std::cout << v << " ";
+        }
+        std::cout << "\n";
+
+        std::cout << "Inner index:   ";
+        for (const auto& i : compressed_data_.inner_index) {
+            std::cout << i << " ";
+        }
+        std::cout << "\n";
+
+        std::cout << "Outer pointer: ";
+        for (const auto& o : compressed_data_.outer_ptr) {
+            std::cout << o << " ";
+        }
+        std::cout << "\n";
+        std::cout << std::string(50, '-') << "\n";
+    }
+    else{
+        // Print COOmap Representation
+        std::cout << std::string(50, '-') << "\n";
+        std::cout << "    Uncompressed Sparse Representation (Coo-MAP)\n";
+        std::cout << std::string(50, '-') << "\n";
+        
+        for (const auto& [key, val] : sparse_data_) {
+            std::cout << "Key: (" << key[0] << ", " << key[1]
+            << ") -> Value: " << val << std::endl;
+        }
+
+        std::cout << "\n";
+        std::cout << std::string(50, '-') << "\n";
+    }
+}
+
+// Returns the matrix space usage, in bytes
+template<typename T, StorageOrder Order>
+size_t Matrix<T, Order>::weight() const{
+    if (is_compressed()){
+        return (compressed_data_.values.size()+compressed_data_.inner_index.size()+compressed_data_.outer_ptr.size()) * sizeof(T);
+    }
+    else{
+        size_t size_per_element = sizeof(std::array<size_t, 2>) + sizeof(T) + 3 * sizeof(void*) + sizeof(bool);
+        return sizeof(sparse_data_) + sparse_data_.size() * size_per_element;
+    }
+}
+
+
+// DEPRECATED
+/* // Funzione di supporto che dice in quale riga si trova l'elemento values[k]
 template<typename T, StorageOrder Order>
 size_t Matrix<T, Order>::find_row_for_index(size_t idx) const {
     if (compressed_data_.outer_ptr.empty() || idx >= compressed_data_.values.size()) {
@@ -262,65 +315,6 @@ size_t Matrix<T, Order>::find_row_for_index(size_t idx) const {
     }
 
     throw std::out_of_range("Indice non trovato in nessuna riga.");
-}
-
-// Print Compressed Matrix
-template<typename T, StorageOrder Order>
-void Matrix<T, Order>::compressedInfo() const{
-
-    std::cout << std::string(50, '-') << "\n";
-    std::cout << "         Compressed Sparse Representation (CSR)\n";
-    std::cout << std::string(50, '-') << "\n";
-
-    std::cout << "Values:        ";
-    for (const auto& v : compressed_data_.values) {
-        std::cout << v << " ";
-    }
-    std::cout << "\n";
-
-    std::cout << "Inner index:   ";
-    for (const auto& i : compressed_data_.inner_index) {
-        std::cout << i << " ";
-    }
-    std::cout << "\n";
-
-    std::cout << "Outer pointer: ";
-    for (const auto& o : compressed_data_.outer_ptr) {
-        std::cout << o << " ";
-    }
-    std::cout << "\n";
-    std::cout << std::string(50, '-') << "\n";
-}
-
-// Printing the map
-template<typename T, StorageOrder Order>
-void Matrix<T, Order>::printSparseData() const {
-
-    std::cout << std::string(50, '-') << "\n";
-    std::cout << "    Uncompressed Sparse Representation (Coo-MAP)\n";
-    std::cout << std::string(50, '-') << "\n";
-
-    
-    for (const auto& [key, val] : sparse_data_) {
-        std::cout << "Key: (" << key[0] << ", " << key[1]
-        << ") -> Value: " << val << std::endl;
-    }
-
-    std::cout << "\n";
-    std::cout << std::string(50, '-') << "\n";
-
-}
-
-// Returns the matrix weight, in bytes
-template<typename T, StorageOrder Order>
-size_t Matrix<T, Order>::weight() const{
-    if (is_compressed()){
-        return (compressed_data_.values.size()+compressed_data_.inner_index.size()+compressed_data_.outer_ptr.size()) * sizeof(T);
-    }
-    else{
-        size_t size_per_element = sizeof(std::array<size_t, 2>) + sizeof(T) + 3 * sizeof(void*) + sizeof(bool);
-        return sizeof(sparse_data_) + sparse_data_.size() * size_per_element;
-    }
-}
+} */
 
 } // namespace algebra

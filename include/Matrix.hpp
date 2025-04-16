@@ -9,7 +9,7 @@
 
 namespace algebra {
 
-// To store the 3 vectors for the CSR/CSM storage 
+// To store the 3 vectors for the CSR/CSC storage 
 template<typename T>
 struct CompressedMatrix {
     std::vector<T> values;        // Contains non zero values
@@ -22,31 +22,27 @@ class Matrix {
 
 private:
     size_t rows_, cols_;
-    std::map<std::array<size_t, 2>, T> sparse_data_; //sparse dynamic storage
-    CompressedMatrix<T> compressed_data_; // compressed storage
-
+    std::map<std::array<size_t, 2>, T> sparse_data_; // sparse dynamic storage: COOmap
+    CompressedMatrix<T> compressed_data_; // compressed storage: CSR/CSC
 
 public:
+    // CONSTRUCTORS
     Matrix(size_t rows, size_t cols); // Constructor
     Matrix(const std::vector<std::vector<T>>& mat); // Constructor
-
-    void print() const; // Print matrix
-    void info() const; // Prints some useful matrix info
+    
+    // CORE METHODS
     bool update(const size_t i, const size_t j,const T& value); // Update element at position (i,j) to the specified value
-    bool is_compressed() const; // returns compression status
     void compress(); //matrix compression (from COOmap to CSR/CSC)
     void decompress(); // matrix decompression (from CSR/CSC to COOmap)
-    void compressedInfo() const; // prints CSR/CSC vectors
-    void printSparseData() const; 
-
     std::vector<T> product_by_vector(const std::vector<T>& v);
-    std::vector<T> extract_row(const size_t index ,int& k);
+    std::vector<T> extract_row(const size_t index ,size_t& k);
 
-    size_t weight() const;
-    size_t find_row_for_index(size_t idx) const;
-
-
-    //bool update(const size_t k, const T& value); // needed? to be decided.
+    // INFO & PRINTING METHODS
+    bool is_compressed() const; // returns compression status
+    size_t weight() const; // Returns the matrix space usage, in bytes
+    void printStorage() const; // prints CSR/CSC vectors or COOmap mapping, depending on compression status
+    void print() const; // Print matrix
+    void info() const; // Prints some useful matrix info
 };
 
 
