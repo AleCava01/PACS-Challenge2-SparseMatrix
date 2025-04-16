@@ -171,10 +171,7 @@ void Matrix<T, Order>::decompress() {
         }
     }
 
-    compressed_data_.inner_index.clear();
-    compressed_data_.values.clear();
-    compressed_data_.outer_ptr.clear();
-
+    compressed_data_.clear();
 }
 
 // checks if the Storage is with the compressed or uncompressed method
@@ -191,20 +188,26 @@ template<typename T, StorageOrder Order>
     // Create the output vector 
     std::vector<T> output = {};
 
-    size_t k = 0;
-    // Iterate over matrix rows to extract
-    for (size_t i = 0; i < rows_ ; i++){
+    if(is_compressed()){
+        size_t k = 0;
+        // Iterate over matrix rows to extract
+        for (size_t i = 0; i < rows_ ; i++){
+            
+            // Extract matrix row vector
+            std::vector<T> matrix_row = extract_row(i, k);
+
+            // Compute the dot product between row and the input vector
+            T result = matrix_row * v; // * operator has been overloaded in Utils.hpp
+
+            // Append to result
+            output.push_back(result);
+        }
+    }
+    else{
         
-        // Extract matrix row vector
-        std::vector<T> matrix_row = extract_row(i, k);
-
-        // Compute the dot product between row and the input vector
-        T result = matrix_row * v; // * operator has been overloaded in Utils.hpp
-
-        // Append to result
-        output.push_back(result);
     }
 
+    
     return output;
 }
 

@@ -1,21 +1,13 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
-#include "StorageOrder.hpp"
 #include <map>
 #include <array>
 #include <iostream>
 #include <vector>
-
+#include "StorageOrder.hpp"
+#include "CompressedMatrix.hpp"
 
 namespace algebra {
-
-// To store the 3 vectors for the CSR/CSC storage 
-template<typename T>
-struct CompressedMatrix {
-    std::vector<T> values;        // Contains non zero values
-    std::vector<size_t> inner_index; // Indexes of rows/columns
-    std::vector<size_t> outer_ptr;   // Pointers to the starting row/column
-};
 
 template<typename T, StorageOrder Order>
 class Matrix {
