@@ -95,20 +95,13 @@ void Matrix<T, Order>::info() const {
 // update(i,j,value) for sparse matrix if the matrix is dynamically stored as COOmap
 template<typename T, StorageOrder Order>
 bool Matrix<T, Order>::update(const size_t i, const size_t j, const T& value) {
-    if(!is_compressed()){
-        std::array<size_t, 2> key = {i, j};
-        if (value != T(0)) {
-            sparse_data_[key] = value;
-        } else {
-            sparse_data_.erase(key);
-        }
-        return true;
+    std::array<size_t, 2> key = {i, j};
+    if (value != T(0)) {
+        sparse_data_[key] = value;
+    } else {
+        sparse_data_.erase(key);
     }
-    else{
-        throw std::runtime_error("The matrix is compressed and it's element cannot be updated.");
-        return false;
-     }
-    
+    return true;
 }
 
 // Compression
@@ -193,7 +186,7 @@ bool Matrix<T, Order>::is_compressed() const{
 
 // Multiplication by vector
 template<typename T, StorageOrder Order>
-std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v){
+    std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v){
 
     // Create the output vector 
     std::vector<T> output = {};
@@ -211,6 +204,7 @@ std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v){
         // Append to result
         output.push_back(result);
     }
+
     return output;
 }
 
@@ -315,6 +309,34 @@ size_t Matrix<T, Order>::find_row_for_index(size_t idx) const {
     }
 
     throw std::out_of_range("Indice non trovato in nessuna riga.");
-} */
+} 
+    
+template<typename T, StorageOrder Order>
+void Matrix<T, Order>::printStorage_compressed() {
+    // Print CSR/CSC vectors
+    std::cout << std::string(50, '-') << "\n";
+    std::cout << "         Compressed Sparse Representation \n";
+    std::cout << std::string(50, '-') << "\n";
+
+    std::cout << "Values:        ";
+    for (const auto& v : compressed_data_.values) {
+        std::cout << v << " ";
+    }
+    std::cout << "\n";
+
+    std::cout << "Inner index:   ";
+    for (const auto& i : compressed_data_.inner_index) {
+        std::cout << i << " ";
+    }
+    std::cout << "\n";
+
+    std::cout << "Outer pointer: ";
+    for (const auto& o : compressed_data_.outer_ptr) {
+        std::cout << o << " ";
+    }
+    std::cout << "\n";
+    std::cout << std::string(50, '-') << "\n";
+}
+*/
 
 } // namespace algebra
