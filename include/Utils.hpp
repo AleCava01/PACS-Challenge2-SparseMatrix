@@ -34,4 +34,20 @@ std::vector<std::vector<int>> getRandomSparseMatrix(const size_t rows, const siz
     return matrix;
 }
 
+// overloading of * operator
+// Overload operator * 
+template<typename T>
+T operator*(const std::vector<T>& a, const std::vector<T>& b) {
+    if (a.size() != b.size()) {
+        throw std::invalid_argument("Vector sizes must match for dot product");
+    }
+
+    T result = T{};
+    for (size_t i = 0; i < a.size(); ++i) {
+        result += a[i] * b[i];
+    }
+
+    return result;
+}
+
 #endif // UTILS_HPP

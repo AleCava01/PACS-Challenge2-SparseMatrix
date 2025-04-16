@@ -183,20 +183,67 @@ bool Matrix<T, Order>::is_compressed() const{
 
 // Multiplication by vector
 template<typename T, StorageOrder Order>
-std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v) const{
+std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v){
 
-    // if the method used is CSR
-    std::vector<T> vect_out = {};  // initializing the output 
-    T result = 0;
+    // Creo il vettore di output 
+    std::vector<T> output = {};
+    int k = 0;
 
-    for (size_t i = 0; i < compressed_data_.values.size(); i++){
-        if (i == find_row_for_index(compressed_data_.values[i])){
-            result += v[i] * compressed_data_.value[i];
-        }
-        vect_out.push_back(result);
-        result = 0;
+
+    // 1. Iterare sulle righe della matirce e estrarre il vettore riga
+    // posso usare un metodo tipo quello di print per costruire il vettore 
+    for (int i = 0; i < rows_ ; i++){
+        
+        // Estraggo il vettore riga
+        std::vector<T> row_i = extract_row(i, k);
+
+        // faccio il prodotto scalare
+        T result = row_i * v;
+
+        output.push_back(result);
     }
-    return vect_out;
+
+    for (int i = 0; i < output.size(); i++){
+        std::cout << output[i] << " ";
+    }
+    std::cout << std::endl << "fine moltiplicazione" << std::endl;
+    return output;
+}
+
+
+// funziona solo per la prima riga
+template<typename T, StorageOrder Order>
+std::vector<T> Matrix<T, Order>::extract_row(size_t index, int& k){
+    std::vector<T> output = {};
+    // Da sistemare
+
+    if (compressed_data_.outer_ptr[index]!=compressed_data_.outer_ptr[index+1])
+    {
+        auto num_values = compressed_data_.outer_ptr[index+1]-compressed_data_.outer_ptr[index];
+        for(size_t j=0; j<cols_; ++j){
+            if(compressed_data_.inner_index[k]==j && num_values>0){
+                output.push_back(compressed_data_.values[k]);
+                k++;
+                num_values--;
+            }
+            else{
+                output.push_back(0);
+            }
+        }
+    }
+    else{
+        for(size_t j=0; j<cols_;++j){
+        output.push_back(0);
+        }
+    }
+
+    for (int i = 0; i < output.size(); i++){
+        std::cout << output[i] << " ";
+    }
+    
+    std::cout << std::endl << "fine riga " << std::endl;
+    std::cout << std::endl << std::endl;
+    return output;
 }
 
 // Funzione di supporto che dice in quale riga si trova l'elemento values[k]

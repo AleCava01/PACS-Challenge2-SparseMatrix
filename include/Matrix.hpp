@@ -39,10 +39,12 @@ public:
     void compressedInfo() const; // prints CSR/CSC vectors
     void printSparseData() const; 
 
-    std::vector<T> product_by_vector(const std::vector<T>& v) const;
+    std::vector<T> product_by_vector(const std::vector<T>& v);
+    std::vector<T> extract_row(const size_t index ,int& k);
 
     size_t weight() const;
     size_t find_row_for_index(size_t idx) const;
+
 
     //bool update(const size_t k, const T& value); // needed? to be decided.
 };
