@@ -27,7 +27,7 @@ public:
     void compress(); //matrix compression (from COOmap to CSR/CSC)
     void decompress(); // matrix decompression (from CSR/CSC to COOmap)
     std::vector<T> product_by_vector(const std::vector<T>& v);
-    std::vector<T> extract_row(const size_t index ,size_t& k);
+    std::vector<T> extract_row(const size_t index, size_t k);
 
     // INFO & PRINTING METHODS
     bool is_compressed() const; // returns compression status

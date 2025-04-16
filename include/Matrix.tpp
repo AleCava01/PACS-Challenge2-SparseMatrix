@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <typeinfo>
 #include <vector>
+#include <omp.h>
 
 namespace algebra{
 
@@ -183,28 +184,37 @@ bool Matrix<T, Order>::is_compressed() const{
 
 // Multiplication by vector
 template<typename T, StorageOrder Order>
-    std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v){
+std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v){
 
     // Create the output vector 
-    std::vector<T> output = {};
+    std::vector<T> output(rows_, 0);
 
     if(is_compressed()){
-        size_t k = 0;
-        // Iterate over matrix rows to extract
+        
+        // Compressed matrix * vector multiplication
+        std::vector<size_t> row_offset(rows_ + 1, 0); // stores the starting indexes to iterate over compressed_data_.values
+        // the row_offset vector will look like:
+        // [0, number_of_elements_in_the_first_row, number_of_elements_in_the_first_2_rows, ...]
+        for (size_t i = 0; i < rows_; ++i) {
+            row_offset[i+1] = row_offset[i] + compressed_data_.outer_ptr[i+1] - compressed_data_.outer_ptr[i];
+        }
+        // enabling parallel computing
+        #pragma omp parallel for
+        // Iterate over matrix rows
         for (size_t i = 0; i < rows_ ; i++){
             
             // Extract matrix row vector
-            std::vector<T> matrix_row = extract_row(i, k);
+            std::vector<T> matrix_row = extract_row(i,row_offset[i]);
 
             // Compute the dot product between row and the input vector
             T result = matrix_row * v; // * operator has been overloaded in Utils.hpp
 
-            // Append to result
-            output.push_back(result);
+            // update the output vector
+            output[i]=result;
         }
     }
     else{
-        
+
     }
 
     
@@ -213,9 +223,12 @@ template<typename T, StorageOrder Order>
 
 // Extract the specified row when the matrix is stored as CSR/CSC matrix.
 template<typename T, StorageOrder Order>
-std::vector<T> Matrix<T, Order>::extract_row(size_t index, size_t& k){
+std::vector<T> Matrix<T, Order>::extract_row(size_t index, size_t k){
     std::vector<T> row = {};
-
+    /* size_t k=0;
+    for(size_t i=0; i<index;++i){
+        k+=compressed_data_.outer_ptr[i+1]-compressed_data_.outer_ptr[i];
+    } */
     if (compressed_data_.outer_ptr[index]!=compressed_data_.outer_ptr[index+1])
     {
         auto num_values = compressed_data_.outer_ptr[index+1]-compressed_data_.outer_ptr[index];
