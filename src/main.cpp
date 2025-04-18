@@ -28,7 +28,7 @@ int main(){
     verbose::separator(50);
 
     // Matrix compression
-    mat.compress();
+    //mat.compress();
     mat.print();
     //mat.info();
 

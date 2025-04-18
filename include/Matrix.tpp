@@ -214,6 +214,12 @@ std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v) cons
         }
     }
     else{
+        //std::cout << "[DEBUG] Using uncompressed multiplication..." << std::endl;
+        for(const auto& [key, val] : sparse_data_){
+            size_t i = key[0];
+            size_t j = key[1];
+            output[i] += val * v[j]; // * operator has been overloaded in Utils.hpp
+        }
 
     }
 
