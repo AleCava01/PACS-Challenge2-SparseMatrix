@@ -28,7 +28,16 @@ int main(){
     verbose::separator(50);
 
     // Matrix compression
+
+    // Compress + Decompress Now (test uncompressed multiplication)
+    mat.compress();
+    mat.decompress();  // force uncompressed mode (triggers else branch in product_by_vector)
+
+    // Print compression status to verify logical branching
+    std::cout << "[DEBUG] Is compressed? " << std::boolalpha << mat.is_compressed() << "\n";
+
     //mat.compress();
+    //mat.decompress();
     mat.print();
     //mat.info();
 
