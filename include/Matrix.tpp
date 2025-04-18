@@ -227,6 +227,38 @@ std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v) cons
     return output;
 }
 
+// operator* for Matrix * (Matrix with one column)
+template<typename T, StorageOrder Order> // This function applies to any Matrix type with any storage order
+std::vector<T> Matrix<T, Order>::operator*(const Matrix<T, Order>& rhs) const {// The result is a plain std::vector<T>, representing the product result
+
+    //Check dimension compatibility
+    if (cols_ != rhs.rows_) { 
+        throw std::invalid_argument("Matrix dimensions do not match for multiplication.");
+    }
+
+    
+    //Convert rhs into a std::vector<T>
+    std::vector<T> vec(rhs.rows_, 0);
+
+   // Make sure rhs is decompressed
+    if (rhs.is_compressed()) {
+        Matrix<T, Order> rhs_copy = rhs;// We cannot modify rhs (it's a const reference), so we create a copy
+        rhs_copy.decompress();
+        for (const auto& [key, val] : rhs_copy.sparse_data_) {
+            vec[key[0]] = val; // key[0] represents the row index (since rhs is a column vector)
+        }
+    } else {
+        for (const auto& [key, val] : rhs.sparse_data_) {
+            vec[key[0]] = val; // If already uncompressed, directly extract values from sparse_data_
+        }
+    }
+    // Use existing method to perform matrix-vector multiplication
+    return this->product_by_vector(vec);
+}
+
+
+
+
 // Extract the specified row when the matrix is stored as CSR/CSC matrix.
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::extract_row(size_t index, size_t k) const{
@@ -309,6 +341,7 @@ size_t Matrix<T, Order>::weight() const{
         return sizeof(sparse_data_) + sparse_data_.size() * size_per_element;
     }
 }
+
 
 
 // DEPRECATED
