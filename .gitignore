@@ -33,3 +33,6 @@
 
 # compiled main
 main
+
+#vscode folder
+.vscode/

@@ -270,18 +270,11 @@ std::vector<T> Matrix<T, Order>::extract_row(size_t index, size_t k) const{
         for(size_t j=0; j<cols_; ++j){
             if(compressed_data_.inner_index[k]==j && num_values>0){
                 row[j] = compressed_data_.values[k];
-                //row.push_back(compressed_data_.values[k]);
                 k++;
                 num_values--;
             }
-            /* else{
-                row.push_back(0);
-            } */
         }
     }
-    /* else{
-        row.resize(cols_, 0);
-    } */
     return row;
 }
 
@@ -341,55 +334,5 @@ size_t Matrix<T, Order>::weight() const{
         return sizeof(sparse_data_) + sparse_data_.size() * size_per_element;
     }
 }
-
-
-
-// DEPRECATED
-/* // Funzione di supporto che dice in quale riga si trova l'elemento values[k]
-template<typename T, StorageOrder Order>
-size_t Matrix<T, Order>::find_row_for_index(size_t idx) const {
-    if (compressed_data_.outer_ptr.empty() || idx >= compressed_data_.values.size()) {
-        throw std::out_of_range("Indice non valido o dati compressi assenti.");
-    }
-
-    // CSR: ogni riga ha un intervallo [outer_ptr[i], outer_ptr[i+1])
-    for (size_t row = 0; row < rows_; ++row) {
-        size_t start = compressed_data_.outer_ptr[row];
-        size_t end = compressed_data_.outer_ptr[row + 1];
-        if (idx >= start && idx < end) {
-            return row;
-        }
-    }
-
-    throw std::out_of_range("Indice non trovato in nessuna riga.");
-} 
-    
-template<typename T, StorageOrder Order>
-void Matrix<T, Order>::printStorage_compressed() {
-    // Print CSR/CSC vectors
-    std::cout << std::string(50, '-') << "\n";
-    std::cout << "         Compressed Sparse Representation \n";
-    std::cout << std::string(50, '-') << "\n";
-
-    std::cout << "Values:        ";
-    for (const auto& v : compressed_data_.values) {
-        std::cout << v << " ";
-    }
-    std::cout << "\n";
-
-    std::cout << "Inner index:   ";
-    for (const auto& i : compressed_data_.inner_index) {
-        std::cout << i << " ";
-    }
-    std::cout << "\n";
-
-    std::cout << "Outer pointer: ";
-    for (const auto& o : compressed_data_.outer_ptr) {
-        std::cout << o << " ";
-    }
-    std::cout << "\n";
-    std::cout << std::string(50, '-') << "\n";
-}
-*/
 
 } // namespace algebra
