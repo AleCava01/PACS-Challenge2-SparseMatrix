@@ -187,49 +187,37 @@ bool Matrix<T, Order>::is_compressed() const{
 }
 
 // Multiplication by vector
+
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v) const {
 
     // Create the output vector 
     std::vector<T> output(rows_, 0);
 
-    if(is_compressed()){
-        // Compressed matrix * vector multiplication
-
-        std::vector<size_t> row_offset(rows_ + 1, 0); // stores the starting indexes to iterate over compressed_data_.values
-        // the row_offset vector will look like:
-        // [0, number_of_elements_in_the_first_row, number_of_elements_in_the_first_2_rows, ...]
+    if (is_compressed()) {
+        // ✅ Optimized compressed matrix * vector multiplication
+        //#pragma omp parallel for
         for (size_t i = 0; i < rows_; ++i) {
-            row_offset[i+1] = row_offset[i] + compressed_data_.outer_ptr[i+1] - compressed_data_.outer_ptr[i];
-        }
-        // enabling parallel computing
-        #pragma omp parallel for
-        // Iterate over matrix rows
-        for (size_t i = 0; i < rows_ ; i++){
-            
-            // Extract matrix row vector
-            std::vector<T> matrix_row = extract_row(i,row_offset[i]);
-
-            // Compute the dot product between row and the input vector
-            T result = matrix_row * v; // * operator has been overloaded in Utils.hpp
-
-            // update the output vector
-            output[i]=result;
+            T sum = 0;
+            for (size_t k = compressed_data_.outer_ptr[i]; k < compressed_data_.outer_ptr[i + 1]; ++k) {
+                sum += compressed_data_.values[k] * v[compressed_data_.inner_index[k]];
+            }
+            output[i] = sum;
         }
     }
-    else{
-        //std::cout << "[DEBUG] Using uncompressed multiplication..." << std::endl;
-        for(const auto& [key, val] : sparse_data_){
+    else {
+        // Uncompressed multiplication (COO)
+        for (const auto& [key, val] : sparse_data_) {
             size_t i = key[0];
             size_t j = key[1];
-            output[i] += val * v[j]; // * operator has been overloaded in Utils.hpp
+            output[i] += val * v[j];
         }
-
     }
 
-    
     return output;
 }
+
+
 
 // operator* for Matrix * (Matrix with one column)
 template<typename T, StorageOrder Order> // This function applies to any Matrix type with any storage order
