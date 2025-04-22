@@ -3,8 +3,12 @@
 #include <iostream>
 #include <iomanip>
 #include <typeinfo>
+#include <fstream>
 #include <vector>
 #include <omp.h>
+#include <zlib.h>
+#include <sstream>
+#include <string>
 
 namespace algebra{
 
@@ -334,5 +338,102 @@ size_t Matrix<T, Order>::weight() const{
         return sizeof(sparse_data_) + sparse_data_.size() * size_per_element;
     }
 }
+
+// Load the 
+template<typename T, StorageOrder Order>
+bool Matrix<T, Order>::mm_stringstream_to_sparsedata_loader(const std::istringstream& iss_original){
+    std::istringstream iss(iss_original.str()); // fai una copia per poter usare getline e >> separatamente
+    std::string line;
+    int max_row_idx = 0;
+    int max_col_idx = 0;
+
+    // Skip header and comments
+    while (std::getline(iss, line)) {
+        if (line.empty() || line[0] == '%') continue;
+        else break; // first non-comment line
+    }
+
+    // parse dimensions
+    std::istringstream header_line(line);
+    size_t rows, cols, entries;
+    if (!(header_line >> rows >> cols >> entries)) {
+        std::cerr << "Error parsing header line: " << line << std::endl;
+        return false;
+    }
+
+    // parse triplets
+    int row, col;
+    double value;
+    while (iss >> row >> col >> value) {
+        if (row > max_row_idx) max_row_idx = row;
+        if (col > max_col_idx) max_col_idx = col;
+        update(row - 1, col - 1, value); // Matrix Market is 1-based
+    }
+
+    rows_ = static_cast<size_t>(max_row_idx);
+    cols_ = static_cast<size_t>(max_col_idx);
+
+    return true;
+}
+
+template<typename T, StorageOrder Order>
+std::string Matrix<T, Order>::mm_extract_gz(const std::string& filename){
+    gzFile file = gzopen(filename.c_str(), "rb");
+    if (!file) {
+        std::cerr << "Error: could not open file " << filename << std::endl;
+        return "";
+    }
+    
+
+    constexpr int BUFFER_SIZE = 8192;
+    char buffer[BUFFER_SIZE];
+
+    std::string file_content;
+
+    int bytes_read;
+    while ((bytes_read = gzread(file, buffer, BUFFER_SIZE - 1)) > 0) {
+        buffer[bytes_read] = '\0'; // Null-terminate buffer
+        file_content += buffer;    // Accumulate contents
+    }
+
+    gzclose(file);
+    return file_content;
+}
+
+// Loads the Matrix Market Matrix from file
+template<typename T, StorageOrder Order>
+bool Matrix<T, Order>::mm_load_mtx(const std::string& filename){
+    
+    if (filename.ends_with(".mtx.gz")) {
+        sparse_data_.clear(); // clear sparse_data_ values
+        compressed_data_.clear(); // clear compressed data values
+
+        auto file_content = mm_extract_gz(filename);
+        std::istringstream iss(file_content);
+        return mm_stringstream_to_sparsedata_loader(iss);
+    } 
+    else if (filename.ends_with(".mtx")) {
+        sparse_data_.clear(); // clear sparse_data_ values
+        compressed_data_.clear(); // clear compressed data values
+
+        std::ifstream ifs(filename);
+        if (!ifs.is_open()) {
+            std::cerr << "Error: could not open file " << filename << std::endl;
+            return false;
+        }
+        
+        // Leggi il contenuto del file direttamente in un istringstream
+        std::istringstream iss;
+        iss.str(std::string((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>()));
+
+        return mm_stringstream_to_sparsedata_loader(iss);
+    }
+    else{
+        std::cout << "Not a Matrix Market file..." << std::endl;
+        return false;
+    }
+    
+}
+    
 
 } // namespace algebra

@@ -17,6 +17,12 @@ private:
     std::map<std::array<size_t, 2>, T> sparse_data_; // sparse dynamic storage: COOmap
     CompressedMatrix<T> compressed_data_; // compressed storage: CSR/CSC
 
+    // MATRIX MARKET PARSER PRIVATE METHODS
+    std::string mm_extract_gz(const std::string& filename);
+    void mm_read_mtx();
+    bool mm_stringstream_to_sparsedata_loader(const std::istringstream& iss);
+
+
 public:
     // CONSTRUCTORS
     Matrix(size_t rows, size_t cols); // Constructor
@@ -30,6 +36,8 @@ public:
     std::vector<T> extract_row(const size_t index, size_t k) const;
     std::vector<T> operator*(const Matrix<T, Order>& rhs) const;
 
+    // MATRIX MARKET PARSER METHODS
+    bool mm_load_mtx(const std::string& filename);
 
     // INFO & PRINTING METHODS
     bool is_compressed() const; // returns compression status
