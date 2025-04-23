@@ -442,7 +442,8 @@ size_t Matrix<T, Order>::weight() const{
 // Outputs: the memory size in bytes.
 
     if (is_compressed()){
-        return (compressed_data_.values.size()+compressed_data_.inner_index.size()+compressed_data_.outer_ptr.size()) * sizeof(T);
+        return compressed_data_.values.size() * sizeof(T)+ compressed_data_.inner_index.size() * sizeof(size_t)+ compressed_data_.outer_ptr.size() * sizeof(size_t);
+
     }
     else{
         size_t size_per_element = sizeof(std::array<size_t, 2>) + sizeof(T) + 3 * sizeof(void*) + sizeof(bool);
