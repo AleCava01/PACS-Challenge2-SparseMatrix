@@ -34,13 +34,11 @@ public:
     void decompress(); // matrix decompression (from CSR/CSC to COOmap)
     std::vector<T> compressed_product_by_vector(const std::vector<T>& v) const;
     std::vector<T> compressed_product_by_vector_parallel(const std::vector<T>& v) const;
-
     std::vector<T> product_by_vector(const std::vector<T>& v) const;
-    std::vector<T> product_by_vector_parallel(const std::vector<T>& v) const;
-    std::vector<T> extract_row(const size_t index, size_t k) const;
+    //std::vector<T> extract_row(const size_t index, size_t k) const;
     std::vector<T> operator*(const Matrix<T, Order>& rhs) const;
 
-    // MATRIX MARKET PARSER METHODS
+    // MATRIX MARKET PARSER + LOADER METHODS
     bool mm_load_mtx(const std::string& filename);
 
     // INFO & PRINTING METHODS

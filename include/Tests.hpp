@@ -12,9 +12,12 @@
 
 namespace tests{
     void multiplication_compressed_vs_uncompressed_speedtest(){
+    // Compares the performance (in milliseconds) of matrix-vector multiplication
+    // between compressed and uncompressed sparse matrix representations across various matrix sizes.
+
         std::cout << "=== Start performance comparison test ===\n\n";
 
-        std::vector<size_t> sizes = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000};
+        std::vector<size_t> sizes = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
 
         std::cout << std::left << std::setw(12) << "MatrixSize"
                 << std::setw(20) << "Compressed Time (ms)"
@@ -47,7 +50,12 @@ namespace tests{
 
         std::cout << "\n=== Done ===\n";
     }
+    
     void multiplication_compressed_parallel_vs_unparallel_speedtest(size_t num_iterations = 5) {
+    // Benchmarks the performance of compressed matrix-vector multiplication
+    // with and without parallelization across various matrix sizes and iterations.
+    // Results are printed to console and saved to "performance_results.csv".
+
         std::cout << "=== Start performance comparison test ===\n\n";
 
         std::vector<size_t> sizes = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000};
@@ -93,9 +101,12 @@ namespace tests{
         file.close();
         std::cout << "\n=== Done. Results saved to performance_results.csv ===\n";
     }
-    // Test multiplication
+    
     template<typename T, StorageOrder Order>
     std::tuple<std::vector<T>, long long> test_multiplication(const Matrix<T, Order>& mat, const std::vector<T>& v) {
+    // Measures the execution time of the matrix-vector multiplication
+    // and returns both the result and the duration (in microseconds).
+
         auto start = std::chrono::high_resolution_clock::now(); // start time
         std::vector<T> multiplication_result = mat.product_by_vector(v);
         auto end = std::chrono::high_resolution_clock::now(); // end time
@@ -104,9 +115,12 @@ namespace tests{
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
         return std::make_tuple(multiplication_result, duration);
     }
-    // Multiple testing
+    
     template<typename T, StorageOrder Order>
     std::tuple<std::vector<T>, long long> test_multiplication_mean(const Matrix<T, Order>& mat, const std::vector<T>& v, int repetitions = 10) {
+    // Measures the average execution time of matrix-vector multiplication
+    // over a specified number of repetitions and returns the last result and the mean duration.
+
         long long total_duration = 0;
         std::vector<T> last_result;
 
@@ -130,7 +144,11 @@ namespace tests{
         verbose::display_mat_times_vector_results(result, duration);
         verbose::separator(50);
     }
+    
     void matrix_vector_multiplication_test_1(){
+    // This function tests matrix-vector multiplication on both compressed and uncompressed sparse matrices.
+    // It initializes a sparse matrix and a vector, performs compression, and runs multiplication tests on both cases.
+
         // Sparse matrix and vector Initialization
         size_t n_row = 5;
         size_t n_col = 5;

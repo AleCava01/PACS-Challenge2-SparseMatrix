@@ -1,3 +1,8 @@
+/* This .tpp file contains the implementation of the Matrix class template. 
+It defines methods for matrix operations, including sparse matrix compression, matrix-vector multiplication, and I/O operations. 
+The implementation supports both uncompressed (COO) and compressed (CSR/CSC) formats, optimizing memory usage and performance for large datasets.
+ */
+
 #include "Matrix.hpp"
 #include "Utils.hpp"
 #include "Parameters.hpp"
@@ -14,18 +19,18 @@
 
 namespace algebra{
 
-// METHODS IMPLEMENTATION OF MATRIX CLASS
-
-// Matrix constructor (empty matrix initialization)
+// CONSTRUCTORS
 template<typename T, StorageOrder Order>
 Matrix<T, Order>::Matrix(size_t rows, size_t cols){
     rows_ = rows;
     cols_ = cols;
 }
 
-// Matrix constructor (matrix initialization)
 template<typename T, StorageOrder Order>
 Matrix<T, Order>::Matrix(const std::vector<std::vector<T>>& mat) {
+// Constructor from a 2D vector.
+// Initializes the matrix dimensions and populates sparse_data_ using the update() method.
+
     if (mat.empty() || mat[0].empty()) {
         rows_ = 0;
         cols_ = 0;
@@ -40,68 +45,12 @@ Matrix<T, Order>::Matrix(const std::vector<std::vector<T>>& mat) {
     }
 }
 
-// Matrix print function
-template<typename T, StorageOrder Order>
-void Matrix<T, Order>::print() const {
-    if (!is_compressed()){ 
-        // Print uncompressed matrix (sparse_data_)
-        for (std::size_t i = 0; i < rows_; ++i) {
-            for (std::size_t j = 0; j < cols_; ++j) {
-                std::array<size_t, 2> key = {i, j};
-                if (sparse_data_.count(key)) {
-                    std::cout << sparse_data_.at(key) << " ";
-                } else {
-                    std::cout << "0 ";
-                }
-            }
-            std::cout << std::endl;
-        }
-    }
-    else{
-        // Print compressed matrix (compressed_data_)
-        auto k = 0;
-        for(size_t i=0; i<compressed_data_.outer_ptr.size()-1; ++i){
-            if (compressed_data_.outer_ptr[i]!=compressed_data_.outer_ptr[i+1])
-            {
-                auto num_values = compressed_data_.outer_ptr[i+1]-compressed_data_.outer_ptr[i];
-                for(size_t j=0; j<cols_; ++j){
-                    if(compressed_data_.inner_index[k]==j && num_values>0){
-                        std::cout<<compressed_data_.values[k]<< " ";
-                        k++;
-                        num_values--;
-                    }
-                    else{
-                        std::cout<<"0 ";
-                    }
-                }
-                std::cout<<std::endl;
-            }
-            else{
-                for(size_t j=0; j<cols_;++j){std::cout<<"0 ";}
-                std::cout<<std::endl;
-            }     
-        }
-    }
-}
-
-// Matrix info display function
-template<typename T, StorageOrder Order>
-void Matrix<T, Order>::info() const {
-    std::cout << std::string(50, '*') << std::endl;
-    std::cout << "*           Matrix Information Summary           *" << std::endl;
-    std::cout << std::string(50, '*') << std::endl;
-    std::cout << std::left;
-    std::cout << std::setw(30) << "  Size:" << rows_ << " x " << cols_ << std::endl;
-    std::cout << std::setw(30) << "  Storage Order:" << storageOrderToString(Order) << std::endl;
-    std::cout << std::setw(30) << "  Element Type:" << demangle(typeid(T).name()) << std::endl;
-    std::cout << std::setw(30) << "  Compression status:" << (is_compressed() ? "Compressed" : "Uncompressed") << std::endl;
-    std::cout << std::setw(30) << "  Memory usage (bytes):" << weight() << std::endl;
-    std::cout << std::string(50, '*') << std::endl;
-}
-
-// update(i,j,value) for sparse matrix if the matrix is dynamically stored as COOmap
+// CORE METHODS
 template<typename T, StorageOrder Order>
 bool Matrix<T, Order>::update(const size_t i, const size_t j, const T& value) {
+// Updates the value at position (i, j) in the uncompressed (sparse_data_) format.
+// Inserts or updates the value if it's non-zero; removes the entry if the value is zero.
+ 
     std::array<size_t, 2> key = {i, j};
     if (value != T(0)) {
         sparse_data_[key] = value;
@@ -111,10 +60,10 @@ bool Matrix<T, Order>::update(const size_t i, const size_t j, const T& value) {
     return true;
 }
 
-// Compression
-// matrix compression (from COOmap to CSR/CSC)
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::compress() {
+// Converts the matrix from uncompressed (Coo-MAP) format to compressed format (CSR for RowMajor, CSC for ColMajor).
+// It builds compressed_data_ from sparse_data_ and then clears the uncompressed storage to save memory.
 
     // Determine the conversion type
     constexpr bool isRowMajor = (Order == StorageOrder::RowMajor);
@@ -157,10 +106,10 @@ void Matrix<T, Order>::compress() {
 
 }
 
-// Decompression
-// matrix decompression (from CSR/CSC to COOmap)
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::decompress() {
+// Converts the matrix from compressed form (CSR/CSC) to uncompressed form (Coo-MAP).
+// It reconstructs sparse_data_ using the compressed_data_ arrays and clears the compressed storage afterward.
 
     sparse_data_.clear();
 
@@ -181,16 +130,14 @@ void Matrix<T, Order>::decompress() {
     compressed_data_.clear();
 }
 
-// checks if the Storage is with the compressed or uncompressed method
-// returns compression status
-template<typename T, StorageOrder Order>
-bool Matrix<T, Order>::is_compressed() const{
-   return compressed_data_.values.size() != 0 && compressed_data_.inner_index.size() != 0 && compressed_data_.outer_ptr.size() != 0;
-}
 
-// Multiplication by vector
+// Product by Vector
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::compressed_product_by_vector_parallel(const std::vector<T>& v) const {
+// Multiplies a compressed matrix by a vector v using parallelization for faster computation.
+// Uses OpenMP to parallelize the dot product calculation for each row of the matrix.
+// Inputs: v - a vector of type T, Outputs: a vector of type T with the result of the multiplication.
+
     // Create the output vector 
     std::vector<T> output(rows_, 0);
 
@@ -205,8 +152,13 @@ std::vector<T> Matrix<T, Order>::compressed_product_by_vector_parallel(const std
     }
     return output;
 }
+
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::compressed_product_by_vector(const std::vector<T>& v) const {
+// Multiplies a compressed matrix by a vector v without parallelization.
+// Iterates over compressed data and computes the dot product for each row of the matrix.
+// Inputs: v - a vector of type T, Outputs: a vector of type T with the result of the multiplication.
+
     // Create the output vector 
     std::vector<T> output(rows_, 0);
 
@@ -223,6 +175,9 @@ std::vector<T> Matrix<T, Order>::compressed_product_by_vector(const std::vector<
 
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v) const {
+// Multiplies the matrix by a vector v. If the matrix is compressed, it uses either parallel or regular multiplication based on the number of rows. 
+// For uncompressed matrices in COO format, it performs the multiplication by iterating over sparse data.
+// Inputs: v - a vector of type T, Outputs: a vector of type T with the result of the multiplication.
 
     if (is_compressed()) {
         if(rows_>=params::NROWS_PARALLELIZATON_LIMIT){
@@ -247,49 +202,17 @@ std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v) cons
 
 }
 
-// Multiplication by vector
-
-template<typename T, StorageOrder Order>
-std::vector<T> Matrix<T, Order>::product_by_vector_parallel(const std::vector<T>& v) const {
-
-    // Create the output vector 
-    std::vector<T> output(rows_, 0);
-
-    if (is_compressed()) {
-        // Parallel compressed matrix * vector multiplication
-        #pragma omp parallel for
-        for (size_t i = 0; i < rows_; ++i) {
-            T sum = 0;
-            for (size_t k = compressed_data_.outer_ptr[i]; k < compressed_data_.outer_ptr[i + 1]; ++k) {
-                sum += compressed_data_.values[k] * v[compressed_data_.inner_index[k]];
-            }
-            output[i] = sum;
-        }
-    }
-    else {
-        // Uncompressed multiplication (COO)
-        for (const auto& [key, val] : sparse_data_) {
-            size_t i = key[0];
-            size_t j = key[1];
-            output[i] += val * v[j];
-        }
-    }
-
-    return output;
-}
-
-
-
-// operator* for Matrix * (Matrix with one column)
 template<typename T, StorageOrder Order> // This function applies to any Matrix type with any storage order
 std::vector<T> Matrix<T, Order>::operator*(const Matrix<T, Order>& rhs) const {// The result is a plain std::vector<T>, representing the product result
+// Overloads the * operator to perform matrix-vector multiplication when rhs is a column vector matrix.
+// Assumes rhs is effectively a column vector; converts it to std::vector<T> and uses product_by_vector for the computation.
+// Ensures rhs is in uncompressed form before extracting values.
 
     //Check dimension compatibility
     if (cols_ != rhs.rows_) { 
         throw std::invalid_argument("Matrix dimensions do not match for multiplication.");
     }
 
-    
     //Convert rhs into a std::vector<T>
     std::vector<T> vec(rhs.rows_, 0);
 
@@ -309,32 +232,168 @@ std::vector<T> Matrix<T, Order>::operator*(const Matrix<T, Order>& rhs) const {/
     return this->product_by_vector(vec);
 }
 
-
-
-
-// Extract the specified row when the matrix is stored as CSR/CSC matrix.
+// MATRIX MARKET PARSER + LOADER METHODS
 template<typename T, StorageOrder Order>
-std::vector<T> Matrix<T, Order>::extract_row(size_t index, size_t k) const{
-    std::vector<T> row(cols_, 0);
+bool Matrix<T, Order>::mm_stringstream_to_sparsedata_loader(const std::istringstream& iss_original){
+// Parses a Matrix Market file's content (from a stringstream) into sparse matrix data format.
+// Reads the header to get matrix dimensions, then processes triplets (row, column, value) to populate the matrix.
+// Inputs: iss_original - an input stringstream containing the file content, Outputs: true if parsing is successful, false otherwise.
 
-    if (compressed_data_.outer_ptr[index]!=compressed_data_.outer_ptr[index+1])
-    {
-        auto num_values = compressed_data_.outer_ptr[index+1]-compressed_data_.outer_ptr[index];
-        for(size_t j=0; j<cols_; ++j){
-            if(compressed_data_.inner_index[k]==j && num_values>0){
-                row[j] = compressed_data_.values[k];
-                k++;
-                num_values--;
-            }
-        }
+    std::istringstream iss(iss_original.str()); // fai una copia per poter usare getline e >> separatamente
+    std::string line;
+    int max_row_idx = 0;
+    int max_col_idx = 0;
+
+    // Skip header and comments
+    while (std::getline(iss, line)) {
+        if (line.empty() || line[0] == '%') continue;
+        else break; // first non-comment line
     }
-    return row;
+
+    // parse dimensions
+    std::istringstream header_line(line);
+    size_t rows, cols, entries;
+    if (!(header_line >> rows >> cols >> entries)) {
+        std::cerr << "Error parsing header line: " << line << std::endl;
+        return false;
+    }
+
+    // parse triplets
+    int row, col;
+    double value;
+    while (iss >> row >> col >> value) {
+        if (row > max_row_idx) max_row_idx = row;
+        if (col > max_col_idx) max_col_idx = col;
+        update(row - 1, col - 1, value); // Matrix Market is 1-based
+    }
+
+    rows_ = static_cast<size_t>(max_row_idx);
+    cols_ = static_cast<size_t>(max_col_idx);
+
+    return true;
 }
 
-// Print Storage
-// prints CSR/CSC vectors or COOmap mapping, depending on compression status
+template<typename T, StorageOrder Order>
+std::string Matrix<T, Order>::mm_extract_gz(const std::string& filename){
+// Extracts and reads the contents of a compressed (.gz) Matrix Market file.
+// Uses zlib's gz functions to read the file in chunks and accumulate its contents into a string.
+// Inputs: filename - the file path, Outputs: the content of the file as a string.
+
+    gzFile file = gzopen(filename.c_str(), "rb");
+    if (!file) {
+        std::cerr << "Error: could not open file " << filename << std::endl;
+        return "";
+    }
+    
+
+    
+    char buffer[params::BUFFER_SIZE];
+
+    std::string file_content;
+
+    int bytes_read;
+    while ((bytes_read = gzread(file, buffer, params::BUFFER_SIZE - 1)) > 0) {
+        buffer[bytes_read] = '\0'; // Null-terminate buffer
+        file_content += buffer;    // Accumulate contents
+    }
+
+    gzclose(file);
+    return file_content;
+}
+
+template<typename T, StorageOrder Order>
+bool Matrix<T, Order>::mm_load_mtx(const std::string& filename){
+// Loads a Matrix Market (.mtx or .mtx.gz) file and parses its contents into sparse data format.
+// Supports both compressed (.mtx.gz) and uncompressed (.mtx) Matrix Market files.
+// Inputs: filename - the file path, Outputs: true if loading is successful, false otherwise.
+
+    
+    if (filename.ends_with(".mtx.gz")) {
+        sparse_data_.clear(); // clear sparse_data_ values
+        compressed_data_.clear(); // clear compressed data values
+
+        auto file_content = mm_extract_gz(filename);
+        std::istringstream iss(file_content);
+        return mm_stringstream_to_sparsedata_loader(iss);
+    } 
+    else if (filename.ends_with(".mtx")) {
+        sparse_data_.clear(); // clear sparse_data_ values
+        compressed_data_.clear(); // clear compressed data values
+
+        std::ifstream ifs(filename);
+        if (!ifs.is_open()) {
+            std::cerr << "Error: could not open file " << filename << std::endl;
+            return false;
+        }
+        
+        // Leggi il contenuto del file direttamente in un istringstream
+        std::istringstream iss;
+        iss.str(std::string((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>()));
+
+        return mm_stringstream_to_sparsedata_loader(iss);
+    }
+    else{
+        std::cout << "Not a Matrix Market file..." << std::endl;
+        return false;
+    }
+    
+}
+    
+
+// INFO & PRINTING METHODS
+template<typename T, StorageOrder Order>
+void Matrix<T, Order>::print() const {
+// Prints the matrix in human-readable form.
+// If the matrix is uncompressed, it prints from sparse_data_.
+// If compressed, it reconstructs the row-wise representation using compressed_data_.
+
+    if (!is_compressed()){ 
+        // Print uncompressed matrix (sparse_data_)
+        for (std::size_t i = 0; i < rows_; ++i) {
+            for (std::size_t j = 0; j < cols_; ++j) {
+                std::array<size_t, 2> key = {i, j};
+                if (sparse_data_.count(key)) {
+                    std::cout << sparse_data_.at(key) << " ";
+                } else {
+                    std::cout << "0 ";
+                }
+            }
+            std::cout << std::endl;
+        }
+    }
+    else{
+        // Print compressed matrix (compressed_data_)
+        auto k = 0;
+        for(size_t i=0; i<compressed_data_.outer_ptr.size()-1; ++i){
+            if (compressed_data_.outer_ptr[i]!=compressed_data_.outer_ptr[i+1])
+            {
+                auto num_values = compressed_data_.outer_ptr[i+1]-compressed_data_.outer_ptr[i];
+                for(size_t j=0; j<cols_; ++j){
+                    if(compressed_data_.inner_index[k]==j && num_values>0){
+                        std::cout<<compressed_data_.values[k]<< " ";
+                        k++;
+                        num_values--;
+                    }
+                    else{
+                        std::cout<<"0 ";
+                    }
+                }
+                std::cout<<std::endl;
+            }
+            else{
+                for(size_t j=0; j<cols_;++j){std::cout<<"0 ";}
+                std::cout<<std::endl;
+            }     
+        }
+    }
+}
+
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::printStorage() const {
+// Prints the storage format of the matrix (compressed or uncompressed).
+// Displays the compressed sparse representation (CSR/CSC) or the uncompressed COO format, showing values, indices, and pointers.
+// Outputs the matrix storage details to the console.
+
     if(is_compressed()){
         // Print CSR/CSC vectors
         std::cout << std::string(50, '-') << "\n";
@@ -376,9 +435,12 @@ void Matrix<T, Order>::printStorage() const {
     }
 }
 
-// Returns the matrix space usage, in bytes
 template<typename T, StorageOrder Order>
 size_t Matrix<T, Order>::weight() const{
+// Calculates the memory usage (weight) of the matrix based on its storage format.
+// For compressed matrices, it sums the sizes of the values, indices, and pointers; for uncompressed, it estimates based on the sparse data structure.
+// Outputs: the memory size in bytes.
+
     if (is_compressed()){
         return (compressed_data_.values.size()+compressed_data_.inner_index.size()+compressed_data_.outer_ptr.size()) * sizeof(T);
     }
@@ -388,101 +450,49 @@ size_t Matrix<T, Order>::weight() const{
     }
 }
 
-// Load the 
 template<typename T, StorageOrder Order>
-bool Matrix<T, Order>::mm_stringstream_to_sparsedata_loader(const std::istringstream& iss_original){
-    std::istringstream iss(iss_original.str()); // fai una copia per poter usare getline e >> separatamente
-    std::string line;
-    int max_row_idx = 0;
-    int max_col_idx = 0;
+bool Matrix<T, Order>::is_compressed() const{
+// Checks whether the matrix is in compressed form (CSR/CSC).
+// Returns true if all three components of compressed_data_ are non-empty.
 
-    // Skip header and comments
-    while (std::getline(iss, line)) {
-        if (line.empty() || line[0] == '%') continue;
-        else break; // first non-comment line
-    }
-
-    // parse dimensions
-    std::istringstream header_line(line);
-    size_t rows, cols, entries;
-    if (!(header_line >> rows >> cols >> entries)) {
-        std::cerr << "Error parsing header line: " << line << std::endl;
-        return false;
-    }
-
-    // parse triplets
-    int row, col;
-    double value;
-    while (iss >> row >> col >> value) {
-        if (row > max_row_idx) max_row_idx = row;
-        if (col > max_col_idx) max_col_idx = col;
-        update(row - 1, col - 1, value); // Matrix Market is 1-based
-    }
-
-    rows_ = static_cast<size_t>(max_row_idx);
-    cols_ = static_cast<size_t>(max_col_idx);
-
-    return true;
+   return compressed_data_.values.size() != 0 && compressed_data_.inner_index.size() != 0 && compressed_data_.outer_ptr.size() != 0;
 }
 
 template<typename T, StorageOrder Order>
-std::string Matrix<T, Order>::mm_extract_gz(const std::string& filename){
-    gzFile file = gzopen(filename.c_str(), "rb");
-    if (!file) {
-        std::cerr << "Error: could not open file " << filename << std::endl;
-        return "";
-    }
-    
-
-    
-    char buffer[params::BUFFER_SIZE];
-
-    std::string file_content;
-
-    int bytes_read;
-    while ((bytes_read = gzread(file, buffer, params::BUFFER_SIZE - 1)) > 0) {
-        buffer[bytes_read] = '\0'; // Null-terminate buffer
-        file_content += buffer;    // Accumulate contents
-    }
-
-    gzclose(file);
-    return file_content;
+void Matrix<T, Order>::info() const {
+    std::cout << std::string(50, '*') << std::endl;
+    std::cout << "*           Matrix Information Summary           *" << std::endl;
+    std::cout << std::string(50, '*') << std::endl;
+    std::cout << std::left;
+    std::cout << std::setw(30) << "  Size:" << rows_ << " x " << cols_ << std::endl;
+    std::cout << std::setw(30) << "  Storage Order:" << storageOrderToString(Order) << std::endl;
+    std::cout << std::setw(30) << "  Element Type:" << demangle(typeid(T).name()) << std::endl;
+    std::cout << std::setw(30) << "  Compression status:" << (is_compressed() ? "Compressed" : "Uncompressed") << std::endl;
+    std::cout << std::setw(30) << "  Memory usage (bytes):" << weight() << std::endl;
+    std::cout << std::string(50, '*') << std::endl;
 }
 
-// Loads the Matrix Market Matrix from file
+
+
+// DEPRECATED
+/* // Extract the specified row when the matrix is stored as CSR/CSC matrix.
 template<typename T, StorageOrder Order>
-bool Matrix<T, Order>::mm_load_mtx(const std::string& filename){
-    
-    if (filename.ends_with(".mtx.gz")) {
-        sparse_data_.clear(); // clear sparse_data_ values
-        compressed_data_.clear(); // clear compressed data values
+std::vector<T> Matrix<T, Order>::extract_row(size_t index, size_t k) const{
+    std::vector<T> row(cols_, 0);
 
-        auto file_content = mm_extract_gz(filename);
-        std::istringstream iss(file_content);
-        return mm_stringstream_to_sparsedata_loader(iss);
-    } 
-    else if (filename.ends_with(".mtx")) {
-        sparse_data_.clear(); // clear sparse_data_ values
-        compressed_data_.clear(); // clear compressed data values
-
-        std::ifstream ifs(filename);
-        if (!ifs.is_open()) {
-            std::cerr << "Error: could not open file " << filename << std::endl;
-            return false;
+    if (compressed_data_.outer_ptr[index]!=compressed_data_.outer_ptr[index+1])
+    {
+        auto num_values = compressed_data_.outer_ptr[index+1]-compressed_data_.outer_ptr[index];
+        for(size_t j=0; j<cols_; ++j){
+            if(compressed_data_.inner_index[k]==j && num_values>0){
+                row[j] = compressed_data_.values[k];
+                k++;
+                num_values--;
+            }
         }
-        
-        // Leggi il contenuto del file direttamente in un istringstream
-        std::istringstream iss;
-        iss.str(std::string((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>()));
-
-        return mm_stringstream_to_sparsedata_loader(iss);
     }
-    else{
-        std::cout << "Not a Matrix Market file..." << std::endl;
-        return false;
-    }
-    
+    return row;
 }
-    
+ */
 
 } // namespace algebra
