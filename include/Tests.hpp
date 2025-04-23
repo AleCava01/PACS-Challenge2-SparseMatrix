@@ -9,6 +9,7 @@
 #include <numeric>
 #include "Matrix.hpp"
 #include "Utils.hpp"
+#include <random> 
 
 namespace tests{
     void multiplication_compressed_vs_uncompressed_speedtest(){
@@ -169,6 +170,49 @@ namespace tests{
         mat.info();
         test_multiply(mat, v); // test matrix * vector multiplication / uncompressed case
 
+    }
+    void matrix_market_speedtest(const std::string& filename) {
+        using namespace algebra;
+        using std::cout;
+        using std::cerr;
+        using std::endl;
+        using std::fixed;
+        using std::setprecision;
+
+        cout << "=== Matrix Market Speed Test (" << filename << ") ===\n\n";
+
+        // 1) 从文件加载稀疏矩阵
+        Matrix<double, StorageOrder::RowMajor> mat(0, 0);
+        if (!mat.mm_load_mtx(filename)) {
+            cerr << "❌ Failed to load Matrix Market file: " << filename << "\n";
+            return;
+        }
+
+        // 打印基本信息（包括行、列数）
+        mat.info();
+
+        // 2) 生成一个长度等于列数的随机向量
+        size_t n = mat.cols();  // 这里需要 Matrix 类暴露一个 public cols() 方法
+        std::vector<double> vec(n);
+        std::mt19937_64 gen(std::random_device{}());
+        std::uniform_real_distribution<> dist(1.0, 9.0);
+        for (size_t i = 0; i < n; ++i) {
+            vec[i] = dist(gen);
+        }
+
+        // 3) 压缩后乘法
+        mat.compress();
+        auto [res_c, time_c] = test_multiplication(mat, vec);
+
+        // 4) 解压后乘法
+        mat.decompress();
+        auto [res_u, time_u] = test_multiplication(mat, vec);
+
+        // 5) 输出对比结果
+        cout << fixed << setprecision(3);
+        cout << "\nCompressed Time:   " << (time_c / 1000.0) << " ms\n";
+        cout << "Uncompressed Time: " << (time_u / 1000.0) << " ms\n";
+        cout << "=== Done ===\n";
     }
 }
 

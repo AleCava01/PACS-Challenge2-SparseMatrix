@@ -27,6 +27,8 @@ public:
     // CONSTRUCTORS
     Matrix(size_t rows, size_t cols); // Constructor
     Matrix(const std::vector<std::vector<T>>& mat); // Constructor
+
+    size_t cols() const { return cols_; }
     
     // CORE METHODS
     bool update(const size_t i, const size_t j,const T& value); // Update element at position (i,j) to the specified value
