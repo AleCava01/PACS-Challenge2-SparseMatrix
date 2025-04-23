@@ -1,5 +1,7 @@
 #include "Matrix.hpp"
 #include "Utils.hpp"
+#include "Parameters.hpp"
+
 #include <iostream>
 #include <iomanip>
 #include <typeinfo>
@@ -187,16 +189,75 @@ bool Matrix<T, Order>::is_compressed() const{
 }
 
 // Multiplication by vector
+template<typename T, StorageOrder Order>
+std::vector<T> Matrix<T, Order>::compressed_product_by_vector_parallel(const std::vector<T>& v) const {
+    // Create the output vector 
+    std::vector<T> output(rows_, 0);
+
+    // Parallel compressed matrix * vector multiplication
+    #pragma omp parallel for
+    for (size_t i = 0; i < rows_; ++i) {
+        T sum = 0;
+        for (size_t k = compressed_data_.outer_ptr[i]; k < compressed_data_.outer_ptr[i + 1]; ++k) {
+            sum += compressed_data_.values[k] * v[compressed_data_.inner_index[k]];
+        }
+        output[i] = sum;
+    }
+    return output;
+}
+template<typename T, StorageOrder Order>
+std::vector<T> Matrix<T, Order>::compressed_product_by_vector(const std::vector<T>& v) const {
+    // Create the output vector 
+    std::vector<T> output(rows_, 0);
+
+    // Not parallel multiplication, to avoid unnecessary overhead
+    for (size_t i = 0; i < rows_; ++i) {
+        T sum = 0;
+        for (size_t k = compressed_data_.outer_ptr[i]; k < compressed_data_.outer_ptr[i + 1]; ++k) {
+            sum += compressed_data_.values[k] * v[compressed_data_.inner_index[k]];
+        }
+        output[i] = sum;
+    }
+    return output;
+}
 
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v) const {
+
+    if (is_compressed()) {
+        if(rows_>=params::NROWS_PARALLELIZATON_LIMIT){
+            return compressed_product_by_vector_parallel(v);
+        }
+        else{
+            return compressed_product_by_vector(v);
+        }
+    }
+    else {
+        // Create the output vector 
+        std::vector<T> output(rows_, 0);
+
+        // Uncompressed multiplication (COO)
+        for (const auto& [key, val] : sparse_data_) {
+            size_t i = key[0];
+            size_t j = key[1];
+            output[i] += val * v[j];
+        }
+        return output;
+    }
+
+}
+
+// Multiplication by vector
+
+template<typename T, StorageOrder Order>
+std::vector<T> Matrix<T, Order>::product_by_vector_parallel(const std::vector<T>& v) const {
 
     // Create the output vector 
     std::vector<T> output(rows_, 0);
 
     if (is_compressed()) {
-        // ✅ Optimized compressed matrix * vector multiplication
-        //#pragma omp parallel for
+        // Parallel compressed matrix * vector multiplication
+        #pragma omp parallel for
         for (size_t i = 0; i < rows_; ++i) {
             T sum = 0;
             for (size_t k = compressed_data_.outer_ptr[i]; k < compressed_data_.outer_ptr[i + 1]; ++k) {
@@ -373,13 +434,13 @@ std::string Matrix<T, Order>::mm_extract_gz(const std::string& filename){
     }
     
 
-    constexpr int BUFFER_SIZE = 8192;
-    char buffer[BUFFER_SIZE];
+    
+    char buffer[params::BUFFER_SIZE];
 
     std::string file_content;
 
     int bytes_read;
-    while ((bytes_read = gzread(file, buffer, BUFFER_SIZE - 1)) > 0) {
+    while ((bytes_read = gzread(file, buffer, params::BUFFER_SIZE - 1)) > 0) {
         buffer[bytes_read] = '\0'; // Null-terminate buffer
         file_content += buffer;    // Accumulate contents
     }

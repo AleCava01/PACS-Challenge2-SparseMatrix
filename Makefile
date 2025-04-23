@@ -26,11 +26,12 @@ endif
 
 SRC_DIR  = src
 OBJ_DIR  = obj
+OUT_DIR  = output
 SOURCES  = $(wildcard $(SRC_DIR)/*.cpp)
 OBJECTS  = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SOURCES))
 
 EXEC     = main
-LDFLAGS ?= -fopenmp
+LDFLAGS ?= -fopenmp -lz
 LDLIBS  ?= 
 
 all: $(EXEC)
@@ -52,5 +53,5 @@ clean:
 	
 distclean:
 	$(RM) -r $(OBJ_DIR) $(EXEC) *.o
-	$(RM) $(EXEC) $(EXEC_MUPARSER)
+	$(RM) -f $(OUT_DIR)/* *.csv
 	$(RM) *~

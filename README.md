@@ -6,15 +6,6 @@
   <a href="https://img.shields.io/badge/clang-18.1.3-blue"><img src="https://img.shields.io/badge/clang-18.1.3-blue" alt="clang"></a>
 </p>
 
-## TO-DO
-Public Methods to implement:
-- Update() method:
-  - with three parameters (i,j,value): sets the corresponding item to the required value :white_check_mark: DONE
-  - with two parameters (k, value): sets the element at index k to the required value  :white_check_mark: DONE
-  - with one parameter (Eigen::MatrixXd or std::vector<std::vector<int>> or int matrix[3][4]): update the whole matrix with the one passed as parameter.
-- Compress() method: does what it says
-- Expand() method: decompress the compressed matrix.
-
 
 # Project Structure and Description
 ```
@@ -32,48 +23,36 @@ challenge2-gasati/
 ├── LICENSE
 └── README.md
 ```
-## Matrix Class (Matrix.hpp + Matrix.tpp)
-### Matrix Storage Method
-In our Matrix class implementation, the matrix is stored in a vector using one of the following methods:
-- Row-major ordering
-- Column-major ordering
+### Parallelization
+We implemented a matrix-vector multiplication method that automatically selects parallel or sequential execution based on the number of rows in the matrix. If the matrix is compressed and has more rows than a certain threshold (```NROWS_PARALLELIZATON_LIMIT```), the parallel version is used to leverage performance on large data. Otherwise, the sequential version is used, which is typically faster for smaller inputs due to lower overhead.
 
-In the row-major (or column-major) storage system, the matrix elements are stored in a one-dimensional vector by traversing the matrix row by row (or column by column, respectively).
+To determine the optimal threshold, we conducted multiple benchmark runs comparing both methods on matrices of increasing size. 
 
-With the Row-major ordering method, the mapping from two-dimensional indices $(i,j)$ to a one-dimensional index $k$ is given by the formula:
-$$k=i\cdot M+j$$
-where $M$ is the number of columns in the matrix.
+![parallel_vs_unparalleled](./assets/parallel_vs_unparalleled.png)
 
-Similarly, with the Column-major ordering method, the mapping from two-dimensional indices $(i,j)$ to a one-dimensional index $k$ is given by the formula:
-$$k=j\cdot N+i$$
-where $N$ is the number of rows in the matrix.
-
-
-![row-major-fig](assets/row-major-fig.jpg)*Example of Row-major storage method. You can check that $k=i\cdot M+j$ holds true.*
-
-In our implementation,
-- N = ```type_t rows_``` (private attribute of the Matrix class)
-- M = ```type_t cols_``` (private attribute of the Matrix class)
-- vector = ```vector<T> data_``` (private attribute of the Matrix class)
-- the conversion $(i,j)\to k$ is done by the private method ```Matrix::index(i,j) ```
-
-## Utils header (Utils.hpp)
-Utils contains the following functions:
-- demangle: used to obtain a human-readable type name for ```T``` in the ```Matrix::info()``` method.
+Based on these tests, we found the inversion point—where parallel computation begins to outperform the sequential one—to be around 1500 rows, and thus we set ```NROWS_PARALLELIZATON_LIMIT = 1500``` in ```include\Parameters.hpp```.
 
 
 
-# Setup (Linux)
+
+# Setup (Linux / macOS)
 ### Prerequisites
-Ensure you have the following dependencies installed on your Linux environment:
-- C++ Compiler (Clang, GCC, MSVC)
-- Make
+Ensure you have the following dependencies installed on your environment:
+- C++20-compatible compiler (e.g., GCC, Clang)
+- GNU Make
+- CMake
+- zlib development libraries
+- OpenMPI
 
-To install all the prerequisites, run the following command:
- ```
- sudo apt update && sudo apt install g++ cmake make
+📦 Install all prerequisites (Debian/Ubuntu)
 ```
-(the project was tested using C++ 20, GNU Make 3.27.6, clang 18.1.3)
+sudo apt update && sudo apt install -y g++ clang cmake make zlib1g-dev libopenmpi-dev openmpi-bin
+```
+🍎 For macOS (via Homebrew)
+```
+brew install gcc clang cmake make zlib open-mpi
+```
+
 ### Building the Project
 Clone the repository:
 ``` 

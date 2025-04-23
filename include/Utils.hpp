@@ -19,21 +19,20 @@ void print(const std::vector<T>& vec, const std::string& delimiter = ", "){
     std::cout << "]" << std::endl;
 }
 
-
 namespace verbose{
     void separator(const size_t i){
         std::cout<<std::string(i,'-')<<std::endl;
     }
     template<typename T>
     void display_mat_times_vector_results(const std::vector<T>& multiplication_result, const auto& duration){
-        std::cout << "Multiplication result: ";
+        std::cout << "Multiplication result: " << std::endl;
         print(multiplication_result);
         std::cout << "Execution time: " << duration << " µs" << std::endl;
     }
+
 } // namespace verbose
 
 using namespace algebra;
-
 
 // Function to get the type name from
 std::string demangle(const char* mangled) {
@@ -80,36 +79,6 @@ T operator*(const std::vector<T>& a, const std::vector<T>& b) {
         result += a[i] * b[i];
     }
     return result;
-}
-
-
-// Test multiplication
-template<typename T, StorageOrder Order>
-std::tuple<std::vector<T>, long long> test_multiplication(const Matrix<T, Order>& mat, const std::vector<T>& v) {
-    auto start = std::chrono::high_resolution_clock::now(); // start time
-    std::vector<T> multiplication_result = mat.product_by_vector(v);
-    auto end = std::chrono::high_resolution_clock::now(); // end time
-
-    // Duration in microseconds
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-    return std::make_tuple(multiplication_result, duration);
-}
-
-
-// Multiple testing
-template<typename T, StorageOrder Order>
-std::tuple<std::vector<T>, long long> test_multiplication_mean(const Matrix<T, Order>& mat, const std::vector<T>& v, int repetitions = 10) {
-    long long total_duration = 0;
-    std::vector<T> last_result;
-
-    for (int i = 0; i < repetitions; ++i) {
-        auto [result, duration] = test_multiplication(mat, v);
-        total_duration += duration;
-        last_result = std::move(result); // store only the last value
-    }
-
-    long long mean_duration = total_duration / repetitions;
-    return {last_result, mean_duration};
 }
 
 
