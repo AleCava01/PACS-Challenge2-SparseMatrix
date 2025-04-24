@@ -47,7 +47,7 @@ public:
     bool is_compressed() const; // returns compression status
     size_t weight() const; // Returns the matrix space usage, in bytes
     void printStorage() const; // prints CSR/CSC vectors or COOmap mapping, depending on compression status
-    void print() const; // Print matrix
+    void print(int width = 6) const; // Print matrix
     void info() const; // Prints some useful matrix info
 };
 

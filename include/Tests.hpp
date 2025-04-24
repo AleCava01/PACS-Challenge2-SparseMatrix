@@ -26,8 +26,8 @@ namespace tests{
         std::cout << std::string(56, '-') << "\n";
 
         for (size_t size : sizes) {
-            Matrix<int, StorageOrder::RowMajor> mat(getRandomSparseMatrix(size, size, 0.95));
-            std::vector<int> vec = getRandomVector(size);
+            Matrix<int, StorageOrder::RowMajor> mat(getRandomSparseMatrix<int>(size, size, 0.95));
+            std::vector<int> vec = getRandomVector<int>(size);
 
             // Compressed
             mat.compress();
@@ -71,8 +71,8 @@ namespace tests{
 
         for (size_t size : sizes) {
             for (size_t iter = 0; iter < num_iterations; ++iter) {
-                Matrix<int, StorageOrder::RowMajor> mat(getRandomSparseMatrix(size, size, 0.95));
-                std::vector<int> vec = getRandomVector(size);
+                Matrix<int, StorageOrder::RowMajor> mat(getRandomSparseMatrix<int>(size, size, 0.95));
+                std::vector<int> vec = getRandomVector<int>(size);
                 mat.compress();
 
                 // Compressed
@@ -137,10 +137,11 @@ namespace tests{
 
     template<typename T, StorageOrder Order>
     void test_multiply(const Matrix<T, Order>& mat, const std::vector<T>& v){
-        std::vector<int> multiplication_result = mat.product_by_vector(v);
+        auto multiplication_result = mat.product_by_vector(v);
         verbose::separator(50);
-        std::cout << "v: ";
+        std::cout << "v: " << std::endl;
         print(v);
+        std::cout<<std::endl;
         auto [result, duration] = tests::test_multiplication_mean(mat,v,100);
         verbose::display_mat_times_vector_results(result, duration);
         verbose::separator(50);
@@ -154,37 +155,32 @@ namespace tests{
         size_t n_row = 5;
         size_t n_col = 5;
         double sparsity_coeff = 0.9;
-        Matrix<int, algebra::StorageOrder::RowMajor> mat(getRandomSparseMatrix(n_row,n_col,sparsity_coeff));
-        std::vector<int> v = getRandomVector(n_row);
+        Matrix<int, algebra::StorageOrder::RowMajor> mat(getRandomSparseMatrix<int>(n_row,n_col,sparsity_coeff));
+        std::vector<int> v = getRandomVector<int>(n_row);
         verbose::separator(50);
 
         // Matrix compression
         mat.compress();
-        //mat.print();
+        mat.print();
         mat.info();
         test_multiply(mat, v); // test matrix * vector multiplication / compressed case
 
         // Matrix decompression
         mat.decompress();
-        //mat.print();
+        mat.print();
         mat.info();
         test_multiply(mat, v); // test matrix * vector multiplication / uncompressed case
 
     }
+    
     void matrix_market_speedtest(const std::string& filename) {
-        using namespace algebra;
-        using std::cout;
-        using std::cerr;
-        using std::endl;
-        using std::fixed;
-        using std::setprecision;
 
-        cout << "=== Matrix Market Speed Test (" << filename << ") ===\n\n";
+        std::cout << "=== Matrix Market Speed Test (" << filename << ") ===\n\n";
 
         // Load sparse matrix from file
-        Matrix<double, StorageOrder::RowMajor> mat(0, 0);
+        algebra::Matrix<double, StorageOrder::RowMajor> mat(0, 0);
         if (!mat.mm_load_mtx(filename)) {
-            cerr << "❌ Failed to load Matrix Market file: " << filename << "\n";
+            std::cerr << "❌ Failed to load Matrix Market file: " << filename << "\n";
             return;
         }
 
@@ -209,11 +205,23 @@ namespace tests{
         auto [res_u, time_u] = test_multiplication(mat, vec);
 
         // Print results
-        cout << fixed << setprecision(3);
-        cout << "\nCompressed Time:   " << (time_c / 1000.0) << " ms\n";
-        cout << "Uncompressed Time: " << (time_u / 1000.0) << " ms\n";
-        cout << "=== Done ===\n";
+        std::cout << std::fixed << std::setprecision(3);
+        std::cout << "\nCompressed Time:   " << (time_c / 1000.0) << " ms\n";
+        std::cout << "Uncompressed Time: " << (time_u / 1000.0) << " ms\n";
+        std::cout << "=== Done ===\n";
     }
+
+    void complex_matrix_times_vector_test(){
+        size_t rows = 4;
+        size_t cols = 4;
+        auto complex_matrix = getRandomSparseMatrix<std::complex<double>>(rows,cols,0.8);
+        auto complex_vector = getRandomVector<std::complex<double>>(rows);
+        auto mat = Matrix<std::complex<double>,StorageOrder::RowMajor>(complex_matrix);
+        mat.compress();
+        mat.print(20);
+        test_multiply(mat,complex_vector);
+    }
+
 }
 
 

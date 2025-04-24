@@ -7,11 +7,10 @@
 using namespace algebra;
 
 int main(){
-    tests::matrix_vector_multiplication_test_1();
-    Matrix<double, StorageOrder::RowMajor> mat(1,1);
-    mat.mm_load_mtx("./assets/lnsp_131.mtx.gz");
-    mat.info();
+    //tests::matrix_vector_multiplication_test_1();
     //tests::multiplication_compressed_parallel_vs_unparallel_speedtest();
-    tests::multiplication_compressed_vs_uncompressed_speedtest();
+    //tests::multiplication_compressed_vs_uncompressed_speedtest();
+    //tests::matrix_market_speedtest("./assets/lnsp_131.mtx.gz");
+    tests::complex_matrix_times_vector_test();
     return 0;
 }

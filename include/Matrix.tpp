@@ -12,6 +12,7 @@ The implementation supports both uncompressed (COO) and compressed (CSR/CSC) for
 #include <typeinfo>
 #include <fstream>
 #include <vector>
+#include <unordered_map>
 #include <omp.h>
 #include <zlib.h>
 #include <sstream>
@@ -342,48 +343,45 @@ bool Matrix<T, Order>::mm_load_mtx(const std::string& filename){
 
 // INFO & PRINTING METHODS
 template<typename T, StorageOrder Order>
-void Matrix<T, Order>::print() const {
-// Prints the matrix in human-readable form.
-// If the matrix is uncompressed, it prints from sparse_data_.
-// If compressed, it reconstructs the row-wise representation using compressed_data_.
+void Matrix<T, Order>::print(int width) const {
+    // Prints the matrix in a tabular, human-readable form.
+    // If the matrix is uncompressed, it prints from sparse_data_.
+    // If compressed, it reconstructs the row-wise representation using compressed_data_.
+    // Parameters:
+    //   width (optional): number of characters per column (default = 6, see Matrix.hpp).
 
-    if (!is_compressed()){ 
-        // Print uncompressed matrix (sparse_data_)
+    if (!is_compressed()) {
+        // Uncompressed mode
         for (std::size_t i = 0; i < rows_; ++i) {
             for (std::size_t j = 0; j < cols_; ++j) {
                 std::array<size_t, 2> key = {i, j};
                 if (sparse_data_.count(key)) {
-                    std::cout << sparse_data_.at(key) << " ";
+                    std::cout << std::setw(width) << sparse_data_.at(key);
                 } else {
-                    std::cout << "0 ";
+                    std::cout << std::setw(width) << T(0);
                 }
             }
-            std::cout << std::endl;
+            std::cout << '\n';
         }
-    }
-    else{
-        // Print compressed matrix (compressed_data_)
-        auto k = 0;
-        for(size_t i=0; i<compressed_data_.outer_ptr.size()-1; ++i){
-            if (compressed_data_.outer_ptr[i]!=compressed_data_.outer_ptr[i+1])
-            {
-                auto num_values = compressed_data_.outer_ptr[i+1]-compressed_data_.outer_ptr[i];
-                for(size_t j=0; j<cols_; ++j){
-                    if(compressed_data_.inner_index[k]==j && num_values>0){
-                        std::cout<<compressed_data_.values[k]<< " ";
-                        k++;
-                        num_values--;
-                    }
-                    else{
-                        std::cout<<"0 ";
-                    }
-                }
-                std::cout<<std::endl;
+    } else {
+        // Compressed mode
+        for (size_t i = 0; i < compressed_data_.outer_ptr.size() - 1; ++i) {
+            auto row_start = compressed_data_.outer_ptr[i];
+            auto row_end = compressed_data_.outer_ptr[i + 1];
+
+            std::unordered_map<size_t, T> row_values;
+            for (size_t idx = row_start; idx < row_end; ++idx) {
+                row_values[compressed_data_.inner_index[idx]] = compressed_data_.values[idx];
             }
-            else{
-                for(size_t j=0; j<cols_;++j){std::cout<<"0 ";}
-                std::cout<<std::endl;
-            }     
+
+            for (size_t j = 0; j < cols_; ++j) {
+                if (row_values.count(j)) {
+                    std::cout << std::setw(width) << row_values[j];
+                } else {
+                    std::cout << std::setw(width) << T(0);
+                }
+            }
+            std::cout << '\n';
         }
     }
 }
@@ -475,7 +473,8 @@ void Matrix<T, Order>::info() const {
 
 
 
-// DEPRECATED
+// ✝️ GRAVEYARD : DEPRECATED FUNCTIONS
+
 /* // Extract the specified row when the matrix is stored as CSR/CSC matrix.
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::extract_row(size_t index, size_t k) const{
