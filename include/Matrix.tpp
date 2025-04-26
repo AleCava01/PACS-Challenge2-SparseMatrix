@@ -131,6 +131,107 @@ void Matrix<T, Order>::decompress() {
     compressed_data_.clear();
 }
 
+template<typename T, StorageOrder Order>
+template<NormType norm_type>
+T Matrix<T, Order>::norm() {
+// Computes the matrix norm (One, Infinity, or Frobenius) depending on the template parameter.
+// Handles both compressed (CSR/CSC) and uncompressed (COOmap) storage formats, with automatic transposition if needed.
+// Returns a scalar value representing the computed norm.
+
+    if (is_compressed()){
+        // Compressed case - CSR/CSC
+        T norm = T(0);
+        bool was_transposed = false;
+        if constexpr (norm_type == NormType::One) {
+            if constexpr (Order == StorageOrder::RowMajor){
+                transpose();
+                was_transposed=true;
+            }
+            for (size_t j = 0; j < cols_; ++j) {
+                T col_sum = T(0);
+                for (size_t idx = compressed_data_.outer_ptr[j]; idx < compressed_data_.outer_ptr[j+1]; ++idx) {
+                    col_sum += std::abs(compressed_data_.values[idx]);
+                }
+                if (std::abs(col_sum) > std::abs(norm)) {norm = col_sum;}
+            }
+            if(was_transposed){transpose();}
+            return norm;
+            
+        } else if constexpr (norm_type == NormType::Infinity) {
+            if constexpr (Order == StorageOrder::ColumnMajor){
+                transpose();
+                was_transposed=true;
+            }
+            for (size_t j = 0; j < cols_; ++j) {
+                T row_sum = T(0);
+                for (size_t idx = compressed_data_.outer_ptr[j]; idx < compressed_data_.outer_ptr[j+1]; ++idx) {
+                    row_sum += std::abs(compressed_data_.values[idx]);
+                }
+                if (std::abs(row_sum) > std::abs(norm)) {norm = row_sum;}
+            }
+            if(was_transposed){transpose();}
+            return norm;
+        } else if constexpr (norm_type == NormType::Frobenius) {
+            if constexpr (Order == StorageOrder::ColumnMajor){
+                transpose();
+                was_transposed=true;
+            }
+            for (size_t j = 0; j < cols_; ++j) {
+                T row_sum = T(0);
+                for (size_t idx = compressed_data_.outer_ptr[j]; idx < compressed_data_.outer_ptr[j+1]; ++idx) {
+                    row_sum += std::pow(std::abs(compressed_data_.values[idx]),T(2));
+                }
+                norm += row_sum;
+            }
+            if(was_transposed){transpose();}
+            return std::sqrt(norm);
+        }
+    }
+    else {
+        // TO DO
+        // Uncompressed case - COOmap
+        T norm = T(0);
+        if constexpr (norm_type == NormType::One) {
+            return norm;
+        } else if constexpr (norm_type == NormType::Infinity) {
+            return norm;
+        } else if constexpr (norm_type == NormType::Frobenius) {
+            return norm;
+        }
+    }
+    
+}
+
+template<typename T, StorageOrder Order>
+void Matrix<T, Order>::transpose() {
+// Transposes the matrix in-place by swapping rows and columns.
+// Updates the sparse data (non-zero entries) by flipping their indices.
+// Recompresses the matrix if it was previously compressed before transposing.
+
+    // If compressed, decompress first
+    bool was_compressed = false;
+    if (is_compressed()) {
+        decompress();
+        was_compressed = true;
+    }
+
+    // New sparse_data where we will store transposed entries
+    std::map<std::array<size_t, 2>, T> new_sparse_data;
+
+    for (const auto& [key, value] : sparse_data_) {
+        std::array<size_t, 2> transposed_key = {key[1], key[0]}; // flip (i,j) -> (j,i)
+        new_sparse_data[transposed_key] = value;
+    }
+
+    // Swap rows and columns
+    std::swap(rows_, cols_);
+
+    // Replace old sparse data with the transposed one
+    sparse_data_ = std::move(new_sparse_data);
+
+    // If it was compressed in the beginning, recompress it
+    if(was_compressed){compress();}
+}
 
 // Product by Vector
 template<typename T, StorageOrder Order>

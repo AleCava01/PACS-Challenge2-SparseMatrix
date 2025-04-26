@@ -11,6 +11,7 @@ int main(){
     //tests::multiplication_compressed_parallel_vs_unparallel_speedtest();
     //tests::multiplication_compressed_vs_uncompressed_speedtest();
     //tests::matrix_market_speedtest("./assets/lnsp_131.mtx.gz");
-    tests::complex_matrix_times_vector_test();
+    //tests::complex_matrix_times_vector_test();
+    tests::matrix_norm_test<std::complex<double>,StorageOrder::RowMajor>();
     return 0;
 }

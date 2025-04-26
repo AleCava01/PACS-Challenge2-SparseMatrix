@@ -8,12 +8,16 @@
 #include <type_traits>
 #include <vector>
 #include <cxxabi.h>
-#include "../include/Matrix.hpp"
+#include "Matrix.hpp"
+
+using namespace algebra;
 
 
-// General vector printer
 template<typename T>
 void print(const std::vector<T>& vec, const std::string& delimiter = ", "){
+// Prints the elements of a std::vector<T> to the standard output.
+// Elements are separated by the given delimiter (default is ", ") and enclosed in square brackets.
+// Does not return anything (void function).
     std::cout << "[";
     for (size_t i = 0; i < vec.size(); ++i) {
         std::cout << vec[i];
@@ -22,22 +26,6 @@ void print(const std::vector<T>& vec, const std::string& delimiter = ", "){
     }
     std::cout << "]" << std::endl;
 }
-
-namespace verbose{
-    void separator(const size_t i){
-        std::cout<<std::string(i,'-')<<std::endl;
-    }
-    template<typename T>
-    void display_mat_times_vector_results(const std::vector<T>& multiplication_result, const auto& duration){
-        std::cout << "Multiplication result: " << std::endl;
-        print(multiplication_result);
-        std::cout << std::endl;
-        std::cout << "Execution time: " << duration << " µs" << std::endl;
-    }
-
-} // namespace verbose
-
-using namespace algebra;
 
 std::string demangle(const char* mangled) {
 // Converts a mangled C++ type name into a human-readable string.

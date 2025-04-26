@@ -4,12 +4,14 @@
 #include <fstream>
 #include <iostream>
 #include <chrono>
+#include <random> 
 #include <tuple>
 #include <cxxabi.h>
 #include <numeric>
+
 #include "Matrix.hpp"
 #include "Utils.hpp"
-#include <random> 
+#include "Verbose.hpp"
 
 namespace tests{
     void multiplication_compressed_vs_uncompressed_speedtest(){
@@ -221,7 +223,36 @@ namespace tests{
         mat.print(20);
         test_multiply(mat,complex_vector);
     }
+    template<typename T>
+    std::vector<std::vector<T>> get_fixed_test_matrix() {
+        return {
+            {T(1), T(0), T(0), T(0)},
+            {T(0), T(0), T(1), T(0)},
+            {T(0), T(1), T(0), T(0)},
+            {T(0), T(0), T(1), T(3)}
+        };
+    }
+    template<typename T, StorageOrder Order = StorageOrder::ColumnMajor>
+    void matrix_norm_test(bool use_fixed_matrix = true, size_t rows = 4, size_t cols = 4, double density = 0.8) {
+        Matrix<T, Order> mat(
+            use_fixed_matrix 
+                ? get_fixed_test_matrix<T>() 
+                : getRandomSparseMatrix<T>(rows, cols, density)
+        );
 
+        mat.compress();
+
+        auto one_norm = mat.template norm<NormType::One>();
+        auto infinity_norm = mat.template norm<NormType::Infinity>();
+        auto frobenius_norm = mat.template norm<NormType::Frobenius>();
+
+        mat.print();
+        verbose::separator(50);
+        std::cout << "The one norm of the matrix is: " << one_norm << std::endl;
+        std::cout << "The infinity norm of the matrix is: " << infinity_norm << std::endl;
+        std::cout << "The Frobenius norm of the matrix is: " << frobenius_norm << std::endl;
+        verbose::separator(50);
+    }
 }
 
 
