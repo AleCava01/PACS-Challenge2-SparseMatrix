@@ -240,18 +240,26 @@ namespace tests{
                 : getRandomSparseMatrix<T>(rows, cols, density)
         );
 
+        auto compute_and_print_norms = [](Matrix<T, Order>& m, const std::string& label) {
+            verbose::separator(50);
+            std::cout << label << " matrix:" << std::endl;
+            m.print();
+            auto one_norm = m.template norm<NormType::One>();
+            auto infinity_norm = m.template norm<NormType::Infinity>();
+            auto frobenius_norm = m.template norm<NormType::Frobenius>();
+
+            verbose::separator(50);
+            std::cout << "One norm:        " << one_norm << std::endl;
+            std::cout << "Infinity norm:   " << infinity_norm << std::endl;
+            std::cout << "Frobenius norm:  " << frobenius_norm << std::endl;
+            verbose::separator(50);
+        };
+
         mat.compress();
+        compute_and_print_norms(mat, "Compressed");
 
-        auto one_norm = mat.template norm<NormType::One>();
-        auto infinity_norm = mat.template norm<NormType::Infinity>();
-        auto frobenius_norm = mat.template norm<NormType::Frobenius>();
-
-        mat.print();
-        verbose::separator(50);
-        std::cout << "The one norm of the matrix is: " << one_norm << std::endl;
-        std::cout << "The infinity norm of the matrix is: " << infinity_norm << std::endl;
-        std::cout << "The Frobenius norm of the matrix is: " << frobenius_norm << std::endl;
-        verbose::separator(50);
+        mat.decompress();
+        compute_and_print_norms(mat, "Uncompressed");
     }
 }
 

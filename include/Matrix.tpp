@@ -20,7 +20,7 @@ The implementation supports both uncompressed (COO) and compressed (CSR/CSC) for
 
 namespace algebra{
 
-// CONSTRUCTORS
+// 🏗️ CONSTRUCTORS
 template<typename T, StorageOrder Order>
 Matrix<T, Order>::Matrix(size_t rows, size_t cols){
     rows_ = rows;
@@ -46,7 +46,7 @@ Matrix<T, Order>::Matrix(const std::vector<std::vector<T>>& mat) {
     }
 }
 
-// CORE METHODS
+// 🔥 CORE METHODS
 template<typename T, StorageOrder Order>
 bool Matrix<T, Order>::update(const size_t i, const size_t j, const T& value) {
 // Updates the value at position (i, j) in the uncompressed (sparse_data_) format.
@@ -137,10 +137,11 @@ T Matrix<T, Order>::norm() {
 // Computes the matrix norm (One, Infinity, or Frobenius) depending on the template parameter.
 // Handles both compressed (CSR/CSC) and uncompressed (COOmap) storage formats, with automatic transposition if needed.
 // Returns a scalar value representing the computed norm.
-
+    
+    T norm = T(0);
     if (is_compressed()){
         // Compressed case - CSR/CSC
-        T norm = T(0);
+        
         bool was_transposed = false;
         if constexpr (norm_type == NormType::One) {
             if constexpr (Order == StorageOrder::RowMajor){
@@ -190,13 +191,31 @@ T Matrix<T, Order>::norm() {
     else {
         // TO DO
         // Uncompressed case - COOmap
-        T norm = T(0);
         if constexpr (norm_type == NormType::One) {
+            std::vector<T> col_sums(cols_, T(0)); // empty vector of dimension cols_
+            for(const auto& [coord, value] : sparse_data_) {
+                col_sums[coord[1]] += std::abs(value);    
+            }
+            for (const auto& sum : col_sums) {
+                if (std::abs(sum) > std::abs(norm)) { norm = sum; }
+                // needed to support also std::complex...
+            }
             return norm;
         } else if constexpr (norm_type == NormType::Infinity) {
+            std::vector<T> row_sums(rows_, T(0)); // empty vector of dimension rows_
+            for(const auto& [coord, value] : sparse_data_) {
+                row_sums[coord[0]] += std::abs(value);    
+            }
+            for (const auto& sum : row_sums) {
+                if (std::abs(sum) > std::abs(norm)) { norm = sum; }
+                // needed to support also std::complex...
+            }
             return norm;
         } else if constexpr (norm_type == NormType::Frobenius) {
-            return norm;
+            for(const auto& [coord, value] : sparse_data_){
+                norm += std::pow(std::abs(value), T(2));
+            }
+            return std::sqrt(norm);
         }
     }
     
@@ -442,7 +461,7 @@ bool Matrix<T, Order>::mm_load_mtx(const std::string& filename){
 }
     
 
-// INFO & PRINTING METHODS
+// ℹ️ INFO & PRINTING METHODS
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::print(int width) const {
     // Prints the matrix in a tabular, human-readable form.

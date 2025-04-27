@@ -14,24 +14,26 @@ template<typename T, StorageOrder Order>
 class Matrix {
 
 private:
+    // 📦 MATRIX DATA CONTAINERS
     size_t rows_, cols_;
     std::map<std::array<size_t, 2>, T> sparse_data_; // sparse dynamic storage: COOmap
     CompressedMatrix<T> compressed_data_; // compressed storage: CSR/CSC
 
-    // MATRIX MARKET PARSER PRIVATE METHODS
+    // 🔒 PRIVATE METHODS
+    // Matrix Market Parser - Private Methods
     std::string mm_extract_gz(const std::string& filename);
     void mm_read_mtx();
     bool mm_stringstream_to_sparsedata_loader(const std::istringstream& iss);
 
 
 public:
-    // CONSTRUCTORS
+    // 🏗️ CONSTRUCTORS
     Matrix(size_t rows, size_t cols); // Constructor
     Matrix(const std::vector<std::vector<T>>& mat); // Constructor
 
     size_t cols() const { return cols_; }
     
-    // CORE METHODS
+    // 🔥 CORE METHODS
     bool update(const size_t i, const size_t j,const T& value); // Update element at position (i,j) to the specified value
     void compress(); //matrix compression (from COOmap to CSR/CSC)
     void decompress(); // matrix decompression (from CSR/CSC to COOmap)
@@ -47,7 +49,7 @@ public:
     // MATRIX MARKET PARSER + LOADER METHODS
     bool mm_load_mtx(const std::string& filename);
 
-    // INFO & PRINTING METHODS
+    // ℹ️ INFO & PRINTING METHODS
     bool is_compressed() const; // returns compression status
     size_t weight() const; // Returns the matrix space usage, in bytes
     void printStorage() const; // prints CSR/CSC vectors or COOmap mapping, depending on compression status
