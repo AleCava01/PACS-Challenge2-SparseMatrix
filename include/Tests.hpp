@@ -280,7 +280,39 @@ namespace tests{
         mat.info();
     }
 
+
+    void diagonal_view_test() {
+        std::cout << "\n=== Diagonal View Test ===\n\n";
+
+        // Create a 4x4 matrix
+        Matrix<int, StorageOrder::RowMajor> mat(4, 4);
+        mat.update(0, 0, 10);
+        mat.update(0, 1, 1);
+        mat.update(1, 1, 20);
+        mat.update(2, 2, 30);
+        mat.update(3, 0, 3);
+        mat.update(3, 3, 40);
+
+        // Uncompressed case
+        std::cout << "\n--- Uncompressed Matrix ---\n";
+        mat.print();
+        std::vector<int> diag_uncompressed = mat.diagonal_view();
+        std::cout << "Diagonal (uncompressed): ";
+        print(diag_uncompressed);
+
+        // Compressed case
+        mat.compress();
+        std::cout << "\n--- Compressed Matrix ---\n";
+        mat.print();
+        std::vector<int> diag_compressed = mat.diagonal_view();
+        std::cout << "Diagonal (compressed): ";
+        print(diag_compressed);
+    }
+
+
 }
+
+
 
 
 

@@ -621,6 +621,51 @@ void Matrix<T, Order>::resize(size_t new_rows, size_t new_cols) {
     compressed_data_.clear();
 }
 
+template<typename T, StorageOrder Order>
+std::vector<T> Matrix<T, Order>::diagonal_view() const {
+// Returns a vector containing the diagonal elements of the matrix.
+// If an element on the diagonal is not stored explicitly (i.e., zero in sparse form), we assume it is 0.
+
+    std::vector<T> diag(std::min(rows_, cols_), T(0));
+
+    if (!is_compressed()) {
+        // Uncompressed (COO map) case
+        for (size_t i = 0; i < diag.size(); ++i) {
+            std::array<size_t, 2> key = {i, i};
+            auto it = sparse_data_.find(key);
+            if (it != sparse_data_.end()) {
+                diag[i] = it->second;
+            }
+        }
+    } else {
+        // Compressed (CSR/CSC) case
+        constexpr bool isRowMajor = (Order == StorageOrder::RowMajor);
+
+        if (isRowMajor) {
+            for (size_t i = 0; i < diag.size(); ++i) {
+                for (size_t k = compressed_data_.outer_ptr[i]; k < compressed_data_.outer_ptr[i + 1]; ++k) {
+                    if (compressed_data_.inner_index[k] == i) {
+                        diag[i] = compressed_data_.values[k];
+                        break;
+                    }
+                }
+            }
+        } else {
+            for (size_t j = 0; j < diag.size(); ++j) {
+                for (size_t k = compressed_data_.outer_ptr[j]; k < compressed_data_.outer_ptr[j + 1]; ++k) {
+                    if (compressed_data_.inner_index[k] == j) {
+                        diag[j] = compressed_data_.values[k];
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    return diag;
+}
+
+
 // ✝️ GRAVEYARD : DEPRECATED FUNCTIONS
 
 /* // Extract the specified row when the matrix is stored as CSR/CSC matrix.

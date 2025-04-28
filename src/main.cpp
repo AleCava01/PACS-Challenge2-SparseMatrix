@@ -13,7 +13,9 @@ int main(){
     //tests::matrix_market_speedtest("./assets/lnsp_131.mtx.gz");
     //tests::complex_matrix_times_vector_test();
     tests::matrix_norm_test<std::complex<double>,StorageOrder::RowMajor>();
-    tests::matrix_resize_test();
+    //tests::matrix_resize_test();
+    //tests::diagonal_view_test();
+
 
     return 0;
 }
