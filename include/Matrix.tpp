@@ -259,40 +259,61 @@ std::vector<T> Matrix<T, Order>::compressed_product_by_vector_parallel(const std
 // Uses OpenMP to parallelize the dot product calculation for each row of the matrix.
 // Inputs: v - a vector of type T, Outputs: a vector of type T with the result of the multiplication.
 
-    // Create the output vector 
-    std::vector<T> output(rows_, 0);
+    std::vector<T> output(rows_, T(0));
 
-    // Parallel compressed matrix * vector multiplication
-    #pragma omp parallel for
-    for (size_t i = 0; i < rows_; ++i) {
-        T sum = 0;
-        for (size_t k = compressed_data_.outer_ptr[i]; k < compressed_data_.outer_ptr[i + 1]; ++k) {
-            sum += compressed_data_.values[k] * v[compressed_data_.inner_index[k]];
+    if constexpr (Order == StorageOrder::RowMajor) {
+        // RowMajor (CSR): traverse row by row (parallelized)
+        #pragma omp parallel for
+        for (size_t i = 0; i < rows_; ++i) {
+            T sum = 0;
+            for (size_t k = compressed_data_.outer_ptr[i]; k < compressed_data_.outer_ptr[i + 1]; ++k) {
+                sum += compressed_data_.values[k] * v[compressed_data_.inner_index[k]];
+            }
+            output[i] = sum;
         }
-        output[i] = sum;
+    } else {
+        // ColumnMajor (CSC): traverse column by column
+        #pragma omp parallel for
+        for (size_t j = 0; j < cols_; ++j) {
+            for (size_t k = compressed_data_.outer_ptr[j]; k < compressed_data_.outer_ptr[j + 1]; ++k) {
+                size_t i = compressed_data_.inner_index[k];
+                #pragma omp atomic
+                output[i] += compressed_data_.values[k] * v[j];
+            }
+        }
     }
+
     return output;
 }
 
+// Compressed product by vector (no parallel version)
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::compressed_product_by_vector(const std::vector<T>& v) const {
-// Multiplies a compressed matrix by a vector v without parallelization.
-// Iterates over compressed data and computes the dot product for each row of the matrix.
-// Inputs: v - a vector of type T, Outputs: a vector of type T with the result of the multiplication.
+    std::vector<T> output(rows_, T(0));
 
-    // Create the output vector 
-    std::vector<T> output(rows_, 0);
-
-    // Not parallel multiplication, to avoid unnecessary overhead
-    for (size_t i = 0; i < rows_; ++i) {
-        T sum = 0;
-        for (size_t k = compressed_data_.outer_ptr[i]; k < compressed_data_.outer_ptr[i + 1]; ++k) {
-            sum += compressed_data_.values[k] * v[compressed_data_.inner_index[k]];
+    if constexpr (Order == StorageOrder::RowMajor) {
+        // RowMajor (CSR): traverse row by row
+        for (size_t i = 0; i < rows_; ++i) {
+            T sum = 0;
+            for (size_t k = compressed_data_.outer_ptr[i]; k < compressed_data_.outer_ptr[i + 1]; ++k) {
+                sum += compressed_data_.values[k] * v[compressed_data_.inner_index[k]];
+            }
+            output[i] = sum;
         }
-        output[i] = sum;
+    } else {
+        // ColumnMajor (CSC): traverse column by column
+        for (size_t j = 0; j < cols_; ++j) {
+            for (size_t k = compressed_data_.outer_ptr[j]; k < compressed_data_.outer_ptr[j + 1]; ++k) {
+                size_t i = compressed_data_.inner_index[k];
+                output[i] += compressed_data_.values[k] * v[j];
+            }
+        }
     }
+
     return output;
 }
+
+
 
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v) const {
