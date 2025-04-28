@@ -261,6 +261,25 @@ namespace tests{
         mat.decompress();
         compute_and_print_norms(mat, "Uncompressed");
     }
+    void matrix_resize_test() {
+        std::cout << "\n=== Matrix Resize Test ===\n\n";
+
+        Matrix<int, StorageOrder::RowMajor> mat(3, 3);
+        mat.update(0, 0, 1);
+        mat.update(1, 1, 2);
+        mat.update(2, 2, 3);
+
+        std::cout << "\n--- Before resize ---\n";
+        mat.print();
+        mat.info();
+
+        mat.resize(4, 5);
+
+        std::cout << "\n--- After resize ---\n";
+        mat.print();
+        mat.info();
+    }
+
 }
 
 

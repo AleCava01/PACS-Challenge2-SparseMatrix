@@ -613,6 +613,13 @@ void Matrix<T, Order>::info() const {
 }
 
 
+template<typename T, StorageOrder Order>
+void Matrix<T, Order>::resize(size_t new_rows, size_t new_cols) {
+    rows_ = new_rows;
+    cols_ = new_cols;
+    sparse_data_.clear();
+    compressed_data_.clear();
+}
 
 // ✝️ GRAVEYARD : DEPRECATED FUNCTIONS
 

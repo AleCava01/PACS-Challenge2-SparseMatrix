@@ -37,6 +37,7 @@ public:
     bool update(const size_t i, const size_t j,const T& value); // Update element at position (i,j) to the specified value
     void compress(); //matrix compression (from COOmap to CSR/CSC)
     void decompress(); // matrix decompression (from CSR/CSC to COOmap)
+    void resize(size_t new_rows, size_t new_cols);
     std::vector<T> compressed_product_by_vector(const std::vector<T>& v) const;
     std::vector<T> compressed_product_by_vector_parallel(const std::vector<T>& v) const;
     std::vector<T> product_by_vector(const std::vector<T>& v) const;
