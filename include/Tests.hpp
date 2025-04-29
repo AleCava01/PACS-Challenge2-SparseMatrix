@@ -13,6 +13,8 @@
 #include "Utils.hpp"
 #include "Verbose.hpp"
 
+using namespace utils;
+
 namespace tests{
     void multiplication_compressed_vs_uncompressed_speedtest(){
     // Compares the performance (in milliseconds) of matrix-vector multiplication
@@ -148,7 +150,10 @@ namespace tests{
         print(v);
         std::cout<<std::endl;
         auto [result, duration] = tests::test_multiplication_mean(mat,v,100);
-        verbose::display_mat_times_vector_results(result, duration);
+        std::cout << "Multiplication result: " << std::endl;
+        print(multiplication_result);
+        std::cout << std::endl;
+        std::cout << "Execution time: " << duration << " µs" << std::endl;
         verbose::separator(50);
     }
     

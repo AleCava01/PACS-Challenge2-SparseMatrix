@@ -688,7 +688,7 @@ void Matrix<T, Order>::info() const {
     std::cout << std::left;
     std::cout << std::setw(30) << "  Size:" << rows_ << " x " << cols_ << std::endl;
     std::cout << std::setw(30) << "  Storage Order:" << storageOrderToString(Order) << std::endl;
-    std::cout << std::setw(30) << "  Element Type:" << demangle(typeid(T).name()) << std::endl;
+    std::cout << std::setw(30) << "  Element Type:" << utils::demangle(typeid(T).name()) << std::endl;
     std::cout << std::setw(30) << "  Compression status:" << (is_compressed() ? "Compressed" : "Uncompressed") << std::endl;
     std::cout << std::setw(30) << "  Memory usage (bytes):" << weight() << std::endl;
     std::cout << std::string(50, '*') << std::endl;
