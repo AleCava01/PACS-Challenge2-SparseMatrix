@@ -482,6 +482,77 @@ bool Matrix<T, Order>::mm_load_mtx(const std::string& filename){
 }
     
 
+template<typename T, StorageOrder Order>
+void Matrix<T, Order>::resize(size_t new_rows, size_t new_cols) {
+    bool was_compressed = false;
+    if (is_compressed()){
+        decompress();
+        was_compressed = true;
+    }
+    rows_ = new_rows;
+    cols_ = new_cols;
+
+    // Remove entries that are now out of bounds
+    for (auto it = sparse_data_.begin(); it != sparse_data_.end(); ) {
+        auto [row, col] = it->first;
+        if (row >= new_rows || col >= new_cols) {
+            it = sparse_data_.erase(it);  // erase returns the next valid iterator
+        } else {
+            ++it;
+        }
+    }
+
+    if (was_compressed){
+        compress();
+    }
+}
+
+template<typename T, StorageOrder Order>
+std::vector<T> Matrix<T, Order>::diagonal_view() const {
+// Returns a vector containing the diagonal elements of the matrix.
+// If an element on the diagonal is not stored explicitly (i.e., zero in sparse form), we assume it is 0.
+
+    std::vector<T> diag(std::min(rows_, cols_), T(0));
+
+    if (!is_compressed()) {
+        // Uncompressed (COO map) case
+        for (size_t i = 0; i < diag.size(); ++i) {
+            std::array<size_t, 2> key = {i, i};
+            auto it = sparse_data_.find(key);
+            if (it != sparse_data_.end()) {
+                diag[i] = it->second;
+            }
+        }
+    } else {
+        // Compressed (CSR/CSC) case
+        constexpr bool isRowMajor = (Order == StorageOrder::RowMajor);
+
+        if (isRowMajor) {
+            for (size_t i = 0; i < diag.size(); ++i) {
+                for (size_t k = compressed_data_.outer_ptr[i]; k < compressed_data_.outer_ptr[i + 1]; ++k) {
+                    if (compressed_data_.inner_index[k] == i) {
+                        diag[i] = compressed_data_.values[k];
+                        break;
+                    }
+                }
+            }
+        } else {
+            for (size_t j = 0; j < diag.size(); ++j) {
+                for (size_t k = compressed_data_.outer_ptr[j]; k < compressed_data_.outer_ptr[j + 1]; ++k) {
+                    if (compressed_data_.inner_index[k] == j) {
+                        diag[j] = compressed_data_.values[k];
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    return diag;
+}
+
+
+
 // ℹ️ INFO & PRINTING METHODS
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::print(int width) const {
@@ -613,79 +684,8 @@ void Matrix<T, Order>::info() const {
 }
 
 
-template<typename T, StorageOrder Order>
-void Matrix<T, Order>::resize(size_t new_rows, size_t new_cols) {
-    rows_ = new_rows;
-    cols_ = new_cols;
-    sparse_data_.clear();
-    compressed_data_.clear();
-}
-
-template<typename T, StorageOrder Order>
-std::vector<T> Matrix<T, Order>::diagonal_view() const {
-// Returns a vector containing the diagonal elements of the matrix.
-// If an element on the diagonal is not stored explicitly (i.e., zero in sparse form), we assume it is 0.
-
-    std::vector<T> diag(std::min(rows_, cols_), T(0));
-
-    if (!is_compressed()) {
-        // Uncompressed (COO map) case
-        for (size_t i = 0; i < diag.size(); ++i) {
-            std::array<size_t, 2> key = {i, i};
-            auto it = sparse_data_.find(key);
-            if (it != sparse_data_.end()) {
-                diag[i] = it->second;
-            }
-        }
-    } else {
-        // Compressed (CSR/CSC) case
-        constexpr bool isRowMajor = (Order == StorageOrder::RowMajor);
-
-        if (isRowMajor) {
-            for (size_t i = 0; i < diag.size(); ++i) {
-                for (size_t k = compressed_data_.outer_ptr[i]; k < compressed_data_.outer_ptr[i + 1]; ++k) {
-                    if (compressed_data_.inner_index[k] == i) {
-                        diag[i] = compressed_data_.values[k];
-                        break;
-                    }
-                }
-            }
-        } else {
-            for (size_t j = 0; j < diag.size(); ++j) {
-                for (size_t k = compressed_data_.outer_ptr[j]; k < compressed_data_.outer_ptr[j + 1]; ++k) {
-                    if (compressed_data_.inner_index[k] == j) {
-                        diag[j] = compressed_data_.values[k];
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    return diag;
-}
-
-
 // ✝️ GRAVEYARD : DEPRECATED FUNCTIONS
+// ashes have been scattered, nothing to see here
 
-/* // Extract the specified row when the matrix is stored as CSR/CSC matrix.
-template<typename T, StorageOrder Order>
-std::vector<T> Matrix<T, Order>::extract_row(size_t index, size_t k) const{
-    std::vector<T> row(cols_, 0);
-
-    if (compressed_data_.outer_ptr[index]!=compressed_data_.outer_ptr[index+1])
-    {
-        auto num_values = compressed_data_.outer_ptr[index+1]-compressed_data_.outer_ptr[index];
-        for(size_t j=0; j<cols_; ++j){
-            if(compressed_data_.inner_index[k]==j && num_values>0){
-                row[j] = compressed_data_.values[k];
-                k++;
-                num_values--;
-            }
-        }
-    }
-    return row;
-}
- */
 
 } // namespace algebra

@@ -268,7 +268,6 @@ namespace tests{
         mat.update(0, 0, 1);
         mat.update(1, 1, 2);
         mat.update(2, 2, 3);
-
         std::cout << "\n--- Before resize ---\n";
         mat.print();
         mat.info();
