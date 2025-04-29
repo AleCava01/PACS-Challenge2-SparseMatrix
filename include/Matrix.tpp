@@ -322,12 +322,23 @@ std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v) cons
 // Inputs: v - a vector of type T, Outputs: a vector of type T with the result of the multiplication.
 
     if (is_compressed()) {
-        if(rows_>=params::NROWS_PARALLELIZATON_LIMIT){
+        if constexpr (Order==StorageOrder::RowMajor){
+            if (rows_>=params::NROWS_PARALLELIZATON_LIMIT){
             return compressed_product_by_vector_parallel(v);
+            }
+            else{
+                return compressed_product_by_vector(v);
+            }
         }
         else{
-            return compressed_product_by_vector(v);
+            if (rows_>=params::NCOLS_PARALLELIZATON_LIMIT){
+            return compressed_product_by_vector_parallel(v);
+            }
+            else{
+                return compressed_product_by_vector(v);
+            }
         }
+        
     }
     else {
         // Create the output vector 

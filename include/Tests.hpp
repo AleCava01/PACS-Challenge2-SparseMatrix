@@ -61,7 +61,7 @@ namespace tests{
 
         std::cout << "=== Start performance comparison test ===\n\n";
 
-        std::vector<size_t> sizes = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000};
+        std::vector<size_t> sizes = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000};
         std::ofstream file("output/performance_results.csv");
         file << "Iteration,MatrixSize,Method,TimeMs\n";
 
@@ -79,7 +79,7 @@ namespace tests{
 
                 // Compressed
                 auto start = std::chrono::high_resolution_clock::now();
-                auto result1 = mat.compressed_product_by_vector(vec);
+                auto result1 = mat.product_by_vector(vec);
                 auto end = std::chrono::high_resolution_clock::now();
                 double time_compressed = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0;
 
@@ -105,6 +105,9 @@ namespace tests{
         std::cout << "\n=== Done. Results saved to performance_results.csv ===\n";
     }
     
+    void multiplication_rowmajor_vs_colmajor_speedtest(){
+
+    }
     template<typename T, StorageOrder Order>
     std::tuple<std::vector<T>, long long> test_multiplication(const Matrix<T, Order>& mat, const std::vector<T>& v) {
     // Measures the execution time of the matrix-vector multiplication
@@ -223,6 +226,7 @@ namespace tests{
         mat.print(20);
         test_multiply(mat,complex_vector);
     }
+    
     template<typename T>
     std::vector<std::vector<T>> get_fixed_test_matrix() {
         return {
@@ -232,6 +236,7 @@ namespace tests{
             {T(0), T(0), T(1), T(3)}
         };
     }
+    
     template<typename T, StorageOrder Order = StorageOrder::ColumnMajor>
     void matrix_norm_test(bool use_fixed_matrix = true, size_t rows = 4, size_t cols = 4, double density = 0.8) {
         Matrix<T, Order> mat(
@@ -261,6 +266,7 @@ namespace tests{
         mat.decompress();
         compute_and_print_norms(mat, "Uncompressed");
     }
+    
     void matrix_resize_test() {
         std::cout << "\n=== Matrix Resize Test ===\n\n";
 
@@ -278,7 +284,6 @@ namespace tests{
         mat.print();
         mat.info();
     }
-
 
     void diagonal_view_test() {
         std::cout << "\n=== Diagonal View Test ===\n\n";

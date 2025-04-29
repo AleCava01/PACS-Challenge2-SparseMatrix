@@ -23,8 +23,8 @@ for iteration in iterations:
         )
 
 plt.xlabel("Matrix Size")
-plt.ylabel("Time (ms)")
-plt.title("Matrix-Vector Multiplication Time per Run")
+plt.ylabel("Time (sec)")
+plt.title("Matrix-Vector Multiplication Time per Run - RowMajor")
 plt.legend()
 plt.grid(True, which='both', linestyle='--', linewidth=0.5, alpha=0.7)
 plt.tight_layout()

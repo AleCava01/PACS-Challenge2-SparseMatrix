@@ -24,16 +24,16 @@ challenge2-gasati/
 └── README.md
 ```
 ### Parallelization
-We implemented a matrix-vector multiplication method that automatically selects parallel or sequential execution based on the number of rows in the matrix. If the matrix is compressed and has more rows than a certain threshold (```NROWS_PARALLELIZATON_LIMIT```), the parallel version is used to leverage performance on large data. Otherwise, the sequential version is used, which is typically faster for smaller inputs due to lower overhead.
+We implemented a matrix-vector multiplication method that automatically selects between parallel and sequential execution based on the number of rows in the matrix, specifically in the case of the CSR storage format. When the matrix is compressed and contains more rows than a predefined threshold (```NROWS_PARALLELIZATON_LIMIT```), the parallel version is employed to enhance performance on larger datasets. Otherwise, the sequential version is preferred, as it tends to be faster for smaller inputs due to reduced overhead.
 
-To determine the optimal threshold, we conducted multiple benchmark runs comparing both methods on matrices of increasing size. 
+To determine the optimal threshold, we conducted a series of benchmark experiments comparing both execution strategies on matrices of increasing size.
 
-![parallel_vs_unparalleled](./assets/parallel_vs_unparalleled.png)
+![parallel_vs_unparalleled_rowmajor](./assets/parallel_vs_unparallel_RowMajor.png)
 
-Based on these tests, we found the inversion point—where parallel computation begins to outperform the sequential one—to be around 1500 rows, and thus we set ```NROWS_PARALLELIZATON_LIMIT = 1500``` in ```include\Parameters.hpp```.
+The results indicated an inversion point at approximately 1000 rows, beyond which parallel computation consistently outperformed the sequential approach. Consequently, we set ```NROWS_PARALLELIZATON_LIMIT = 1000``` in include\Parameters.hpp.
 
-
-
+A similar analysis was performed for the CSC storage format, and the same threshold value (```1000```) was adopted.
+![parallel_vs_unparalleled_columnmajor](./assets/parallel_vs_unparallel_ColumnMajor.png)
 
 # Setup (Linux / macOS)
 ### Prerequisites
