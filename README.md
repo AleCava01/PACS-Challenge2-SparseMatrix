@@ -2,7 +2,7 @@
 # Challenge 2: A Sparse Matrix
 <p align="center">
   <a href="https://it.wikipedia.org/wiki/C%2B%2B"><img src="https://img.shields.io/badge/C%2B%2B-20-yellow" alt="C++"></a>
-  <a href="https://www.gnu.org/software/make/"><img src="https://img.shields.io/badge/GNU Make-4.3-blue" alt="make"></a>
+  <a href="https://www.gnu.org/software/make/"><img src="https://img.shields.io/badge/GNU Make-4.3-green" alt="make"></a>
   <a href="https://www.mingw-w64.org/"><img src="https://img.shields.io/badge/g++-13.3.0-red" alt="g++"></a>
   <a href="https://www.open-mpi.org/"><img src="https://img.shields.io/badge/Open MPI-4.1.6-red" alt="g++"></a>
   <a href="https://zlib.net/"><img src="https://img.shields.io/badge/zlib-1.3.1-blue" alt="g++"></a>
