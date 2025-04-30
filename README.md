@@ -1,13 +1,15 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/HlQKP7Zu)
 # Challenge 2: A Sparse Matrix
 <p align="center">
-  <a href="https://img.shields.io/badge/C%2B%2B-20-blue"><img src="https://img.shields.io/badge/C%2B%2B-20-blue" alt="C++"></a>
-  <a href="https://img.shields.io/badge/GNU Make-3.27.6-blue"><img src="https://img.shields.io/badge/GNU Make-4.3-blue" alt="make"></a>
-  <a href="https://img.shields.io/badge/clang-18.1.3-blue"><img src="https://img.shields.io/badge/clang-18.1.3-blue" alt="clang"></a>
+  <a href="https://it.wikipedia.org/wiki/C%2B%2B"><img src="https://img.shields.io/badge/C%2B%2B-20-yellow" alt="C++"></a>
+  <a href="https://www.gnu.org/software/make/"><img src="https://img.shields.io/badge/GNU Make-4.3-blue" alt="make"></a>
+  <a href="https://www.mingw-w64.org/"><img src="https://img.shields.io/badge/g++-13.3.0-red" alt="g++"></a>
+  <a href="https://www.open-mpi.org/"><img src="https://img.shields.io/badge/Open MPI-4.1.6-red" alt="g++"></a>
+  <a href="https://zlib.net/"><img src="https://img.shields.io/badge/zlib-1.3.1-blue" alt="g++"></a>
 </p>
 
 
-# Project Structure and Description
+## Project Structure and Description
 ```
 challenge2-gasati/
 ├── src/
@@ -17,9 +19,19 @@ challenge2-gasati/
 │   ├── Matrix.tpp
 |   ├── StorageOrder.hpp
 |   ├── Utils.hpp
+|   ├── Utils.tpp
+|   ├── Tests.hpp
+|   ├── Tests.tpp
+|   ├── Parameters.hpp
+|   ├── CompressedMatrix.hpp
+|   ├── NormType.hpp
 ├── assets
+├── extras
+|   ├── parallel_vs_unparallel_plot.py
+├── output
 ├── Makefile
 ├── run
+├── doxygen_config
 ├── LICENSE
 └── README.md
 ```
@@ -99,7 +111,7 @@ The results indicated an inversion point at approximately 1000 rows, beyond whic
 A similar analysis was performed for the CSC storage format, and the same threshold value (```1000```) was adopted.
 
 
-# Setup (Linux / macOS)
+## Setup (Linux / macOS)
 ### Prerequisites
 Ensure you have the following dependencies installed on your environment:
 - C++20-compatible compiler (e.g., GCC, Clang)
