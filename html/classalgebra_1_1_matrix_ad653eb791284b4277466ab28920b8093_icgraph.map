@@ -1,0 +1,5 @@
+<map id="algebra::Matrix::Matrix" name="algebra::Matrix::Matrix">
+<area shape="rect" id="Node000001" title="Constructor initializing an empty matrix (all values are set to 0) with specified dimensions." alt="" coords="221,5,372,32"/>
+<area shape="rect" id="Node000002" href="$classalgebra_1_1_matrix.html#a56d39c63b13cfd97f2cb62c4589088e6" title="Overloads the * operator to perform matrix&#45;vector multiplication when rhs is a column vector matrix." alt="" coords="5,5,173,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,21,173,21,173,16,205,16"/>
+</map>

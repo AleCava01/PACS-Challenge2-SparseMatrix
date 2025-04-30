@@ -1,0 +1,553 @@
+\doxysection{algebra\+::Matrix\texorpdfstring{$<$}{<} T, Order \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classalgebra_1_1_matrix}{}\label{classalgebra_1_1_matrix}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+
+
+A sparse matrix class with optional compression.  
+
+
+
+
+{\ttfamily \#include $<$Matrix.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classalgebra_1_1_matrix_ad653eb791284b4277466ab28920b8093}{Matrix}} (size\+\_\+t rows, size\+\_\+t cols)
+\begin{DoxyCompactList}\small\item\em Constructor initializing an empty matrix (all values are set to 0) with specified dimensions. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classalgebra_1_1_matrix_acbe7936d086d895678d6ae815a23eff0}{Matrix}} (const std\+::vector$<$ std\+::vector$<$ T $>$ $>$ \&mat)
+\begin{DoxyCompactList}\small\item\em Constructor initializing a matrix from a 2D vector (std\+::vector$<$\+T$>$). \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classalgebra_1_1_matrix_ac7f43fa9f6acad938d1d29c727a2aaf0}{update}} (const size\+\_\+t i, const size\+\_\+t j, const T \&value)
+\begin{DoxyCompactList}\small\item\em Updates an element at a specific position. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classalgebra_1_1_matrix_a1261cfc498cd74d2184aecceca3faaa7}{compress}} ()
+\begin{DoxyCompactList}\small\item\em Compresses the matrix from sparse to compressed format. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classalgebra_1_1_matrix_a006a9eb1d18fe32d3e7eab0b41391a51}{decompress}} ()
+\begin{DoxyCompactList}\small\item\em Decompresses the matrix from compressed to sparse format. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classalgebra_1_1_matrix_aa296ecd29111480382a2361be8df0049}{resize}} (size\+\_\+t new\+\_\+rows, size\+\_\+t new\+\_\+cols)
+\begin{DoxyCompactList}\small\item\em Resizes the matrix to new dimensions. \end{DoxyCompactList}\item 
+std\+::vector$<$ T $>$ \mbox{\hyperlink{classalgebra_1_1_matrix_a6f6821567de81098f87ee1e2b577bbca}{compressed\+\_\+product\+\_\+by\+\_\+vector}} (const std\+::vector$<$ T $>$ \&v) const
+\begin{DoxyCompactList}\small\item\em Multiplies the compressed matrix by a vector. \end{DoxyCompactList}\item 
+std\+::vector$<$ T $>$ \mbox{\hyperlink{classalgebra_1_1_matrix_ae65b639c9ad7c4f66762c630a67398ec}{compressed\+\_\+product\+\_\+by\+\_\+vector\+\_\+parallel}} (const std\+::vector$<$ T $>$ \&v) const
+\begin{DoxyCompactList}\small\item\em Multiplies the compressed matrix by a vector in parallel. \end{DoxyCompactList}\item 
+std\+::vector$<$ T $>$ \mbox{\hyperlink{classalgebra_1_1_matrix_a36b51a8ae2c7d8e1dabda5a259c55a9e}{product\+\_\+by\+\_\+vector}} (const std\+::vector$<$ T $>$ \&v) const
+\begin{DoxyCompactList}\small\item\em Multiplies the (possibly uncompressed) matrix by a vector. \end{DoxyCompactList}\item 
+std\+::vector$<$ T $>$ \mbox{\hyperlink{classalgebra_1_1_matrix_a56d39c63b13cfd97f2cb62c4589088e6}{operator\texorpdfstring{$\ast$}{*}}} (const \mbox{\hyperlink{classalgebra_1_1_matrix}{Matrix}}$<$ T, Order $>$ \&rhs) const
+\begin{DoxyCompactList}\small\item\em Overloads the \texorpdfstring{$\ast$}{*} operator to perform matrix-\/vector multiplication when rhs is a column vector matrix. \end{DoxyCompactList}\item 
+std\+::vector$<$ T $>$ \mbox{\hyperlink{classalgebra_1_1_matrix_aa72ea4db06e82ccc68eb5bbe2ba7756f}{diagonal\+\_\+view}} () const
+\begin{DoxyCompactList}\small\item\em Extracts the diagonal of the matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classalgebra_1_1_matrix_a910f7a1f93e1e15e8e3d1ca2bf5aa320}{transpose}} ()
+\begin{DoxyCompactList}\small\item\em Transposes the matrix (rows become columns and vice versa). \end{DoxyCompactList}\item 
+{\footnotesize template$<$\mbox{\hyperlink{_norm_type_8hpp_ad4bb8dabdbf8ad75e34220cc666b59ca}{Norm\+Type}} norm\+\_\+type$>$ }\\T \mbox{\hyperlink{classalgebra_1_1_matrix_abc4d5d258e00696d4808e95d44ba2d89}{norm}} ()
+\begin{DoxyCompactList}\small\item\em Computes a matrix norm. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classalgebra_1_1_matrix_a1628985d356132c0dc9c72863c3a3356}{mm\+\_\+load\+\_\+mtx}} (const std\+::string \&filename)
+\begin{DoxyCompactList}\small\item\em Loads a \doxylink{classalgebra_1_1_matrix}{Matrix} Market (.mtx or .mtx.\+gz) file and parses its contents into sparse data format. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classalgebra_1_1_matrix_a55f614d6c24dbd26628678cc838acef5}{is\+\_\+compressed}} () const
+\begin{DoxyCompactList}\small\item\em Checks if the matrix is in compressed form. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{classalgebra_1_1_matrix_a97c00e9c6b3212c24ef295b19da3d241}{weight}} () const
+\begin{DoxyCompactList}\small\item\em Calculates the memory usage of the matrix in bytes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classalgebra_1_1_matrix_a98d666c50e0c6c90ce46aa18d74a0e85}{print\+Storage}} () const
+\begin{DoxyCompactList}\small\item\em Prints the internal storage format (COOmap or CSR/\+CSC). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classalgebra_1_1_matrix_af12f37afab036337f61701dd9f6fb36b}{print}} (int width=6) const
+\begin{DoxyCompactList}\small\item\em Prints the matrix contents. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classalgebra_1_1_matrix_a7f900e65ee0ac9de4b7b75b766addf05}{info}} () const
+\begin{DoxyCompactList}\small\item\em Prints information about the matrix (size, storage type, etc.). \end{DoxyCompactList}\item 
+std\+::array$<$ size\+\_\+t, 2 $>$ \mbox{\hyperlink{classalgebra_1_1_matrix_a3f48a1a05c2ffafbc389be2908dad21f}{size}} () const
+\begin{DoxyCompactList}\small\item\em Returns the dimensions of the matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{classalgebra_1_1_matrix_af2bb1ffd2e52f17b74364d48a9cec293}{mm\+\_\+extract\+\_\+gz}} (const std\+::string \&filename)
+\begin{DoxyCompactList}\small\item\em Extracts the content of a gzipped \doxylink{classalgebra_1_1_matrix}{Matrix} Market file. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classalgebra_1_1_matrix_af419761e7c522ae2834dc5a941ff3331}{mm\+\_\+read\+\_\+mtx}} ()
+\begin{DoxyCompactList}\small\item\em Reads a \doxylink{classalgebra_1_1_matrix}{Matrix} Market file into the sparse data structure. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classalgebra_1_1_matrix_af878d7a02329c1171f08c6c6db95a1e8}{mm\+\_\+stringstream\+\_\+to\+\_\+sparsedata\+\_\+loader}} (const std\+::istringstream \&iss\+\_\+original)
+\begin{DoxyCompactList}\small\item\em Parses a \doxylink{classalgebra_1_1_matrix}{Matrix} Market file\textquotesingle{}s content (from a stringstream) into sparse matrix data format. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+size\+\_\+t \mbox{\hyperlink{classalgebra_1_1_matrix_add5555911896959e93a49d475600b96d}{rows\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Number of rows. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{classalgebra_1_1_matrix_a630797d1cb4b9b97c6adfba01128b403}{cols\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Number of columns. \end{DoxyCompactList}\item 
+std\+::map$<$ std\+::array$<$ size\+\_\+t, 2 $>$, T $>$ \mbox{\hyperlink{classalgebra_1_1_matrix_a7af7e1e01a86e9565311fc245fd29147}{sparse\+\_\+data\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Sparse dynamic storage\+: COOmap format. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structalgebra_1_1_compressed_matrix}{Compressed\+Matrix}}$<$ T $>$ \mbox{\hyperlink{classalgebra_1_1_matrix_a569c17b32ebdd814b5fbaa6eaa267cc1}{compressed\+\_\+data\+\_\+}}
+\begin{DoxyCompactList}\small\item\em Compressed storage\+: CSR/\+CSC format. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$\newline
+class algebra\+::\+Matrix$<$ T, Order $>$}
+A sparse matrix class with optional compression. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Type of the matrix elements. \\
+\hline
+{\em Order} & Storage order (Row\+Major or Column\+Major).\\
+\hline
+\end{DoxyTemplParams}
+Provides efficient storage and operations for sparse matrices, supporting both COO and compressed (CSR/\+CSC) formats. Includes functionalities like update, compression, decompression, resizing, and matrix-\/vector multiplication (serial and parallel). 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classalgebra_1_1_matrix_ad653eb791284b4277466ab28920b8093}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!Matrix@{Matrix}}
+\index{Matrix@{Matrix}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{Matrix()}{Matrix()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_ad653eb791284b4277466ab28920b8093} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+\mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\mbox{\hyperlink{classalgebra_1_1_matrix}{\+::\+Matrix}} (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{rows}{, }\item[{size\+\_\+t}]{cols}{}\end{DoxyParamCaption})}
+
+
+
+Constructor initializing an empty matrix (all values are set to 0) with specified dimensions. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em rows} & Number of rows. \\
+\hline
+{\em cols} & Number of columns. \\
+\hline
+\end{DoxyParams}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classalgebra_1_1_matrix_ad653eb791284b4277466ab28920b8093_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classalgebra_1_1_matrix_acbe7936d086d895678d6ae815a23eff0}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!Matrix@{Matrix}}
+\index{Matrix@{Matrix}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{Matrix()}{Matrix()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_acbe7936d086d895678d6ae815a23eff0} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+\mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\mbox{\hyperlink{classalgebra_1_1_matrix}{\+::\+Matrix}} (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::vector$<$ T $>$ $>$ \&}]{mat}{}\end{DoxyParamCaption})}
+
+
+
+Constructor initializing a matrix from a 2D vector (std\+::vector$<$\+T$>$). 
+
+Initializes the matrix dimensions and populates sparse\+\_\+data\+\_\+ using the \doxylink{classalgebra_1_1_matrix_ac7f43fa9f6acad938d1d29c727a2aaf0}{update()} method.
+
+
+\begin{DoxyParams}{Parameters}
+{\em mat} & 2D vector representing the matrix. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classalgebra_1_1_matrix_a1261cfc498cd74d2184aecceca3faaa7}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!compress@{compress}}
+\index{compress@{compress}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{compress()}{compress()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a1261cfc498cd74d2184aecceca3faaa7} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+void \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::compress (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Compresses the matrix from sparse to compressed format. 
+
+
+\begin{DoxyItemize}
+\item Converts the matrix from uncompressed (Coo-\/\+MAP) format to compressed format (CSR for Row\+Major, CSC for Col\+Major). It builds compressed\+\_\+data\+\_\+ from sparse\+\_\+data\+\_\+ and then clears the uncompressed storage to save memory. 
+\end{DoxyItemize}\Hypertarget{classalgebra_1_1_matrix_a6f6821567de81098f87ee1e2b577bbca}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!compressed\_product\_by\_vector@{compressed\_product\_by\_vector}}
+\index{compressed\_product\_by\_vector@{compressed\_product\_by\_vector}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{compressed\_product\_by\_vector()}{compressed\_product\_by\_vector()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a6f6821567de81098f87ee1e2b577bbca} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+std\+::vector$<$ T $>$ \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::compressed\+\_\+product\+\_\+by\+\_\+vector (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ T $>$ \&}]{v}{}\end{DoxyParamCaption}) const}
+
+
+
+Multiplies the compressed matrix by a vector. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & Input vector. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Resulting vector after multiplication. 
+\end{DoxyReturn}
+\Hypertarget{classalgebra_1_1_matrix_ae65b639c9ad7c4f66762c630a67398ec}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!compressed\_product\_by\_vector\_parallel@{compressed\_product\_by\_vector\_parallel}}
+\index{compressed\_product\_by\_vector\_parallel@{compressed\_product\_by\_vector\_parallel}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{compressed\_product\_by\_vector\_parallel()}{compressed\_product\_by\_vector\_parallel()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_ae65b639c9ad7c4f66762c630a67398ec} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+std\+::vector$<$ T $>$ \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::compressed\+\_\+product\+\_\+by\+\_\+vector\+\_\+parallel (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ T $>$ \&}]{v}{}\end{DoxyParamCaption}) const}
+
+
+
+Multiplies the compressed matrix by a vector in parallel. 
+
+Uses Open\+MP to parallelize the dot product calculation for each row of the matrix.
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & Input vector. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Resulting vector after multiplication. 
+\end{DoxyReturn}
+\Hypertarget{classalgebra_1_1_matrix_a006a9eb1d18fe32d3e7eab0b41391a51}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!decompress@{decompress}}
+\index{decompress@{decompress}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{decompress()}{decompress()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a006a9eb1d18fe32d3e7eab0b41391a51} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+void \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::decompress (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Decompresses the matrix from compressed to sparse format. 
+
+Converts the matrix from compressed form (CSR/\+CSC) to uncompressed form (Coo-\/\+MAP). It reconstructs sparse\+\_\+data\+\_\+ using the compressed\+\_\+data\+\_\+ arrays and clears the compressed storage afterward. \Hypertarget{classalgebra_1_1_matrix_aa72ea4db06e82ccc68eb5bbe2ba7756f}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!diagonal\_view@{diagonal\_view}}
+\index{diagonal\_view@{diagonal\_view}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{diagonal\_view()}{diagonal\_view()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_aa72ea4db06e82ccc68eb5bbe2ba7756f} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+std\+::vector$<$ T $>$ \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::diagonal\+\_\+view (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Extracts the diagonal of the matrix. 
+
+\begin{DoxyReturn}{Returns}
+Vector containing diagonal elements. 
+\end{DoxyReturn}
+\Hypertarget{classalgebra_1_1_matrix_a7f900e65ee0ac9de4b7b75b766addf05}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!info@{info}}
+\index{info@{info}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{info()}{info()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a7f900e65ee0ac9de4b7b75b766addf05} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+void \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::info (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Prints information about the matrix (size, storage type, etc.). 
+
+\Hypertarget{classalgebra_1_1_matrix_a55f614d6c24dbd26628678cc838acef5}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!is\_compressed@{is\_compressed}}
+\index{is\_compressed@{is\_compressed}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{is\_compressed()}{is\_compressed()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a55f614d6c24dbd26628678cc838acef5} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+bool \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::is\+\_\+compressed (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Checks if the matrix is in compressed form. 
+
+\begin{DoxyReturn}{Returns}
+True if compressed, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{classalgebra_1_1_matrix_af2bb1ffd2e52f17b74364d48a9cec293}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!mm\_extract\_gz@{mm\_extract\_gz}}
+\index{mm\_extract\_gz@{mm\_extract\_gz}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{mm\_extract\_gz()}{mm\_extract\_gz()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_af2bb1ffd2e52f17b74364d48a9cec293} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+std\+::string \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::mm\+\_\+extract\+\_\+gz (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Extracts the content of a gzipped \doxylink{classalgebra_1_1_matrix}{Matrix} Market file. 
+
+Uses zlib\textquotesingle{}s gz functions to read the file in chunks and accumulate its contents
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & Path to the .mtx.\+gz file. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Extracted content as a string. 
+\end{DoxyReturn}
+\Hypertarget{classalgebra_1_1_matrix_a1628985d356132c0dc9c72863c3a3356}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!mm\_load\_mtx@{mm\_load\_mtx}}
+\index{mm\_load\_mtx@{mm\_load\_mtx}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{mm\_load\_mtx()}{mm\_load\_mtx()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a1628985d356132c0dc9c72863c3a3356} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+bool \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::mm\+\_\+load\+\_\+mtx (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename}{}\end{DoxyParamCaption})}
+
+
+
+Loads a \doxylink{classalgebra_1_1_matrix}{Matrix} Market (.mtx or .mtx.\+gz) file and parses its contents into sparse data format. 
+
+Supports both compressed (.mtx.\+gz) and uncompressed (.mtx) \doxylink{classalgebra_1_1_matrix}{Matrix} Market files.
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & Path to the file. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if loading was successful, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{classalgebra_1_1_matrix_af419761e7c522ae2834dc5a941ff3331}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!mm\_read\_mtx@{mm\_read\_mtx}}
+\index{mm\_read\_mtx@{mm\_read\_mtx}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{mm\_read\_mtx()}{mm\_read\_mtx()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_af419761e7c522ae2834dc5a941ff3331} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+void \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::mm\+\_\+read\+\_\+mtx (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Reads a \doxylink{classalgebra_1_1_matrix}{Matrix} Market file into the sparse data structure. 
+
+\Hypertarget{classalgebra_1_1_matrix_af878d7a02329c1171f08c6c6db95a1e8}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!mm\_stringstream\_to\_sparsedata\_loader@{mm\_stringstream\_to\_sparsedata\_loader}}
+\index{mm\_stringstream\_to\_sparsedata\_loader@{mm\_stringstream\_to\_sparsedata\_loader}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{mm\_stringstream\_to\_sparsedata\_loader()}{mm\_stringstream\_to\_sparsedata\_loader()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_af878d7a02329c1171f08c6c6db95a1e8} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+bool \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::mm\+\_\+stringstream\+\_\+to\+\_\+sparsedata\+\_\+loader (\begin{DoxyParamCaption}\item[{const std\+::istringstream \&}]{iss\+\_\+original}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Parses a \doxylink{classalgebra_1_1_matrix}{Matrix} Market file\textquotesingle{}s content (from a stringstream) into sparse matrix data format. 
+
+Reads the header to get matrix dimensions, then processes triplets (row, column, value) to populate the matrix.
+
+
+\begin{DoxyParams}{Parameters}
+{\em iss\+\_\+original} & an input stringstream containing the file content \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if parsing was successful, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{classalgebra_1_1_matrix_abc4d5d258e00696d4808e95d44ba2d89}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!norm@{norm}}
+\index{norm@{norm}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{norm()}{norm()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_abc4d5d258e00696d4808e95d44ba2d89} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+template$<$\mbox{\hyperlink{_norm_type_8hpp_ad4bb8dabdbf8ad75e34220cc666b59ca}{Norm\+Type}} norm\+\_\+type$>$ \\
+T \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::norm (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Computes a matrix norm. 
+
+Computes the matrix norm (One, Infinity, or Frobenius) depending on the template parameter. Handles both compressed (CSR/\+CSC) and uncompressed (COOmap) storage formats, with automatic transposition if needed. Returns a scalar value representing the computed norm.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em norm\+\_\+type} & Type of norm to compute. \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+Computed norm value. 
+\end{DoxyReturn}
+\Hypertarget{classalgebra_1_1_matrix_a56d39c63b13cfd97f2cb62c4589088e6}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}}
+\index{operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{operator\texorpdfstring{$\ast$}{*}()}{operator*()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a56d39c63b13cfd97f2cb62c4589088e6} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+std\+::vector$<$ T $>$ \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::operator\texorpdfstring{$\ast$}{*} (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classalgebra_1_1_matrix}{Matrix}}$<$ T, Order $>$ \&}]{rhs}{}\end{DoxyParamCaption}) const}
+
+
+
+Overloads the \texorpdfstring{$\ast$}{*} operator to perform matrix-\/vector multiplication when rhs is a column vector matrix. 
+
+Assumes rhs is effectively a column vector; converts it to std\+::vector$<$\+T$>$ and uses product\+\_\+by\+\_\+vector for the computation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em rhs} & Right-\/hand side matrix. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Resulting vector after multiplication. 
+\end{DoxyReturn}
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classalgebra_1_1_matrix_a56d39c63b13cfd97f2cb62c4589088e6_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{classalgebra_1_1_matrix_af12f37afab036337f61701dd9f6fb36b}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!print@{print}}
+\index{print@{print}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{print()}{print()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_af12f37afab036337f61701dd9f6fb36b} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+void \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::print (\begin{DoxyParamCaption}\item[{int}]{width}{ = {\ttfamily 6}}\end{DoxyParamCaption}) const}
+
+
+
+Prints the matrix contents. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em width} & Field width for each printed element (default is 6). \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classalgebra_1_1_matrix_a98d666c50e0c6c90ce46aa18d74a0e85}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!printStorage@{printStorage}}
+\index{printStorage@{printStorage}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{printStorage()}{printStorage()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a98d666c50e0c6c90ce46aa18d74a0e85} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+void \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::print\+Storage (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Prints the internal storage format (COOmap or CSR/\+CSC). 
+
+Displays the compressed sparse representation (CSR/\+CSC) or the uncompressed COO format, showing values, indices, and pointers. \Hypertarget{classalgebra_1_1_matrix_a36b51a8ae2c7d8e1dabda5a259c55a9e}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!product\_by\_vector@{product\_by\_vector}}
+\index{product\_by\_vector@{product\_by\_vector}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{product\_by\_vector()}{product\_by\_vector()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a36b51a8ae2c7d8e1dabda5a259c55a9e} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+std\+::vector$<$ T $>$ \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::product\+\_\+by\+\_\+vector (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ T $>$ \&}]{v}{}\end{DoxyParamCaption}) const}
+
+
+
+Multiplies the (possibly uncompressed) matrix by a vector. 
+
+Multiplies the matrix by a vector v. If the matrix is compressed, it uses either parallel or regular multiplication based on the number of rows (CSR case) or columns (CSC case). For uncompressed matrices in COO format, it performs the multiplication by iterating over sparse data. Inputs\+: v -\/ a vector of type T, Outputs\+: a vector of type T with the result of the multiplication.
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & Input vector. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Resulting vector after multiplication. 
+\end{DoxyReturn}
+\Hypertarget{classalgebra_1_1_matrix_aa296ecd29111480382a2361be8df0049}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!resize@{resize}}
+\index{resize@{resize}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{resize()}{resize()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_aa296ecd29111480382a2361be8df0049} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+void \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::resize (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{new\+\_\+rows}{, }\item[{size\+\_\+t}]{new\+\_\+cols}{}\end{DoxyParamCaption})}
+
+
+
+Resizes the matrix to new dimensions. 
+
+Removes all elements outside the new bounds.
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+rows} & New number of rows. \\
+\hline
+{\em new\+\_\+cols} & New number of columns. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classalgebra_1_1_matrix_a3f48a1a05c2ffafbc389be2908dad21f}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!size@{size}}
+\index{size@{size}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a3f48a1a05c2ffafbc389be2908dad21f} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+std\+::array$<$ size\+\_\+t, 2 $>$ \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Returns the dimensions of the matrix. 
+
+\begin{DoxyReturn}{Returns}
+An array \{rows, cols\}. 
+\end{DoxyReturn}
+\Hypertarget{classalgebra_1_1_matrix_a910f7a1f93e1e15e8e3d1ca2bf5aa320}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!transpose@{transpose}}
+\index{transpose@{transpose}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{transpose()}{transpose()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a910f7a1f93e1e15e8e3d1ca2bf5aa320} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+void \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::transpose (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Transposes the matrix (rows become columns and vice versa). 
+
+Transposes the matrix in-\/place by swapping rows and columns. Updates the sparse data (non-\/zero entries) by flipping their indices. Recompresses the matrix if it was previously compressed before transposing. \Hypertarget{classalgebra_1_1_matrix_ac7f43fa9f6acad938d1d29c727a2aaf0}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!update@{update}}
+\index{update@{update}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_ac7f43fa9f6acad938d1d29c727a2aaf0} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+bool \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::update (\begin{DoxyParamCaption}\item[{const size\+\_\+t}]{i}{, }\item[{const size\+\_\+t}]{j}{, }\item[{const T \&}]{value}{}\end{DoxyParamCaption})}
+
+
+
+Updates an element at a specific position. 
+
+Updates the value at position (i, j) in the uncompressed (sparse\+\_\+data\+\_\+) format. Inserts or updates the value if it\textquotesingle{}s non-\/zero; removes the entry if the value is zero.
+
+
+\begin{DoxyParams}{Parameters}
+{\em i} & Row index. \\
+\hline
+{\em j} & Column index. \\
+\hline
+{\em value} & New value to set. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if update was successful, false otherwise. 
+\end{DoxyReturn}
+\Hypertarget{classalgebra_1_1_matrix_a97c00e9c6b3212c24ef295b19da3d241}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!weight@{weight}}
+\index{weight@{weight}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{weight()}{weight()}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a97c00e9c6b3212c24ef295b19da3d241} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+size\+\_\+t \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::weight (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Calculates the memory usage of the matrix in bytes. 
+
+Calculates the memory usage (weight) of the matrix based on its storage format. For compressed matrices, it sums the sizes of the values, indices, and pointers; for uncompressed, it estimates based on the sparse data structure.
+
+\begin{DoxyReturn}{Returns}
+Memory usage in bytes. 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classalgebra_1_1_matrix_a630797d1cb4b9b97c6adfba01128b403}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!cols\_@{cols\_}}
+\index{cols\_@{cols\_}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{cols\_}{cols\_}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a630797d1cb4b9b97c6adfba01128b403} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+size\+\_\+t \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::cols\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Number of columns. 
+
+\Hypertarget{classalgebra_1_1_matrix_a569c17b32ebdd814b5fbaa6eaa267cc1}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!compressed\_data\_@{compressed\_data\_}}
+\index{compressed\_data\_@{compressed\_data\_}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{compressed\_data\_}{compressed\_data\_}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a569c17b32ebdd814b5fbaa6eaa267cc1} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+\mbox{\hyperlink{structalgebra_1_1_compressed_matrix}{Compressed\+Matrix}}$<$T$>$ \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::compressed\+\_\+data\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Compressed storage\+: CSR/\+CSC format. 
+
+\Hypertarget{classalgebra_1_1_matrix_add5555911896959e93a49d475600b96d}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!rows\_@{rows\_}}
+\index{rows\_@{rows\_}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{rows\_}{rows\_}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_add5555911896959e93a49d475600b96d} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+size\+\_\+t \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::rows\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Number of rows. 
+
+\Hypertarget{classalgebra_1_1_matrix_a7af7e1e01a86e9565311fc245fd29147}\index{algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}!sparse\_data\_@{sparse\_data\_}}
+\index{sparse\_data\_@{sparse\_data\_}!algebra::Matrix$<$ T, Order $>$@{algebra::Matrix$<$ T, Order $>$}}
+\doxysubsubsection{\texorpdfstring{sparse\_data\_}{sparse\_data\_}}
+{\footnotesize\ttfamily \label{classalgebra_1_1_matrix_a7af7e1e01a86e9565311fc245fd29147} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+std\+::map$<$std\+::array$<$size\+\_\+t, 2$>$, T$>$ \mbox{\hyperlink{classalgebra_1_1_matrix}{algebra\+::\+Matrix}}$<$ T, Order $>$\+::sparse\+\_\+data\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Sparse dynamic storage\+: COOmap format. 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{_matrix_8hpp}{Matrix.\+hpp}}\end{DoxyCompactItemize}

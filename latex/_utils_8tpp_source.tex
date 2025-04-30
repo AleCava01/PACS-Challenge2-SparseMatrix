@@ -1,0 +1,122 @@
+\doxysection{Utils.\+tpp}
+\hypertarget{_utils_8tpp_source}{}\label{_utils_8tpp_source}\index{include/Utils.tpp@{include/Utils.tpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \#ifndef\ UTILS\_TPP}
+\DoxyCodeLine{00002\ \#define\ UTILS\_TPP}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ namespace\ utils\{}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ template<typename\ T>}
+\DoxyCodeLine{00007\ void\ print(const\ std::vector<T>\&\ vec,\ const\ std::string\&\ delimiter)\{}
+\DoxyCodeLine{00008\ //\ Prints\ the\ elements\ of\ a\ std::vector<T>\ to\ the\ standard\ output.}
+\DoxyCodeLine{00009\ //\ Elements\ are\ separated\ by\ the\ given\ delimiter\ (default\ is\ "{},\ "{})\ and\ enclosed\ in\ square\ brackets.}
+\DoxyCodeLine{00010\ //\ Does\ not\ return\ anything\ (void\ function).}
+\DoxyCodeLine{00011\ \ \ \ \ std::cout\ <<\ "{}["{};}
+\DoxyCodeLine{00012\ \ \ \ \ for\ (size\_t\ i\ =\ 0;\ i\ <\ vec.size();\ ++i)\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ std::cout\ <<\ vec[i];}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ if\ (i\ +\ 1\ <\ vec.size())}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ std::cout\ <<\ delimiter;}
+\DoxyCodeLine{00016\ \ \ \ \ \}}
+\DoxyCodeLine{00017\ \ \ \ \ std::cout\ <<\ "{}]"{}\ <<\ std::endl;}
+\DoxyCodeLine{00018\ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ std::string\ demangle(const\ char*\ mangled)\ \{}
+\DoxyCodeLine{00021\ //\ Converts\ a\ mangled\ C++\ type\ name\ into\ a\ human-\/readable\ string.}
+\DoxyCodeLine{00022\ //\ Takes\ a\ const\ char*\ representing\ the\ mangled\ name\ (usually\ from\ typeid().name()).}
+\DoxyCodeLine{00023\ //\ Returns\ a\ std::string\ with\ the\ demangled,\ readable\ type\ name.}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ int\ status\ =\ 0;}
+\DoxyCodeLine{00026\ \ \ \ \ char*\ realname\ =\ abi::\_\_cxa\_demangle(mangled,\ nullptr,\ nullptr,\ \&status);}
+\DoxyCodeLine{00027\ \ \ \ \ std::string\ result\ =\ (status\ ==\ 0\ \&\&\ realname)\ ?\ realname\ :\ mangled;}
+\DoxyCodeLine{00028\ \ \ \ \ free(realname);}
+\DoxyCodeLine{00029\ \ \ \ \ return\ result;}
+\DoxyCodeLine{00030\ \}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ template<typename\ T>}
+\DoxyCodeLine{00033\ std::vector<std::vector<T>>\ getRandomSparseMatrix(size\_t\ rows,\ size\_t\ cols,\ double\ random\_factor,\ T\ min\_val,\ T\ max\_val)\ \{}
+\DoxyCodeLine{00034\ //\ Generates\ a\ sparse\ matrix\ of\ size\ rows\ ×\ cols\ with\ random\ elements\ of\ type\ T.}
+\DoxyCodeLine{00035\ //\ Each\ element\ is\ set\ with\ probability\ (1\ -\/\ random\_factor),\ sampled\ in\ [min\_val,\ max\_val].}
+\DoxyCodeLine{00036\ //\ Returns\ a\ std::vector<std::vector<T>>\ representing\ the\ sparse\ matrix.}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ std::vector<std::vector<T>>\ matrix(rows,\ std::vector<T>(cols,\ T(0)));}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ std::random\_device\ rd;}
+\DoxyCodeLine{00041\ \ \ \ \ std::mt19937\ gen(rd());}
+\DoxyCodeLine{00042\ \ \ \ \ std::uniform\_real\_distribution<>\ prob\_dist(0.0,\ 1.0);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ if\ constexpr\ (std::is\_integral<T>::value)\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ std::uniform\_int\_distribution<T>\ val\_dist(min\_val,\ max\_val);}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ for\ (size\_t\ i\ =\ 0;\ i\ <\ rows;\ ++i)\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ for\ (size\_t\ j\ =\ 0;\ j\ <\ cols;\ ++j)\ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (prob\_dist(gen)\ >\ random\_factor)\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ matrix[i][j]\ =\ val\_dist(gen);}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00053\ \ \ \ \ \}\ else\ if\ constexpr\ (std::is\_floating\_point<T>::value)\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ std::uniform\_real\_distribution<T>\ val\_dist(min\_val,\ max\_val);}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ for\ (size\_t\ i\ =\ 0;\ i\ <\ rows;\ ++i)\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ for\ (size\_t\ j\ =\ 0;\ j\ <\ cols;\ ++j)\ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (prob\_dist(gen)\ >\ random\_factor)\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ matrix[i][j]\ =\ val\_dist(gen);}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ \}\ else\ if\ constexpr\ (std::is\_same<T,\ std::complex<double>>::value)\ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ std::uniform\_real\_distribution<double>\ val\_dist(std::real(min\_val),\ std::real(max\_val));}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ for\ (size\_t\ i\ =\ 0;\ i\ <\ rows;\ ++i)\ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ for\ (size\_t\ j\ =\ 0;\ j\ <\ cols;\ ++j)\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ (prob\_dist(gen)\ >\ random\_factor)\ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ double\ real\ =\ val\_dist(gen);}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ double\ imag\ =\ val\_dist(gen);}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ matrix[i][j]\ =\ std::complex<double>(real,\ imag);}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00073\ \ \ \ \ \}\ else\ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ static\_assert(sizeof(T)\ ==\ 0,\ "{}Unsupported\ type\ for\ getRandomSparseMatrix"{});}
+\DoxyCodeLine{00075\ \ \ \ \ \}}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ return\ matrix;}
+\DoxyCodeLine{00078\ \}}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ template<typename\ T>}
+\DoxyCodeLine{00081\ std::vector<T>\ getRandomVector(size\_t\ n,\ T\ min\_val,\ T\ max\_val)\ \{}
+\DoxyCodeLine{00082\ //\ Generates\ a\ vector\ of\ size\ n\ with\ random\ elements\ of\ type\ T\ (int,\ double\ or\ std::complex<double>).}
+\DoxyCodeLine{00083\ //\ Values\ are\ sampled\ uniformly\ in\ the\ range\ [min\_val,\ max\_val].}
+\DoxyCodeLine{00084\ //\ Returns\ a\ std::vector<T>\ containing\ the\ generated\ random\ values.}
+\DoxyCodeLine{00085\ \ \ \ \ std::vector<T>\ vec(n,\ T(0));}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ std::random\_device\ rd;}
+\DoxyCodeLine{00088\ \ \ \ \ std::mt19937\ gen(rd());}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ if\ constexpr\ (std::is\_integral<T>::value)\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ std::uniform\_int\_distribution<T>\ val\_dist(min\_val,\ max\_val);}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ for\ (size\_t\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ vec[i]\ =\ val\_dist(gen);}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00095\ \ \ \ \ \}\ else\ if\ constexpr\ (std::is\_floating\_point<T>::value)\ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ std::uniform\_real\_distribution<T>\ val\_dist(min\_val,\ max\_val);}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ for\ (size\_t\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ vec[i]\ =\ val\_dist(gen);}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00100\ \ \ \ \ \}\ else\ if\ constexpr\ (std::is\_same<T,\ std::complex<double>>::value)\ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ std::uniform\_real\_distribution<double>\ val\_dist(std::real(min\_val),\ std::real(max\_val));}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ for\ (size\_t\ i\ =\ 0;\ i\ <\ n;\ ++i)\ \{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ double\ real\ =\ val\_dist(gen);}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ double\ imag\ =\ val\_dist(gen);}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ vec[i]\ =\ std::complex<double>(real,\ imag);}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00107\ \ \ \ \ \}\ else\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ static\_assert(sizeof(T)\ ==\ 0,\ "{}Unsupported\ type\ for\ getRandomVector"{});}
+\DoxyCodeLine{00109\ \ \ \ \ \}}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ return\ vec;}
+\DoxyCodeLine{00112\ \}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \}\ //\ namespace\ utils}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \#endif\ //UTILS\_TPP}
+
+\end{DoxyCode}

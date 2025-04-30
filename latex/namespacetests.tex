@@ -1,0 +1,372 @@
+\doxysection{tests Namespace Reference}
+\hypertarget{namespacetests}{}\label{namespacetests}\index{tests@{tests}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ }\\std\+::tuple$<$ std\+::vector$<$ T $>$, long long $>$ \mbox{\hyperlink{namespacetests_a4130b8a55a109abf3ab3eeb6bcf1e8fc}{test\+\_\+multiplication}} (const \mbox{\hyperlink{classalgebra_1_1_matrix}{Matrix}}$<$ T, Order $>$ \&mat, const std\+::vector$<$ T $>$ \&v)
+\begin{DoxyCompactList}\small\item\em Measures the execution time of matrix-\/vector multiplication. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ }\\std\+::tuple$<$ std\+::vector$<$ T $>$, long long $>$ \mbox{\hyperlink{namespacetests_adfbe8ba7d4aca8984cf251cbec5b8686}{test\+\_\+multiplication\+\_\+mean}} (const \mbox{\hyperlink{classalgebra_1_1_matrix}{Matrix}}$<$ T, Order $>$ \&mat, const std\+::vector$<$ T $>$ \&v, int repetitions=10)
+\begin{DoxyCompactList}\small\item\em Measures the average execution time of matrix-\/vector multiplication over multiple repetitions. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\std\+::vector$<$ std\+::vector$<$ T $>$ $>$ \mbox{\hyperlink{namespacetests_ab67a4baff16265710e055ed00238dbd3}{get\+\_\+fixed\+\_\+test\+\_\+matrix}} ()
+\begin{DoxyCompactList}\small\item\em Generates a fixed test matrix for validation or testing purposes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacetests_a1fa27f6505ffe94f55d45180699b6065}{multiplication\+\_\+compressed\+\_\+vs\+\_\+uncompressed\+\_\+speedtest}} ()
+\begin{DoxyCompactList}\small\item\em Compares the performance of compressed vs. uncompressed matrix-\/vector multiplication. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacetests_a054e53152d76471dc68d6d86462218b0}{multiplication\+\_\+compressed\+\_\+parallel\+\_\+vs\+\_\+unparallel\+\_\+speedtest}} (size\+\_\+t num\+\_\+iterations=5)
+\begin{DoxyCompactList}\small\item\em Benchmarks compressed matrix-\/vector multiplication with and without parallelization. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacetests_aff225843413db67ba43631fc1ee7018e}{multiplication\+\_\+all\+\_\+speedtest}} (size\+\_\+t num\+\_\+iterations=1)
+\begin{DoxyCompactList}\small\item\em Full benchmark comparing multiple matrix storage and computation strategies. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacetests_ae80083c28c4e29c8795da53a440fb0bb}{matrix\+\_\+market\+\_\+speedtest}} (const std\+::string \&filename)
+\begin{DoxyCompactList}\small\item\em Benchmarking the performance of matrix-\/vector multiplication for \doxylink{classalgebra_1_1_matrix}{Matrix} Market files. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacetests_a529ababc118dcafed51313800787f6aa}{matrix\+\_\+vector\+\_\+multiplication\+\_\+test\+\_\+1}} ()
+\begin{DoxyCompactList}\small\item\em Tests matrix-\/vector multiplication on both compressed and uncompressed sparse matrices. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacetests_a2e521903375f71cdb7c697b23204a923}{complex\+\_\+matrix\+\_\+times\+\_\+vector\+\_\+test}} ()
+\begin{DoxyCompactList}\small\item\em Tests matrix-\/vector multiplication on a complex-\/valued sparse matrix and vector. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order = Storage\+Order\+::\+Column\+Major$>$ }\\void \mbox{\hyperlink{namespacetests_a98889297c0b3cb7a60bd685cf075e92a}{matrix\+\_\+norm\+\_\+test}} (bool use\+\_\+fixed\+\_\+matrix=true, size\+\_\+t rows=4, size\+\_\+t cols=4, double density=0.\+8)
+\begin{DoxyCompactList}\small\item\em Tests the computation of various matrix norms on both compressed and uncompressed matrices. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacetests_abee6e7ae1c9a34b491b4ab68b076bd87}{matrix\+\_\+resize\+\_\+test}} ()
+\begin{DoxyCompactList}\small\item\em Tests the matrix resizing functionality. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{namespacetests_aa56f14164990ef004389fc1dead67e50}{diagonal\+\_\+view\+\_\+test}} ()
+\begin{DoxyCompactList}\small\item\em Tests the diagonal view functionality on both compressed and uncompressed matrices. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacetests_a2e521903375f71cdb7c697b23204a923}\index{tests@{tests}!complex\_matrix\_times\_vector\_test@{complex\_matrix\_times\_vector\_test}}
+\index{complex\_matrix\_times\_vector\_test@{complex\_matrix\_times\_vector\_test}!tests@{tests}}
+\doxysubsubsection{\texorpdfstring{complex\_matrix\_times\_vector\_test()}{complex\_matrix\_times\_vector\_test()}}
+{\footnotesize\ttfamily \label{namespacetests_a2e521903375f71cdb7c697b23204a923} 
+void tests\+::complex\+\_\+matrix\+\_\+times\+\_\+vector\+\_\+test (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Tests matrix-\/vector multiplication on a complex-\/valued sparse matrix and vector. 
+
+This function performs matrix-\/vector multiplication on a sparse matrix containing complex numbers and a complex-\/valued vector. It compresses the matrix before the multiplication, prints the matrix, vector, and multiplication results, and measures the execution time.
+
+A random sparse matrix with complex values is created, and a complex vector is generated. The matrix is then compressed before performing the matrix-\/vector multiplication. The test also outputs the result and execution time for the multiplication.
+
+\begin{DoxyNote}{Note}
+The multiplication result and execution time are printed to the console. 
+\end{DoxyNote}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=266pt]{namespacetests_a2e521903375f71cdb7c697b23204a923_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacetests_aa56f14164990ef004389fc1dead67e50}\index{tests@{tests}!diagonal\_view\_test@{diagonal\_view\_test}}
+\index{diagonal\_view\_test@{diagonal\_view\_test}!tests@{tests}}
+\doxysubsubsection{\texorpdfstring{diagonal\_view\_test()}{diagonal\_view\_test()}}
+{\footnotesize\ttfamily \label{namespacetests_aa56f14164990ef004389fc1dead67e50} 
+void tests\+::diagonal\+\_\+view\+\_\+test (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Tests the diagonal view functionality on both compressed and uncompressed matrices. 
+
+This function demonstrates extracting the diagonal elements of a matrix. The matrix is first printed, then its diagonal elements are extracted and printed for both the compressed and uncompressed versions.
+
+A 4x4 matrix is created with specific values, and the diagonal elements are extracted in both compressed and uncompressed states. The diagonal values are printed for both states to show the difference. Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=280pt]{namespacetests_aa56f14164990ef004389fc1dead67e50_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacetests_ab67a4baff16265710e055ed00238dbd3}\index{tests@{tests}!get\_fixed\_test\_matrix@{get\_fixed\_test\_matrix}}
+\index{get\_fixed\_test\_matrix@{get\_fixed\_test\_matrix}!tests@{tests}}
+\doxysubsubsection{\texorpdfstring{get\_fixed\_test\_matrix()}{get\_fixed\_test\_matrix()}}
+{\footnotesize\ttfamily \label{namespacetests_ab67a4baff16265710e055ed00238dbd3} 
+template$<$typename T$>$ \\
+std\+::vector$<$ std\+::vector$<$ T $>$ $>$ tests\+::get\+\_\+fixed\+\_\+test\+\_\+matrix (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Generates a fixed test matrix for validation or testing purposes. 
+
+This function returns a 4x4 fixed test matrix used for unit tests or other specific use cases where a known matrix is required. The matrix is predefined with integer elements.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The data type of the matrix elements (e.\+g., int, double).\\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+A 2D vector representing the fixed test matrix. 
+\end{DoxyReturn}
+\Hypertarget{namespacetests_ae80083c28c4e29c8795da53a440fb0bb}\index{tests@{tests}!matrix\_market\_speedtest@{matrix\_market\_speedtest}}
+\index{matrix\_market\_speedtest@{matrix\_market\_speedtest}!tests@{tests}}
+\doxysubsubsection{\texorpdfstring{matrix\_market\_speedtest()}{matrix\_market\_speedtest()}}
+{\footnotesize\ttfamily \label{namespacetests_ae80083c28c4e29c8795da53a440fb0bb} 
+void tests\+::matrix\+\_\+market\+\_\+speedtest (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename}{}\end{DoxyParamCaption})}
+
+
+
+Benchmarking the performance of matrix-\/vector multiplication for \doxylink{classalgebra_1_1_matrix}{Matrix} Market files. 
+
+Loads a sparse matrix from a \doxylink{classalgebra_1_1_matrix}{Matrix} Market file, performs matrix-\/vector multiplication using both compressed and uncompressed storage formats, and compares the execution times.
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & The path to the \doxylink{classalgebra_1_1_matrix}{Matrix} Market (.mtx) file containing the sparse matrix.\\
+\hline
+\end{DoxyParams}
+The matrix is first loaded from the file and a random vector of appropriate size is generated. Then, the multiplication is performed both with the compressed matrix and the uncompressed matrix. The time taken for each multiplication is measured and printed to the console.
+
+The results include\+:
+\begin{DoxyItemize}
+\item Time taken for compressed matrix-\/vector multiplication
+\item Time taken for uncompressed matrix-\/vector multiplication
+\end{DoxyItemize}
+
+Results are printed in milliseconds with a precision of 3 decimal places. Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=259pt]{namespacetests_ae80083c28c4e29c8795da53a440fb0bb_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacetests_a98889297c0b3cb7a60bd685cf075e92a}\index{tests@{tests}!matrix\_norm\_test@{matrix\_norm\_test}}
+\index{matrix\_norm\_test@{matrix\_norm\_test}!tests@{tests}}
+\doxysubsubsection{\texorpdfstring{matrix\_norm\_test()}{matrix\_norm\_test()}}
+{\footnotesize\ttfamily \label{namespacetests_a98889297c0b3cb7a60bd685cf075e92a} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order = Storage\+Order\+::\+Column\+Major$>$ \\
+void tests\+::matrix\+\_\+norm\+\_\+test (\begin{DoxyParamCaption}\item[{bool}]{use\+\_\+fixed\+\_\+matrix}{ = {\ttfamily true}, }\item[{size\+\_\+t}]{rows}{ = {\ttfamily 4}, }\item[{size\+\_\+t}]{cols}{ = {\ttfamily 4}, }\item[{double}]{density}{ = {\ttfamily 0.8}}\end{DoxyParamCaption})}
+
+
+
+Tests the computation of various matrix norms on both compressed and uncompressed matrices. 
+
+This function calculates and prints the One norm, Infinity norm, and Frobenius norm of a matrix. It tests both the compressed and uncompressed versions of the matrix.
+
+The matrix is either generated randomly with a given density or initialized with a fixed test matrix based on the {\ttfamily use\+\_\+fixed\+\_\+matrix} parameter. The norms are computed using the \doxylink{classalgebra_1_1_matrix}{Matrix} class\textquotesingle{}s templated {\ttfamily norm} function, and results are printed to the console for both compressed and uncompressed matrices.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of the matrix elements (e.\+g., int, double, etc.). \\
+\hline
+{\em Order} & The storage order of the matrix (e.\+g., Row\+Major, Column\+Major).\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em use\+\_\+fixed\+\_\+matrix} & A boolean flag indicating whether to use a fixed test matrix or a random sparse matrix. \\
+\hline
+{\em rows} & The number of rows for a randomly generated matrix. \\
+\hline
+{\em cols} & The number of columns for a randomly generated matrix. \\
+\hline
+{\em density} & The sparsity coefficient for a randomly generated matrix. \\
+\hline
+\end{DoxyParams}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=273pt]{namespacetests_a98889297c0b3cb7a60bd685cf075e92a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacetests_abee6e7ae1c9a34b491b4ab68b076bd87}\index{tests@{tests}!matrix\_resize\_test@{matrix\_resize\_test}}
+\index{matrix\_resize\_test@{matrix\_resize\_test}!tests@{tests}}
+\doxysubsubsection{\texorpdfstring{matrix\_resize\_test()}{matrix\_resize\_test()}}
+{\footnotesize\ttfamily \label{namespacetests_abee6e7ae1c9a34b491b4ab68b076bd87} 
+void tests\+::matrix\+\_\+resize\+\_\+test (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Tests the matrix resizing functionality. 
+
+This function tests the ability to resize a matrix. The matrix is first initialized with specific values, resized, and the results are printed before and after the resize operation.
+
+A 3x3 matrix is created with specific values. After updating some entries, the matrix is resized to 4x5, and both the original and resized matrices are printed along with their information. Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=277pt]{namespacetests_abee6e7ae1c9a34b491b4ab68b076bd87_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacetests_a529ababc118dcafed51313800787f6aa}\index{tests@{tests}!matrix\_vector\_multiplication\_test\_1@{matrix\_vector\_multiplication\_test\_1}}
+\index{matrix\_vector\_multiplication\_test\_1@{matrix\_vector\_multiplication\_test\_1}!tests@{tests}}
+\doxysubsubsection{\texorpdfstring{matrix\_vector\_multiplication\_test\_1()}{matrix\_vector\_multiplication\_test\_1()}}
+{\footnotesize\ttfamily \label{namespacetests_a529ababc118dcafed51313800787f6aa} 
+void tests\+::matrix\+\_\+vector\+\_\+multiplication\+\_\+test\+\_\+1 (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Tests matrix-\/vector multiplication on both compressed and uncompressed sparse matrices. 
+
+This function initializes a sparse matrix and a vector, then performs matrix-\/vector multiplication for both compressed and uncompressed versions of the matrix. It measures and outputs the execution time for each phase (compressed and uncompressed).
+
+The matrix is created using a random sparse matrix generator, and the vector is generated with random values. The test is repeated for both the compressed and uncompressed versions of the matrix.
+
+\begin{DoxyNote}{Note}
+The multiplication results and execution times are printed to the console. 
+\end{DoxyNote}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=264pt]{namespacetests_a529ababc118dcafed51313800787f6aa_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacetests_aff225843413db67ba43631fc1ee7018e}\index{tests@{tests}!multiplication\_all\_speedtest@{multiplication\_all\_speedtest}}
+\index{multiplication\_all\_speedtest@{multiplication\_all\_speedtest}!tests@{tests}}
+\doxysubsubsection{\texorpdfstring{multiplication\_all\_speedtest()}{multiplication\_all\_speedtest()}}
+{\footnotesize\ttfamily \label{namespacetests_aff225843413db67ba43631fc1ee7018e} 
+void tests\+::multiplication\+\_\+all\+\_\+speedtest (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{num\+\_\+iterations}{ = {\ttfamily 1}}\end{DoxyParamCaption})}
+
+
+
+Full benchmark comparing multiple matrix storage and computation strategies. 
+
+Measures and prints the time (in milliseconds) taken to perform matrix-\/vector multiplication across\+:
+\begin{DoxyItemize}
+\item Compressed Row\+Major storage
+\item Compressed Column\+Major storage
+\item Uncompressed Row\+Major storage
+\item Uncompressed Column\+Major storage
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em num\+\_\+iterations} & Number of iterations to run for each matrix size.\\
+\hline
+\end{DoxyParams}
+\doxylink{classalgebra_1_1_matrix}{Matrix} sizes tested\+: \{100, 200, ..., 2000\}.
+
+Results are printed to the console in a formatted table. Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=254pt]{namespacetests_aff225843413db67ba43631fc1ee7018e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacetests_a054e53152d76471dc68d6d86462218b0}\index{tests@{tests}!multiplication\_compressed\_parallel\_vs\_unparallel\_speedtest@{multiplication\_compressed\_parallel\_vs\_unparallel\_speedtest}}
+\index{multiplication\_compressed\_parallel\_vs\_unparallel\_speedtest@{multiplication\_compressed\_parallel\_vs\_unparallel\_speedtest}!tests@{tests}}
+\doxysubsubsection{\texorpdfstring{multiplication\_compressed\_parallel\_vs\_unparallel\_speedtest()}{multiplication\_compressed\_parallel\_vs\_unparallel\_speedtest()}}
+{\footnotesize\ttfamily \label{namespacetests_a054e53152d76471dc68d6d86462218b0} 
+void tests\+::multiplication\+\_\+compressed\+\_\+parallel\+\_\+vs\+\_\+unparallel\+\_\+speedtest (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{num\+\_\+iterations}{ = {\ttfamily 5}}\end{DoxyParamCaption})}
+
+
+
+Benchmarks compressed matrix-\/vector multiplication with and without parallelization. 
+
+Measures and prints the execution time (in milliseconds) for matrix-\/vector multiplication using compressed storage, comparing single-\/threaded vs. parallelized computation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em num\+\_\+iterations} & Number of times the benchmark should be repeated for each matrix size.\\
+\hline
+\end{DoxyParams}
+\doxylink{classalgebra_1_1_matrix}{Matrix} sizes tested\+: \{100, 200, ..., 2000\}.
+
+Results are printed to the console and saved to "{}output/performance\+\_\+results.\+csv"{}. Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=279pt]{namespacetests_a054e53152d76471dc68d6d86462218b0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacetests_a1fa27f6505ffe94f55d45180699b6065}\index{tests@{tests}!multiplication\_compressed\_vs\_uncompressed\_speedtest@{multiplication\_compressed\_vs\_uncompressed\_speedtest}}
+\index{multiplication\_compressed\_vs\_uncompressed\_speedtest@{multiplication\_compressed\_vs\_uncompressed\_speedtest}!tests@{tests}}
+\doxysubsubsection{\texorpdfstring{multiplication\_compressed\_vs\_uncompressed\_speedtest()}{multiplication\_compressed\_vs\_uncompressed\_speedtest()}}
+{\footnotesize\ttfamily \label{namespacetests_a1fa27f6505ffe94f55d45180699b6065} 
+void tests\+::multiplication\+\_\+compressed\+\_\+vs\+\_\+uncompressed\+\_\+speedtest (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Compares the performance of compressed vs. uncompressed matrix-\/vector multiplication. 
+
+Measures and prints the time (in milliseconds) taken for multiplying a sparse matrix (both compressed and uncompressed) by a vector across various matrix sizes.
+
+\doxylink{classalgebra_1_1_matrix}{Matrix} sizes tested\+: \{100, 200, ..., 1000\}.
+
+\begin{DoxyNote}{Note}
+Results are printed to the console. 
+\end{DoxyNote}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=312pt]{namespacetests_a1fa27f6505ffe94f55d45180699b6065_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacetests_a4130b8a55a109abf3ab3eeb6bcf1e8fc}\index{tests@{tests}!test\_multiplication@{test\_multiplication}}
+\index{test\_multiplication@{test\_multiplication}!tests@{tests}}
+\doxysubsubsection{\texorpdfstring{test\_multiplication()}{test\_multiplication()}}
+{\footnotesize\ttfamily \label{namespacetests_a4130b8a55a109abf3ab3eeb6bcf1e8fc} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+std\+::tuple$<$ std\+::vector$<$ T $>$, long long $>$ tests\+::test\+\_\+multiplication (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classalgebra_1_1_matrix}{Matrix}}$<$ T, Order $>$ \&}]{mat}{, }\item[{const std\+::vector$<$ T $>$ \&}]{v}{}\end{DoxyParamCaption})}
+
+
+
+Measures the execution time of matrix-\/vector multiplication. 
+
+This function performs matrix-\/vector multiplication using the provided matrix and vector, and returns both the result and the duration of the operation in microseconds.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The data type of the matrix and vector elements (e.\+g., int, double). \\
+\hline
+{\em Order} & The storage order of the matrix (either Row\+Major or Column\+Major).\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em mat} & The matrix used in the multiplication. \\
+\hline
+{\em v} & The vector to multiply with the matrix.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A tuple containing\+:
+\begin{DoxyItemize}
+\item The resulting vector of the multiplication.
+\item The duration of the multiplication in microseconds. 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\Hypertarget{namespacetests_adfbe8ba7d4aca8984cf251cbec5b8686}\index{tests@{tests}!test\_multiplication\_mean@{test\_multiplication\_mean}}
+\index{test\_multiplication\_mean@{test\_multiplication\_mean}!tests@{tests}}
+\doxysubsubsection{\texorpdfstring{test\_multiplication\_mean()}{test\_multiplication\_mean()}}
+{\footnotesize\ttfamily \label{namespacetests_adfbe8ba7d4aca8984cf251cbec5b8686} 
+template$<$typename T, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} Order$>$ \\
+std\+::tuple$<$ std\+::vector$<$ T $>$, long long $>$ tests\+::test\+\_\+multiplication\+\_\+mean (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classalgebra_1_1_matrix}{Matrix}}$<$ T, Order $>$ \&}]{mat}{, }\item[{const std\+::vector$<$ T $>$ \&}]{v}{, }\item[{int}]{repetitions}{ = {\ttfamily 10}}\end{DoxyParamCaption})}
+
+
+
+Measures the average execution time of matrix-\/vector multiplication over multiple repetitions. 
+
+This function performs matrix-\/vector multiplication multiple times, calculates the average execution time, and returns both the last result and the average duration.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The data type of the matrix and vector elements (e.\+g., int, double). \\
+\hline
+{\em Order} & The storage order of the matrix (either Row\+Major or Column\+Major).\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em mat} & The matrix used in the multiplication. \\
+\hline
+{\em v} & The vector to multiply with the matrix. \\
+\hline
+{\em repetitions} & The number of repetitions to perform.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A tuple containing\+:
+\begin{DoxyItemize}
+\item The last result from the matrix-\/vector multiplication.
+\item The average duration of the multiplication across all repetitions in microseconds. 
+\end{DoxyItemize}
+\end{DoxyReturn}

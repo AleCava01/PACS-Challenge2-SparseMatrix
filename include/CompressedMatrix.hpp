@@ -3,21 +3,51 @@
 
 namespace algebra{
 
-// To store the 3 vectors for the CSR/CSC storage 
+/**
+ * @brief Structure for storing a sparse matrix in compressed format (CSR or CSC).
+ * 
+ * @tparam T Type of the matrix elements.
+ * 
+ * This structure holds the data needed for a compressed sparse row (CSR) or 
+ * compressed sparse column (CSC) representation: the nonzero values, the 
+ * inner indices (column indices in CSR or row indices in CSC), and the 
+ * outer pointers (row pointers in CSR or column pointers in CSC).
+ */
 template<typename T>
 struct CompressedMatrix {
-    std::vector<T> values;        // Contains non zero values
-    std::vector<size_t> inner_index; // Indexes of rows/columns
-    std::vector<size_t> outer_ptr;   // Pointers to the starting row/column
-    
+    /**
+     * @brief Vector containing the nonzero values of the matrix.
+     */
+    std::vector<T> values;        
+
+    /**
+     * @brief Vector containing the column indices (in CSR) or row indices (in CSC) for each nonzero value.
+     */
+    std::vector<size_t> inner_index;
+
+    /**
+     * @brief Vector containing the starting positions of each row (in CSR) or column (in CSC) in the values array.
+     */
+    std::vector<size_t> outer_ptr;
+
+    /**
+     * @brief Clears all vectors and deallocates their memory.
+     */
     void clear() { 
-        // clear vectors deallocating memory
         std::vector<T>().swap(values);
         std::vector<size_t>().swap(inner_index);
         std::vector<size_t>().swap(outer_ptr);
     }
+
+    /**
+     * @brief Retrieves the value at the specified position (i, j).
+     * 
+     * @param i Row index.
+     * @param j Column index.
+     * @param order Storage order (RowMajor or ColumnMajor).
+     * @return T Value at position (i, j), or zero if the element is not stored (i.e., it is implicitly zero).
+     */
     T get(size_t i, size_t j, StorageOrder order) const {
-        // returns the element at position i,j depending on the StorageOrder
         if (order == StorageOrder::RowMajor) {
             size_t row_start = outer_ptr[i];
             size_t row_end = outer_ptr[i+1];

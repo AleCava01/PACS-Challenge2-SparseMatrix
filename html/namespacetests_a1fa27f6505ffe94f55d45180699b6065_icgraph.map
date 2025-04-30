@@ -1,0 +1,5 @@
+<map id="tests::multiplication_compressed_vs_uncompressed_speedtest" name="tests::multiplication_compressed_vs_uncompressed_speedtest">
+<area shape="rect" id="Node000001" title="Compares the performance of compressed vs. uncompressed matrix&#45;vector multiplication." alt="" coords="103,5,315,64"/>
+<area shape="rect" id="Node000002" href="$main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title="Main function to execute various tests." alt="" coords="5,21,55,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,37,55,37,55,32,87,32"/>
+</map>

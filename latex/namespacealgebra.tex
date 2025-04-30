@@ -1,0 +1,69 @@
+\doxysection{algebra Namespace Reference}
+\hypertarget{namespacealgebra}{}\label{namespacealgebra}\index{algebra@{algebra}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structalgebra_1_1_compressed_matrix}{Compressed\+Matrix}}
+\begin{DoxyCompactList}\small\item\em Structure for storing a sparse matrix in compressed format (CSR or CSC). \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classalgebra_1_1_matrix}{Matrix}}
+\begin{DoxyCompactList}\small\item\em A sparse matrix class with optional compression. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} \{ \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108abba47a7c03289a67ca347baa3f55be2f}{Row\+Major}}
+, \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108af695e73139b1c1d06d77655104370f00}{Column\+Major}}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumeration for specifying the storage order of a matrix. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{namespacealgebra_a64538ced354df922ca1eed6fd4b665a3}{storage\+Order\+To\+String}} (\mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}} order)
+\begin{DoxyCompactList}\small\item\em Converts a \doxylink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order} enum value to its corresponding string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}\index{algebra@{algebra}!StorageOrder@{StorageOrder}}
+\index{StorageOrder@{StorageOrder}!algebra@{algebra}}
+\doxysubsubsection{\texorpdfstring{StorageOrder}{StorageOrder}}
+{\footnotesize\ttfamily \label{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108} 
+enum class \mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{algebra\+::\+Storage\+Order}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Enumeration for specifying the storage order of a matrix. 
+
+
+\begin{DoxyItemize}
+\item {\ttfamily Row\+Major}\+: \doxylink{classalgebra_1_1_matrix}{Matrix} is stored row by row.
+\item {\ttfamily Column\+Major}\+: \doxylink{classalgebra_1_1_matrix}{Matrix} is stored column by column. 
+\end{DoxyItemize}\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RowMajor@{RowMajor}!algebra@{algebra}}\index{algebra@{algebra}!RowMajor@{RowMajor}}}\Hypertarget{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108abba47a7c03289a67ca347baa3f55be2f}\label{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108abba47a7c03289a67ca347baa3f55be2f} 
+Row\+Major&Row-\/major storage order. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ColumnMajor@{ColumnMajor}!algebra@{algebra}}\index{algebra@{algebra}!ColumnMajor@{ColumnMajor}}}\Hypertarget{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108af695e73139b1c1d06d77655104370f00}\label{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108af695e73139b1c1d06d77655104370f00} 
+Column\+Major&Column-\/major storage order. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespacealgebra_a64538ced354df922ca1eed6fd4b665a3}\index{algebra@{algebra}!storageOrderToString@{storageOrderToString}}
+\index{storageOrderToString@{storageOrderToString}!algebra@{algebra}}
+\doxysubsubsection{\texorpdfstring{storageOrderToString()}{storageOrderToString()}}
+{\footnotesize\ttfamily \label{namespacealgebra_a64538ced354df922ca1eed6fd4b665a3} 
+const char \texorpdfstring{$\ast$}{*} algebra\+::storage\+Order\+To\+String (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order}}}]{order}{}\end{DoxyParamCaption})}
+
+
+
+Converts a \doxylink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order} enum value to its corresponding string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em order} & The \doxylink{namespacealgebra_af7f291bc9289c8ac99068a8ae4873108}{Storage\+Order} to convert. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A C-\/style string ("{}\+Row\+Major"{}, "{}\+Column\+Major"{}, or "{}\+Unknown"{} if invalid). 
+\end{DoxyReturn}

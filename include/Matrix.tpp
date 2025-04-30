@@ -300,7 +300,7 @@ std::vector<T> Matrix<T, Order>::compressed_product_by_vector(const std::vector<
 
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v) const {
-// Multiplies the matrix by a vector v. If the matrix is compressed, it uses either parallel or regular multiplication based on the number of rows. 
+// Multiplies the matrix by a vector v. If the matrix is compressed, it uses either parallel or regular multiplication based on the number of rows (CSR case) or columns (CSC case). 
 // For uncompressed matrices in COO format, it performs the multiplication by iterating over sparse data.
 // Inputs: v - a vector of type T, Outputs: a vector of type T with the result of the multiplication.
 

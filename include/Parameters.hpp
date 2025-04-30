@@ -1,17 +1,38 @@
-// This header file defines parameters used throughout the program.
-
-// Inside the `params` namespace, two constants are defined:
-// 1. `NROWS_PARALLELIZATION_LIMIT`: Defines the row limit for parallelization. When the number of rows exceeds this value, parallel processing is applied.
-// 2. `NCOLS_PARALLELIZATION_LIMIT`: Defines the column limit for parallelization. When the number of columns exceeds this value, parallel processing is applied.
-// 3. `BUFFER_SIZE`: Specifies the buffer size used in operations such as reading from files (used in gz files decompression).
-
 #ifndef PARAMETERS_HPP
 #define PARAMETERS_HPP
 
-namespace params{
-    const int NROWS_PARALLELIZATON_LIMIT = 1000;
-    const int NCOLS_PARALLELIZATON_LIMIT = 1000;
-    constexpr int BUFFER_SIZE = 8192;
-}
+/**
+ * @file Parameters.hpp
+ * @brief Defines global constants used throughout the program.
+ * 
+ * This header provides constants that control parallelization thresholds 
+ * and buffer sizes for file operations.
+ */
 
-#endif
+namespace params {
+
+/**
+ * @brief Row threshold for enabling parallelization.
+ * 
+ * When the number of rows exceeds this limit, parallel processing is applied.
+ */
+const int NROWS_PARALLELIZATON_LIMIT = 1000;
+
+/**
+ * @brief Column threshold for enabling parallelization.
+ * 
+ * When the number of columns exceeds this limit, parallel processing is applied.
+ */
+const int NCOLS_PARALLELIZATON_LIMIT = 1000;
+
+/**
+ * @brief Size of the buffer used in file operations.
+ * 
+ * Specifies the buffer size (in bytes) used for operations such as reading from files,
+ * including gzip file decompression.
+ */
+constexpr int BUFFER_SIZE = 8192;
+
+} // namespace params
+
+#endif // PARAMETERS_HPP

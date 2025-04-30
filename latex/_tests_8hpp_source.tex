@@ -1,0 +1,52 @@
+\doxysection{Tests.\+hpp}
+\hypertarget{_tests_8hpp_source}{}\label{_tests_8hpp_source}\index{include/Tests.hpp@{include/Tests.hpp}}
+\mbox{\hyperlink{_tests_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ TESTS\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ TESTS\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <random>}\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <tuple>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <cxxabi.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <numeric>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_matrix_8hpp}{Matrix.hpp}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_utils_8hpp}{Utils.hpp}}"{}}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{using\ namespace\ }\mbox{\hyperlink{namespaceutils}{utils}};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacetests}{tests}}\{}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{comment}{//\ Multiplication\ testing\ utilities}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ StorageOrder\ Order>}
+\DoxyCodeLine{00036\ \ \ \ \ std::tuple<std::vector<T>,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}>\ \mbox{\hyperlink{namespacetests_a4130b8a55a109abf3ab3eeb6bcf1e8fc}{test\_multiplication}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classalgebra_1_1_matrix}{Matrix<T,\ Order>}}\&\ mat,\ \textcolor{keyword}{const}\ std::vector<T>\&\ v);}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ StorageOrder\ Order>}
+\DoxyCodeLine{00055\ \ \ \ \ std::tuple<std::vector<T>,\ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long}>\ \mbox{\hyperlink{namespacetests_adfbe8ba7d4aca8984cf251cbec5b8686}{test\_multiplication\_mean}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classalgebra_1_1_matrix}{Matrix<T,\ Order>}}\&\ mat,\ \textcolor{keyword}{const}\ std::vector<T>\&\ v,\ \textcolor{keywordtype}{int}\ repetitions\ =\ 10);}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00067\ \ \ \ \ std::vector<std::vector<T>>\ \mbox{\hyperlink{namespacetests_ab67a4baff16265710e055ed00238dbd3}{get\_fixed\_test\_matrix}}();}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{//\ Speed\ tests}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetests_a1fa27f6505ffe94f55d45180699b6065}{multiplication\_compressed\_vs\_uncompressed\_speedtest}}();}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetests_a054e53152d76471dc68d6d86462218b0}{multiplication\_compressed\_parallel\_vs\_unparallel\_speedtest}}(\textcolor{keywordtype}{size\_t}\ num\_iterations\ =\ 5);}
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetests_aff225843413db67ba43631fc1ee7018e}{multiplication\_all\_speedtest}}(\textcolor{keywordtype}{size\_t}\ num\_iterations=1);}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetests_ae80083c28c4e29c8795da53a440fb0bb}{matrix\_market\_speedtest}}(\textcolor{keyword}{const}\ std::string\&\ filename);}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{comment}{//\ Simple\ Matrix\ *\ Vector\ tests}}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetests_a529ababc118dcafed51313800787f6aa}{matrix\_vector\_multiplication\_test\_1}}();}
+\DoxyCodeLine{00163\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetests_a2e521903375f71cdb7c697b23204a923}{complex\_matrix\_times\_vector\_test}}();}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{comment}{//\ Specific\ methods\ tests}}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T,\ StorageOrder\ Order\ =\ StorageOrder::ColumnMajor>}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetests_a98889297c0b3cb7a60bd685cf075e92a}{matrix\_norm\_test}}(\textcolor{keywordtype}{bool}\ use\_fixed\_matrix\ =\ \textcolor{keyword}{true},\ \textcolor{keywordtype}{size\_t}\ rows\ =\ 4,\ \textcolor{keywordtype}{size\_t}\ cols\ =\ 4,\ \textcolor{keywordtype}{double}\ density\ =\ 0.8);}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetests_abee6e7ae1c9a34b491b4ab68b076bd87}{matrix\_resize\_test}}();}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{namespacetests_aa56f14164990ef004389fc1dead67e50}{diagonal\_view\_test}}();}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \}}
+\DoxyCodeLine{00211\ }
+\DoxyCodeLine{00212\ \textcolor{preprocessor}{\#include\ "{}Tests.tpp"{}}\ \textcolor{comment}{//\ Include\ implementations}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ TESTS\_HPP}}
+
+\end{DoxyCode}

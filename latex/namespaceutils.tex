@@ -1,0 +1,125 @@
+\doxysection{utils Namespace Reference}
+\hypertarget{namespaceutils}{}\label{namespaceutils}\index{utils@{utils}}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\void \mbox{\hyperlink{namespaceutils_a5e9ab83d898f64c90e37e823dd6295e9}{print}} (const std\+::vector$<$ T $>$ \&vec, const std\+::string \&delimiter="{}, "{})
+\begin{DoxyCompactList}\small\item\em Prints the elements of a vector with a specified delimiter. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{namespaceutils_aa64c7ee424c96e10d8ad7db104e76ac7}{demangle}} (const char \texorpdfstring{$\ast$}{*}mangled)
+\begin{DoxyCompactList}\small\item\em Demangles a C++ symbol. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\std\+::vector$<$ std\+::vector$<$ T $>$ $>$ \mbox{\hyperlink{namespaceutils_ab1557c381bf5a42cabc489fa8eb68131}{get\+Random\+Sparse\+Matrix}} (size\+\_\+t rows, size\+\_\+t cols, double random\+\_\+factor, T min\+\_\+val=T(1), T max\+\_\+val=T(9))
+\begin{DoxyCompactList}\small\item\em Generates a random sparse matrix of a specified size. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T$>$ }\\std\+::vector$<$ T $>$ \mbox{\hyperlink{namespaceutils_a0ae199f0c3c2c2c26f0f0e0535387855}{get\+Random\+Vector}} (size\+\_\+t n, T min\+\_\+val=T(1), T max\+\_\+val=T(9))
+\begin{DoxyCompactList}\small\item\em Generates a random vector of a specified size. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{namespaceutils_aa64c7ee424c96e10d8ad7db104e76ac7}\index{utils@{utils}!demangle@{demangle}}
+\index{demangle@{demangle}!utils@{utils}}
+\doxysubsubsection{\texorpdfstring{demangle()}{demangle()}}
+{\footnotesize\ttfamily \label{namespaceutils_aa64c7ee424c96e10d8ad7db104e76ac7} 
+std\+::string utils\+::demangle (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{mangled}{}\end{DoxyParamCaption})}
+
+
+
+Demangles a C++ symbol. 
+
+This function takes a mangled C++ symbol (as returned by the typeid operator) and demangles it to its readable form. Useful for debugging or logging type names.
+
+
+\begin{DoxyParams}{Parameters}
+{\em mangled} & The mangled C++ symbol. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A demangled, human-\/readable string representation of the symbol. 
+\end{DoxyReturn}
+\Hypertarget{namespaceutils_ab1557c381bf5a42cabc489fa8eb68131}\index{utils@{utils}!getRandomSparseMatrix@{getRandomSparseMatrix}}
+\index{getRandomSparseMatrix@{getRandomSparseMatrix}!utils@{utils}}
+\doxysubsubsection{\texorpdfstring{getRandomSparseMatrix()}{getRandomSparseMatrix()}}
+{\footnotesize\ttfamily \label{namespaceutils_ab1557c381bf5a42cabc489fa8eb68131} 
+template$<$typename T$>$ \\
+std\+::vector$<$ std\+::vector$<$ T $>$ $>$ utils\+::get\+Random\+Sparse\+Matrix (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{rows}{, }\item[{size\+\_\+t}]{cols}{, }\item[{double}]{random\+\_\+factor}{, }\item[{T}]{min\+\_\+val}{ = {\ttfamily T(1)}, }\item[{T}]{max\+\_\+val}{ = {\ttfamily T(9)}}\end{DoxyParamCaption})}
+
+
+
+Generates a random sparse matrix of a specified size. 
+
+This function generates a sparse matrix of size {\ttfamily rows} × {\ttfamily cols}, where each element is assigned with a probability of {\ttfamily 1 -\/ random\+\_\+factor}. Non-\/zero elements are assigned random values uniformly distributed between {\ttfamily min\+\_\+val} and {\ttfamily max\+\_\+val}.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of matrix elements (e.\+g., int, double, std\+::complex). \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em rows} & The number of rows in the matrix. \\
+\hline
+{\em cols} & The number of columns in the matrix. \\
+\hline
+{\em random\+\_\+factor} & The probability that an element will be zero (sparsity factor). \\
+\hline
+{\em min\+\_\+val} & The minimum value for non-\/zero elements. \\
+\hline
+{\em max\+\_\+val} & The maximum value for non-\/zero elements. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A 2D vector representing the sparse matrix. 
+\end{DoxyReturn}
+\Hypertarget{namespaceutils_a0ae199f0c3c2c2c26f0f0e0535387855}\index{utils@{utils}!getRandomVector@{getRandomVector}}
+\index{getRandomVector@{getRandomVector}!utils@{utils}}
+\doxysubsubsection{\texorpdfstring{getRandomVector()}{getRandomVector()}}
+{\footnotesize\ttfamily \label{namespaceutils_a0ae199f0c3c2c2c26f0f0e0535387855} 
+template$<$typename T$>$ \\
+std\+::vector$<$ T $>$ utils\+::get\+Random\+Vector (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{n}{, }\item[{T}]{min\+\_\+val}{ = {\ttfamily T(1)}, }\item[{T}]{max\+\_\+val}{ = {\ttfamily T(9)}}\end{DoxyParamCaption})}
+
+
+
+Generates a random vector of a specified size. 
+
+This function generates a vector of size {\ttfamily n}, where each element is a random number uniformly distributed between {\ttfamily min\+\_\+val} and {\ttfamily max\+\_\+val}. The type of the vector elements can be integral (e.\+g., int), floating-\/point (e.\+g., double), or complex (std\+::complex$<$double$>$).
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of vector elements (e.\+g., int, double, std\+::complex). \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em n} & The size of the vector. \\
+\hline
+{\em min\+\_\+val} & The minimum value for elements. \\
+\hline
+{\em max\+\_\+val} & The maximum value for elements. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A vector of randomly generated values. 
+\end{DoxyReturn}
+\Hypertarget{namespaceutils_a5e9ab83d898f64c90e37e823dd6295e9}\index{utils@{utils}!print@{print}}
+\index{print@{print}!utils@{utils}}
+\doxysubsubsection{\texorpdfstring{print()}{print()}}
+{\footnotesize\ttfamily \label{namespaceutils_a5e9ab83d898f64c90e37e823dd6295e9} 
+template$<$typename T$>$ \\
+void utils\+::print (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ T $>$ \&}]{vec}{, }\item[{const std\+::string \&}]{delimiter}{ = {\ttfamily "{},~"{}}}\end{DoxyParamCaption})}
+
+
+
+Prints the elements of a vector with a specified delimiter. 
+
+This function prints the elements of a given vector of any type {\ttfamily T} with a delimiter between the elements. By default, the delimiter is a comma followed by a space.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type of elements in the vector (e.\+g., int, double, std\+::complex). \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em vec} & The vector whose elements are to be printed. \\
+\hline
+{\em delimiter} & The delimiter to separate the elements (default is "{}, "{}). \\
+\hline
+\end{DoxyParams}

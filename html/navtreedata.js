@@ -24,18 +24,39 @@
 */
 var NAVTREE =
 [
-  [ "My Project", "index.html", [
-    [ "README", "md__r_e_a_d_m_e.html", [
-      [ "Challenge 2: A Sparse Matrix", "md__r_e_a_d_m_e.html#autotoc_md0", null ],
-      [ "Project Structure and Description", "md__r_e_a_d_m_e.html#autotoc_md1", null ],
-      [ "Setup (Linux / macOS)", "md__r_e_a_d_m_e.html#autotoc_md3", null ]
+  [ "A Sparse Matrix", "index.html", [
+    [ "Namespaces", "namespaces.html", [
+      [ "Namespace List", "namespaces.html", "namespaces_dup" ],
+      [ "Namespace Members", "namespacemembers.html", [
+        [ "All", "namespacemembers.html", null ],
+        [ "Functions", "namespacemembers_func.html", null ],
+        [ "Variables", "namespacemembers_vars.html", null ],
+        [ "Enumerations", "namespacemembers_enum.html", null ]
+      ] ]
+    ] ],
+    [ "Classes", "annotated.html", [
+      [ "Class List", "annotated.html", "annotated_dup" ],
+      [ "Class Index", "classes.html", null ],
+      [ "Class Members", "functions.html", [
+        [ "All", "functions.html", null ],
+        [ "Functions", "functions_func.html", null ],
+        [ "Variables", "functions_vars.html", null ]
+      ] ]
+    ] ],
+    [ "Files", "files.html", [
+      [ "File List", "files.html", "files_dup" ],
+      [ "File Members", "globals.html", [
+        [ "All", "globals.html", null ],
+        [ "Functions", "globals_func.html", null ],
+        [ "Enumerations", "globals_enum.html", null ]
+      ] ]
     ] ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"index.html"
+"_compressed_matrix_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

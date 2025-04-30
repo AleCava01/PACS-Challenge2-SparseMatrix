@@ -6,7 +6,31 @@
 
 using namespace algebra;
 
-int main(){
+/**
+ * @brief Main function to execute various tests.
+ * 
+ * This function presents a menu to the user to select a specific test case to run. 
+ * Based on the user's input, it calls the corresponding test function. The available 
+ * test cases include matrix-vector multiplication, speed tests for compressed and 
+ * uncompressed matrices, matrix norm calculation, and more.
+ * 
+ * The tests include:
+ * 1. Matrix-Vector Multiplication Test 1
+ * 2. Compressed Parallel vs Unparallel Speedtest
+ * 3. Compressed vs Uncompressed Speedtest
+ * 4. Matrix Market Speedtest (with a sample matrix file)
+ * 5. Complex Matrix Times Vector Test
+ * 6. Matrix Norm Test (int, RowMajor)
+ * 7. Matrix Resize Test
+ * 8. Diagonal View Test
+ * 9. Full Multiplication Speedtest
+ * 
+ * The user is prompted to select a test case by entering a number between 1 and 9.
+ * 
+ * @return 0 on successful execution of the selected test, or 1 if an invalid choice is entered.
+ */
+int main() {
+    // Prompt the user for a test selection
     std::cout << "Select a test to run:\n";
     std::cout << "1. Matrix-Vector Multiplication Test 1\n";
     std::cout << "2. Compressed Parallel vs Unparallel Speedtest\n";
@@ -19,9 +43,11 @@ int main(){
     std::cout << "9. Full Multiplication Speedtest\n";
     std::cout << "Enter your choice (1-9): ";
 
+    // Read user input for test selection
     int choice;
     std::cin >> choice;
 
+    // Execute corresponding test based on the user's choice
     switch (choice) {
         case 1:
             tests::matrix_vector_multiplication_test_1();
@@ -51,9 +77,11 @@ int main(){
             tests::multiplication_all_speedtest();
             break;
         default:
+            // Handle invalid input
             std::cout << "Invalid choice.\n";
             break;
     }
 
+    // Return success
     return 0;
 }
