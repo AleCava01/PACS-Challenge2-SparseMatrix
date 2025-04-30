@@ -2,21 +2,7 @@
 It defines methods for matrix operations, including sparse matrix compression, matrix-vector multiplication, and I/O operations. 
 The implementation supports both uncompressed (COO) and compressed (CSR/CSC) formats, optimizing memory usage and performance for large datasets.
  */
-
 #include "Matrix.hpp"
-#include "Utils.hpp"
-#include "Parameters.hpp"
-
-#include <iostream>
-#include <iomanip>
-#include <typeinfo>
-#include <fstream>
-#include <vector>
-#include <unordered_map>
-#include <omp.h>
-#include <zlib.h>
-#include <sstream>
-#include <string>
 
 namespace algebra{
 
@@ -252,7 +238,7 @@ void Matrix<T, Order>::transpose() {
     if(was_compressed){compress();}
 }
 
-// Product by Vector
+// Product by Vector methods
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::compressed_product_by_vector_parallel(const std::vector<T>& v) const {
 // Multiplies a compressed matrix by a vector v using parallelization for faster computation.
@@ -286,7 +272,6 @@ std::vector<T> Matrix<T, Order>::compressed_product_by_vector_parallel(const std
     return output;
 }
 
-// Compressed product by vector (no parallel version)
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::compressed_product_by_vector(const std::vector<T>& v) const {
     std::vector<T> output(rows_, T(0));
@@ -312,8 +297,6 @@ std::vector<T> Matrix<T, Order>::compressed_product_by_vector(const std::vector<
 
     return output;
 }
-
-
 
 template<typename T, StorageOrder Order>
 std::vector<T> Matrix<T, Order>::product_by_vector(const std::vector<T>& v) const {
@@ -492,9 +475,12 @@ bool Matrix<T, Order>::mm_load_mtx(const std::string& filename){
     
 }
     
-
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::resize(size_t new_rows, size_t new_cols) {
+// Resizes the matrix to new_rows x new_cols, updating internal dimensions.
+// Removes all elements outside the new bounds.
+// INPUT: new_rows (size_t), new_cols (size_t) - new dimensions; OUTPUT: none (matrix modified in-place).
+
     bool was_compressed = false;
     if (is_compressed()){
         decompress();
@@ -682,6 +668,8 @@ bool Matrix<T, Order>::is_compressed() const{
 
 template<typename T, StorageOrder Order>
 void Matrix<T, Order>::info() const {
+// Prints a summary of the matrix information to std::cout.
+
     std::cout << std::string(50, '*') << std::endl;
     std::cout << "*           Matrix Information Summary           *" << std::endl;
     std::cout << std::string(50, '*') << std::endl;
@@ -694,6 +682,10 @@ void Matrix<T, Order>::info() const {
     std::cout << std::string(50, '*') << std::endl;
 }
 
+template<typename T, StorageOrder Order>
+std::array<size_t, 2>  Matrix<T,Order>::size() const {
+    return {rows_, cols_};
+}
 
 // ✝️ GRAVEYARD : DEPRECATED FUNCTIONS
 // ashes have been scattered, nothing to see here

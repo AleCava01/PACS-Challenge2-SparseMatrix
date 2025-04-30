@@ -27,6 +27,6 @@ std::vector<T> getRandomVector(size_t n, T min_val = T(1), T max_val = T(9));
 
 } // namespace utils
 
-#include "utils.tpp" // Include implementations
+#include "Utils.tpp" // Include implementations
 
 #endif // UTILS_HPP

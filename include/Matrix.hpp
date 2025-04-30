@@ -1,12 +1,28 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
+
+// STL Headers
 #include <map>
 #include <array>
 #include <iostream>
 #include <vector>
+#include <iomanip>
+#include <typeinfo>
+#include <fstream>
+#include <unordered_map>
+#include <sstream>
+#include <string>
+
+// External libraries
+#include <omp.h> // for parallel computing (matrix * vector methods)
+#include <zlib.h> // for reading .mtx.gz files (see Matrix Market Parsers)
+
+// Project headers
 #include "StorageOrder.hpp"
 #include "CompressedMatrix.hpp"
 #include "NormType.hpp"
+#include "Utils.hpp"
+#include "Parameters.hpp"
 
 namespace algebra {
 
@@ -30,8 +46,6 @@ public:
     // 🏗️ CONSTRUCTORS
     Matrix(size_t rows, size_t cols); // Constructor
     Matrix(const std::vector<std::vector<T>>& mat); // Constructor
-
-    size_t cols() const { return cols_; }
     
     // 🔥 CORE METHODS
     bool update(const size_t i, const size_t j,const T& value); // Update element at position (i,j) to the specified value
@@ -56,6 +70,7 @@ public:
     void printStorage() const; // prints CSR/CSC vectors or COOmap mapping, depending on compression status
     void print(int width = 6) const; // Print matrix
     void info() const; // Prints some useful matrix info
+    std::array<size_t, 2> size() const; // returns the size of the matrix as an array of {n_rows, n_cols}
 };
 
 
