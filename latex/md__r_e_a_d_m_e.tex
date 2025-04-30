@@ -1,0 +1,69 @@
+\chapter{README}
+\hypertarget{md__r_e_a_d_m_e}{}\label{md__r_e_a_d_m_e}\index{README@{README}}
+\href{https://classroom.github.com/a/HlQKP7Zu}{\texttt{ }} \hypertarget{md__r_e_a_d_m_e_autotoc_md0}{}\doxysection{\texorpdfstring{Challenge 2\+: A Sparse Matrix}{Challenge 2\+: A Sparse Matrix}}\label{md__r_e_a_d_m_e_autotoc_md0}
+\href{https://img.shields.io/badge/C\%2B\%2B-20-blue}{\texttt{ }} \href{https://img.shields.io/badge/GNU Make-3.27.6-blue}{\texttt{ }} \href{https://img.shields.io/badge/clang-18.1.3-blue}{\texttt{ }} \hypertarget{md__r_e_a_d_m_e_autotoc_md1}{}\doxysection{\texorpdfstring{Project Structure and Description}{Project Structure and Description}}\label{md__r_e_a_d_m_e_autotoc_md1}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{challenge2-\/gasati/}
+\DoxyCodeLine{├──\ src/}
+\DoxyCodeLine{│\ \ \ ├──\ main.cpp}
+\DoxyCodeLine{├──\ include/}
+\DoxyCodeLine{│\ \ \ ├──\ Matrix.hpp}
+\DoxyCodeLine{│\ \ \ ├──\ Matrix.tpp}
+\DoxyCodeLine{|\ \ \ ├──\ StorageOrder.hpp}
+\DoxyCodeLine{|\ \ \ ├──\ Utils.hpp}
+\DoxyCodeLine{├──\ assets}
+\DoxyCodeLine{├──\ Makefile}
+\DoxyCodeLine{├──\ run}
+\DoxyCodeLine{├──\ LICENSE}
+\DoxyCodeLine{└──\ README.md}
+
+\end{DoxyCode}
+ \hypertarget{md__r_e_a_d_m_e_autotoc_md2}{}\doxysubsubsection{\texorpdfstring{Parallelization}{Parallelization}}\label{md__r_e_a_d_m_e_autotoc_md2}
+We implemented a matrix-\/vector multiplication method that automatically selects between parallel and sequential execution based on the number of rows in the matrix, specifically in the case of the CSR storage format. When the matrix is compressed and contains more rows than a predefined threshold ({\ttfamily NROWS\+\_\+\+PARALLELIZATON\+\_\+\+LIMIT}), the parallel version is employed to enhance performance on larger datasets. Otherwise, the sequential version is preferred, as it tends to be faster for smaller inputs due to reduced overhead.
+
+To determine the optimal threshold, we conducted a series of benchmark experiments comparing both execution strategies on matrices of increasing size.
+
+
+
+The results indicated an inversion point at approximately 1000 rows, beyond which parallel computation consistently outperformed the sequential approach. Consequently, we set {\ttfamily NROWS\+\_\+\+PARALLELIZATON\+\_\+\+LIMIT = 1000} in include\textbackslash{}\+Parameters.\+hpp.
+
+A similar analysis was performed for the CSC storage format, and the same threshold value ({\ttfamily 1000}) was adopted. \hypertarget{md__r_e_a_d_m_e_autotoc_md3}{}\doxysection{\texorpdfstring{Setup (Linux / mac\+OS)}{Setup (Linux / mac\+OS)}}\label{md__r_e_a_d_m_e_autotoc_md3}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md4}{}\doxysubsubsection{\texorpdfstring{Prerequisites}{Prerequisites}}\label{md__r_e_a_d_m_e_autotoc_md4}
+Ensure you have the following dependencies installed on your environment\+:
+\begin{DoxyItemize}
+\item C++20-\/compatible compiler (e.\+g., GCC, Clang)
+\item GNU Make
+\item CMake
+\item zlib development libraries
+\item Open\+MPI
+\end{DoxyItemize}
+
+📦 Install all prerequisites (Debian/\+Ubuntu) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo\ apt\ update\ \&\&\ sudo\ apt\ install\ -\/y\ g++\ clang\ cmake\ make\ zlib1g-\/dev\ libopenmpi-\/dev\ openmpi-\/bin}
+
+\end{DoxyCode}
+ 🍎 For mac\+OS (via Homebrew) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{brew\ install\ gcc\ clang\ cmake\ make\ zlib\ open-\/mpi}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md5}{}\doxysubsubsection{\texorpdfstring{Building the Project}{Building the Project}}\label{md__r_e_a_d_m_e_autotoc_md5}
+Clone the repository\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git\ clone\ https://github.com/PACS-\/24-\/25/challenge2-\/gasati.git}
+\DoxyCodeLine{cd\ challenge2-\/gasati}
+
+\end{DoxyCode}
+ Build with the Makefile\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{make}
+
+\end{DoxyCode}
+ Run the program\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./main}
+
+\end{DoxyCode}
+ 

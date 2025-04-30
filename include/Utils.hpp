@@ -1,5 +1,6 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
+
 #include <iostream>
 #include <chrono>
 #include <tuple>
@@ -8,6 +9,7 @@
 #include <type_traits>
 #include <vector>
 #include <cxxabi.h>
+
 #include "Matrix.hpp"
 
 using namespace algebra;
