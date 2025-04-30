@@ -23,7 +23,7 @@ using namespace algebra;
  * 6. Matrix Norm Test (int, RowMajor)
  * 7. Matrix Resize Test
  * 8. Diagonal View Test
- * 9. Full Multiplication Speedtest
+ * 9. All (Rowmajor/ ColumnMajor , Compressed / Uncompressed) Multiplication Speedtest
  * 
  * The user is prompted to select a test case by entering a number between 1 and 9.
  * 
@@ -40,7 +40,7 @@ int main() {
     std::cout << "6. Matrix Norm Test (int, RowMajor)\n";
     std::cout << "7. Matrix Resize Test\n";
     std::cout << "8. Diagonal View Test\n";
-    std::cout << "9. Full Multiplication Speedtest\n";
+    std::cout << "9. All (Rowmajor/ ColumnMajor , Compressed / Uncompressed) Multiplication Speedtest\n";
     std::cout << "Enter your choice (1-9): ";
 
     // Read user input for test selection
